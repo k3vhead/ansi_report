@@ -1,0 +1,78 @@
+<project name="ansi_report" default="jar" basedir="..">
+    <description>Build ANSI Report jar</description>
+        
+        
+    <!-- set global properties for this build -->
+	<property name="projectName" value="ansi_report" />
+	<property name="buildLoc" location="work" />
+    <property name="build" location="${buildLoc}/build" />
+    <property name="dist"  location="${buildLoc}/dist" />
+    <property name="deploy" location="${buildLoc}/deploy" />
+    <property name="compile.debug" value="true"/>
+    <property environment="env" />
+	<property name="libdirectory"  value="lib" />
+    
+    <path id="compile.classpath">
+        <fileset dir="${env.CATALINA_HOME}/lib">
+            <include name="servlet-api.jar" />
+            <include name="jsp-api.jar" />
+        </fileset>
+
+        <fileset dir="${libdirectory}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="clean">
+        <!-- clear out old stuff -->
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/> 
+        <delete dir="${deploy}"/>           
+	</target>
+	
+    <target name="init" depends="clean" description="Initializes build area">
+        <!-- Create the time stamp -->
+        <tstamp />
+        
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build}" />
+        <mkdir dir="${dist}" />
+        <mkdir dir="${deploy}" />
+    	<mkdir dir="${dist}/resources" />
+        
+    </target>
+
+    
+    
+    <target name="build" depends="init" description="Build everything">
+        <path id="ui.classpath">
+            <path refid="compile.classpath"/>
+            <fileset dir="lib">
+                <include name="*.jar"/>
+            </fileset>
+        </path>
+        
+        <javac srcdir="src"
+               destdir="${dist}"
+               debug="${compile.debug}"
+               includeantruntime="false">
+            <classpath refid="ui.classpath"/>
+        </javac>
+    </target>
+    
+    <target name="jar" depends="build" description="Make a JAR File">  
+    	<copy todir="${dist}/resources">
+			<fileset dir="src/resources"/>
+		</copy>
+    	<propertyfile file="${dist}/resources/build_report.properties" comment="ansi_report">
+    		<entry key="builddate" type="date" value="now" pattern="MM/dd/yyyy HH:mm:ss" />
+    	</propertyfile>
+        <jar destfile="${deploy}/${projectName}.jar" basedir="${dist}" />
+    </target>
+
+    <target name="deploy" depends="jar">
+        <copy file="${deploy}/${projectName}.jar" toDir="../ansi_web/WebContent/WEB-INF/lib" />
+    	<copy file="${deploy}/${projectName}.jar" toDir="../ansi_batch/lib" />
+    </target>
+
+</project>
