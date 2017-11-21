@@ -8,8 +8,8 @@ import org.apache.log4j.Level;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.Midnight;
-import com.ansi.scilla.common.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
 import com.ansi.scilla.common.utils.AppUtils;
+import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
 import com.ansi.scilla.report.reportBuilder.XLSBuilder;
 
 public class TestReportBuilderXLS {

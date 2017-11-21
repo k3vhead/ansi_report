@@ -1,4 +1,4 @@
-package com.ansi.scilla.common.report.ticket;
+package com.ansi.scilla.report.ticket;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;

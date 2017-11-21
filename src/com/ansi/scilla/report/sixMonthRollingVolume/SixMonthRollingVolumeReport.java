@@ -1,4 +1,4 @@
-package com.ansi.scilla.common.report.sixMonthRollingVolume;
+package com.ansi.scilla.report.sixMonthRollingVolume;
 
 import java.math.BigDecimal;
 import java.sql.Connection;

@@ -1,4 +1,4 @@
-package com.ansi.scilla.common.report.pac;
+package com.ansi.scilla.report.pac;
 
 import java.sql.Connection;
 import java.util.Calendar;

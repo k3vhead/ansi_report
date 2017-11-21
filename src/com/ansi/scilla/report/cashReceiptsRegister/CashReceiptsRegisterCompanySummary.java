@@ -1,4 +1,4 @@
-package com.ansi.scilla.common.report.cashReceiptsRegister;
+package com.ansi.scilla.report.cashReceiptsRegister;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,35 +23,33 @@ import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
 
-public class CashReceiptsRegisterRegionSummary extends StandardReport {
+public class CashReceiptsRegisterCompanySummary extends StandardReport {
 
 	private static final long serialVersionUID = 1L;
 
-//	 Region summary - includes a recursive join with division_group to join the parent regions for the companies
-	private final String REGION_SUMMARY_SQL = "select division_group.name " +
-			"\n, isnull(region.amount,'0.00') as amount " +
-			"\n, isnull(region.tax_amt,'0.00') as tax_amt " +
-			"\n, isnull(region.total,'0.00') as total " +
+	private final String COMPANY_SUMMARY_SQL ="select division_group.name " +
+			"\n, isnull(company.amount,'0.00') as amount " +
+			"\n, isnull(company.tax_amt,'0.00') as tax_amt " +
+			"\n, isnull(company.total,'0.00') as total " +
 			"\nfrom division_group " +
 			"\nleft outer join (select " +
-			"\n    region.name " +
+			"\n    company.name " +
 			"\n	, isnull(sum(ticket_payment.amount),'0.00') as amount " +
 			"\n	, isnull(sum(ticket_payment.tax_amt),'0.00') as tax_amt " +
 			"\n	, isnull(sum(ticket_payment.amount+ticket_payment.tax_amt),'0.00') as total " +
-			"\n	from division_group as region " +
-			"\n	join division_group as company on company.parent_id = region.group_id " +
+			"\n	from division_group as company " +
 			"\n	join division on division.group_id = company.group_id " +
 			"\n	join ticket on division.division_id = ticket.act_division_id " +
 			"\n	join ticket_payment on ticket_payment.ticket_id = ticket.ticket_id " +
 			"\n	join payment on payment.payment_id = ticket_payment.payment_id " +
 			"\n	where payment_date >= ? and payment_date <= ? and company.group_type = ? " +
-			"\n	group by region.name) as region on region.name = division_group.name " +
+			"\n	group by company.name) as company on company.name = division_group.name " +
 			"\nwhere division_group.group_type = ? " +
-			"\norder by division_group.name"; 
+			"\norder by division_group.name";
 	
 
 	
-	public static final String REPORT_TITLE = "Cash Summary By Region";
+	public static final String REPORT_TITLE = "Cash Summary By Company";
 	private final String REPORT_NOTES = null;
 
 	private Calendar startDate;
@@ -60,7 +58,7 @@ public class CashReceiptsRegisterRegionSummary extends StandardReport {
 
 	Logger logger = Logger.getLogger("com.ansi.scilla.common.report");
 	
-	public CashReceiptsRegisterRegionSummary() {
+	public CashReceiptsRegisterCompanySummary() {
 		super();
 		this.setTitle(REPORT_TITLE);
 	}
@@ -70,7 +68,7 @@ public class CashReceiptsRegisterRegionSummary extends StandardReport {
 	 * @param divisionId
 	 * @throws Exception
 	 */
-	protected CashReceiptsRegisterRegionSummary(Connection conn) throws Exception {
+	protected CashReceiptsRegisterCompanySummary(Connection conn) throws Exception {
 		this();
 
 		DateFormatter dateFormatter = (DateFormatter)DataFormats.DATE_FORMAT.formatter();
@@ -89,7 +87,7 @@ public class CashReceiptsRegisterRegionSummary extends StandardReport {
 		makeReport(startDate, endDate, data, subtitle);
 	}
 
-	protected CashReceiptsRegisterRegionSummary(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
+	protected CashReceiptsRegisterCompanySummary(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
 		this();
 		DateFormatter dateFormatter = (DateFormatter)DataFormats.DATE_FORMAT.formatter();
 		this.startDate = startDate;
@@ -103,7 +101,7 @@ public class CashReceiptsRegisterRegionSummary extends StandardReport {
 	
 	
 	
-	private List<RowData> makeData(Connection conn, CashReceiptsRegisterRegionSummary report, Calendar startDate, Calendar endDate) throws SQLException {
+	private List<RowData> makeData(Connection conn, CashReceiptsRegisterCompanySummary report, Calendar startDate, Calendar endDate) throws SQLException {
 		startDate.set(Calendar.HOUR_OF_DAY, 0);
 		startDate.set(Calendar.MINUTE, 0);
 		startDate.set(Calendar.SECOND, 0);
@@ -115,11 +113,11 @@ public class CashReceiptsRegisterRegionSummary extends StandardReport {
 		endDate.set(Calendar.MILLISECOND, 0);
 
 		List<RowData> data = new ArrayList<RowData>();
-		PreparedStatement ps = conn.prepareStatement(REGION_SUMMARY_SQL);
+		PreparedStatement ps = conn.prepareStatement(COMPANY_SUMMARY_SQL);
 		ps.setDate(1, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(2, new java.sql.Date(endDate.getTimeInMillis()));
 		ps.setString(3, DivisionGroup.GroupType.COMPANY.toString());
-		ps.setString(4, DivisionGroup.GroupType.REGION.toString());
+		ps.setString(4, DivisionGroup.GroupType.COMPANY.toString());
 		ResultSet rs = ps.executeQuery();
 		while ( rs.next() ) {
 			data.add(new RowData(rs));
@@ -136,7 +134,7 @@ public class CashReceiptsRegisterRegionSummary extends StandardReport {
 		super.setHeaderNotes(REPORT_NOTES);
 
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("name", "Region", DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("name", "Company", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("amount", "Invoices\nPaid\nAmount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
 				new ColumnHeader("taxAmt", "Taxes\nPaid\nAmount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
 				new ColumnHeader("total", "Total\nPayment\nAmount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM)//,
@@ -204,10 +202,12 @@ public class CashReceiptsRegisterRegionSummary extends StandardReport {
 		}		
 	}
 	
-	public static CashReceiptsRegisterRegionSummary buildReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
-		return new CashReceiptsRegisterRegionSummary( conn, startDate, endDate);
+	public static CashReceiptsRegisterCompanySummary buildReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
+		return new CashReceiptsRegisterCompanySummary(conn, startDate, endDate);
 	}
-	public static CashReceiptsRegisterRegionSummary buildReport(Connection conn) throws Exception {
-		return new CashReceiptsRegisterRegionSummary( conn);
+	
+	public static CashReceiptsRegisterCompanySummary buildReport(Connection conn) throws Exception {
+		return new CashReceiptsRegisterCompanySummary(conn);
 	}
+
 }

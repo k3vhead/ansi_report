@@ -1,4 +1,4 @@
-package com.ansi.scilla.common.report.invoiceRegisterReport;
+package com.ansi.scilla.report.invoiceRegisterReport;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;

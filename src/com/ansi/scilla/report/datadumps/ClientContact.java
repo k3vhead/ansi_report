@@ -1,4 +1,4 @@
-package com.ansi.scilla.common.report.datadumps;
+package com.ansi.scilla.report.datadumps;
 
 import java.sql.Connection;
 

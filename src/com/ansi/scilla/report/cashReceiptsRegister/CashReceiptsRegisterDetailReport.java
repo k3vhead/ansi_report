@@ -1,4 +1,4 @@
-package com.ansi.scilla.common.report.cashReceiptsRegister;
+package com.ansi.scilla.report.cashReceiptsRegister;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;

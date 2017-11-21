@@ -13,8 +13,8 @@ import java.util.List;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.ansi.scilla.common.report.sixMonthRollingVolume.SixMonthRollingVolumeReport;
 import com.ansi.scilla.common.utils.AppUtils;
+import com.ansi.scilla.report.sixMonthRollingVolume.SixMonthRollingVolumeReport;
 
 public class Test6MonthVolume {
 

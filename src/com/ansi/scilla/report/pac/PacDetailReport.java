@@ -1,4 +1,4 @@
-package com.ansi.scilla.common.report.pac;
+package com.ansi.scilla.report.pac;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
