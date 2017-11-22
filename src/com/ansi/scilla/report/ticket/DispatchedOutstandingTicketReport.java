@@ -18,6 +18,7 @@ import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.jobticket.TicketStatus;
+import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
@@ -42,7 +43,7 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 //			+ "\nwhere ticket.act_division_id=? and ticket.process_date>? and ticket.process_date<? "
 //			+ "\norder by ticket.ticket_id asc";
 	
-	private final String sql = "select division_nbr, division_id, ticket.fleetmatics_id, address.name, address.address1, address.city, ticket.start_date, "
+	private final String sql = "select division.division_nbr, division.division_id, ticket.ticket_id, ticket.fleetmatics_id, address.name, address.address1, address.city, ticket.start_date, "
 			+ "\n\tjob.price_per_cleaning, job.job_nbr, job.job_frequency, ticket.ticket_status, "
 			+ "\n\t(	"
 			+ "\n\tselect top 1 process_date "
@@ -50,16 +51,17 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 			+ "\n\twhere ticket.job_id = job.job_id "
 			+ "\n\tand ticket.process_date is not null "
 			+ "\n\torder by ticket.process_date desc "
-			+ "\n\t) as last_run "
-			+ "\n\tticket.ticket_type, job.invoice_style, dateadd(day, 1, EOMONTH(getDate())) as PriorToDate, GetDate() as ReportCreatedDate "
+			+ "\n\t) as last_run, "
+			+ "\n\tticket.ticket_type, job.invoice_style, GetDate() as ReportCreatedDate "
 			+ "\nfrom ticket "
 			+ "\ninner join job on job.job_id=ticket.job_id "
 			+ "\ninner join quote on quote.quote_id=job.quote_id "
 			+ "\ninner join address on address.address_id=quote.job_site_address_id "
-			+ "\nwhere where ticket.start_date <= EOMONTH(getdate()) "
+			+ "\ninner join division on division.division_id=ticket.act_division_id "
+			+ "\nwhere ticket.start_date <= ? "
 			+ "\n\tand division.division_id=? "
-			+ "\n\tand ticket_type = 'job' "
-			+ "\nand ticket_status in ('D','N') "
+			+ "\n\tand ticket_type = ? "
+			+ "\nand ticket_status in (?,?) "
 			+ "\norder by division_nbr, ticket.start_date asc, address.name";
 	
 	/*
@@ -136,10 +138,9 @@ order by division_nbr, ticket.start_date asc, address.name
 //		startDate.set(Calendar.DAY_OF_MONTH, 1);
 		
 		endDate = Midnight.getInstance(new AnsiTime());
-		endDate.add(Calendar.DAY_OF_MONTH, 1);
 		
 		this.data = makeData(conn, divisionId, endDate);
-		makeReport(div, endDate, data, "Current Month to Date");
+		makeReport(div, endDate, data, "Prior to Today");
 	}
 
 	private DispatchedOutstandingTicketReport(Connection conn,  Integer divisionId, Calendar endDate) throws Exception {
@@ -191,21 +192,19 @@ order by division_nbr, ticket.start_date asc, address.name
 	}
 
 	private List<RowData> makeData(Connection conn, Integer divisionId, Calendar endDate) throws Exception {
-//		startDate.set(Calendar.HOUR_OF_DAY, 0);
-//		startDate.set(Calendar.MINUTE, 0);
-//		startDate.set(Calendar.SECOND, 0);
-//		startDate.set(Calendar.MILLISECOND, 0);
-		
-		endDate.add(Calendar.DAY_OF_MONTH, 1);
-		endDate.set(Calendar.HOUR_OF_DAY, 0);
-		endDate.set(Calendar.MINUTE, 0);
-		endDate.set(Calendar.SECOND, 0);
-		endDate.set(Calendar.MILLISECOND, 0);
-		
+		System.out.println(sql);
+		System.out.println(divisionId + "\n" + endDate);
 		PreparedStatement ps = conn.prepareStatement(sql);
-		ps.setInt(1, divisionId);
-		//ps.setDate(2, new java.sql.Date(startDate.getTimeInMillis()));
-		ps.setDate(2, new java.sql.Date(endDate.getTimeInMillis()));
+		int n = 1;
+		ps.setDate(n, new java.sql.Date(endDate.getTimeInMillis()));
+		n++;
+		ps.setInt(n, divisionId);
+		n++;
+		ps.setString(n, TicketType.JOB.code());
+		n++;
+		ps.setString(n, TicketStatus.DISPATCHED.code());
+		n++;
+		ps.setString(n, TicketStatus.NOT_DISPATCHED.code());
 		ResultSet rs = ps.executeQuery();
 		
 		List<RowData> data = new ArrayList<RowData>();
@@ -232,27 +231,17 @@ order by division_nbr, ticket.start_date asc, address.name
 		super.setSubtitle(subtitle);
 //		super.setHeaderNotes(REPORT_NOTES);
 		
-//		super.setHeaderRow(new ColumnHeader[] {
-//				new ColumnHeader("processDate", "Date Completed", DataFormats.DATE_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("jobId", "Job Id", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("ticketId","Ticket #", DataFormats.NUMBER_FORMAT, SummaryType.COUNT),
-//				new ColumnHeader("ticketStatus","Status", DataFormats.STRING_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("actPricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
-//				new ColumnHeader("invoiceDate","Invoiced", DataFormats.DATE_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("jobNbr","Job #", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
-//				new ColumnHeader("name","Site Name", DataFormats.STRING_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("address1","Site Address", DataFormats.STRING_FORMAT, SummaryType.NONE),
-//		});
+
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("ticketId", "Tkt #", DataFormats.NUMBER_FORMAT, SummaryType.COUNT),
+				new ColumnHeader("ticketId", "Ticket", DataFormats.INTEGER_FORMAT, SummaryType.NONE),
 				new ColumnHeader("fleetmaticsId", "Tkt # FM", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 				new ColumnHeader("name","Site", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("address1","Street 1", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("city","City", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("lastRun","Last Run", DataFormats.DATE_FORMAT, SummaryType.NONE),
 				new ColumnHeader("startDate","Run Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("pricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
+				new ColumnHeader("pricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobNbr","J#", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
 				new ColumnHeader("jobFrequency", "FREQ", DataFormats.STRING_CENTERED, SummaryType.NONE),
 				new ColumnHeader("ticketType", "ST", DataFormats.STRING_CENTERED, SummaryType.NONE),
