@@ -11,6 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.utils.AppUtils;
+import com.ansi.scilla.report.reportBuilder.XLSBuilder;
 import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
 
 
@@ -68,7 +69,8 @@ public class JoshuasReportTester {
 	private void makeClientUsage(Connection conn) throws Exception {
 		logger.info("Client Report");
 		DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId);
-		XSSFWorkbook workbook = userReport.makeXLS();
+		XSSFWorkbook workbook = XLSBuilder.build(userReport);
+//		XSSFWorkbook workbook = userReport.makeXLS();
 		workbook.write(new FileOutputStream(joshuasTestResultDirectory + "clientContact.xlsx"));
 
 //		String html = userReport.makeHTML();

@@ -31,11 +31,13 @@ import com.ansi.scilla.report.reportBuilder.StandardSummaryReport;
 import com.ansi.scilla.report.reportBuilder.XLSBuilder;
 import com.ansi.scilla.report.reportBuilder.XLSSummaryBuilder;
 import com.ansi.scilla.report.sixMonthRollingVolume.SixMonthRollingVolumeReport;
+import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
 import com.ansi.scilla.report.ticket.TicketStatusReport;
 
 
 public class TestReportReflection {
 
+	private final String outputDirectory = "/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/";
 	protected ReportType reportType;
 	protected Calendar startDate;
 	protected Calendar endDate;
@@ -77,8 +79,9 @@ public class TestReportReflection {
 //			makePac(conn);
 //			make6mrv(conn);
 //			makeTicketStatus(conn);
-			makeAddressUsage(conn);
+//			makeAddressUsage(conn);
 //			makeClientUsage(conn);
+			makeDO(conn);
 			
 			conn.rollback();
 		} finally {
@@ -87,6 +90,17 @@ public class TestReportReflection {
 			}
 		}
 		logger.info("Done");		
+	}
+
+	private void makeDO(Connection conn) throws Exception {
+		logger.info("Client Report");
+		DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId);
+		XSSFWorkbook workbook = XLSBuilder.build(userReport);
+		workbook.write(new FileOutputStream(outputDirectory + "do.xlsx"));
+
+		String html = HTMLBuilder.build(userReport);
+		FileUtils.write(new File(outputDirectory + "do.html"), html);
+
 	}
 
 	private void makeTicketStatus(Connection conn) throws Exception {
