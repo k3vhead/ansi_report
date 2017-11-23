@@ -324,9 +324,13 @@ order by division_nbr, ticket.start_date asc, address.name
 			this.fleetmaticsId = rs.getString("fleetmatics_id");
 			this.city = rs.getString("city");
 			this.jobFrequency = rs.getString("job_frequency");
-			this.ticketType = rs.getString("ticket_type");
+			String ticketType = rs.getString("ticket_type"); 
+			this.ticketType = TicketType.lookup(ticketType).display();
 			this.invoiceStyle = rs.getString("invoice_style");
-			this.lastRun = new Date(rs.getDate("last_run").getTime());
+			Object lastRun = rs.getObject("last_run");
+			if ( lastRun != null ) {
+				this.lastRun = new Date(rs.getDate("last_run").getTime());
+			}
 		}
 
 		public String getCity() {

@@ -93,7 +93,7 @@ public class TestReportReflection {
 	}
 
 	private void makeDO(Connection conn) throws Exception {
-		logger.info("Client Report");
+		logger.info("DO Report");
 		DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId);
 		XSSFWorkbook workbook = XLSBuilder.build(userReport);
 		workbook.write(new FileOutputStream(outputDirectory + "do.xlsx"));
