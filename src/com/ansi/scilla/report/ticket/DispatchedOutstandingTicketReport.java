@@ -235,7 +235,7 @@ order by division_nbr, ticket.start_date asc, address.name
 		
 		super.setHeaderRow(new ColumnHeader[] {
 				new ColumnHeader("ticketId", "Ticket", DataFormats.INTEGER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("fleetmaticsId", "Tkt # FM", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("fleetmaticsId", "Tkt # FM", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("name","Site", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("address1","Street 1", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("city","City", DataFormats.STRING_FORMAT, SummaryType.NONE),
@@ -297,14 +297,14 @@ order by division_nbr, ticket.start_date asc, address.name
 		public Integer divisionNbr;	//
 		public Integer divisionId;	//
 		public Integer ticketId;	//
-		public Integer fleetmaticsId;	//
+		public String fleetmaticsId;	//
 		public String name;	//
 		public String address1;	//
 		public String city;	//
 		public Date startDate;	//
 		public Double pricePerCleaning;	//
 		public Integer jobNbr;	//
-		public Integer jobFrequency;
+		public String jobFrequency;
 		public String ticketStatus;	//
 		public String ticketType;
 		public String invoiceStyle;
@@ -321,9 +321,9 @@ order by division_nbr, ticket.start_date asc, address.name
 			this.address1 = rs.getString("address1");
 			this.divisionNbr = rs.getInt("division_nbr");
 			this.divisionId = rs.getInt("division_id");
-			this.fleetmaticsId = rs.getInt("fleetmatics_id");
+			this.fleetmaticsId = rs.getString("fleetmatics_id");
 			this.city = rs.getString("city");
-			this.jobFrequency = rs.getInt("job_frequency");
+			this.jobFrequency = rs.getString("job_frequency");
 			this.ticketType = rs.getString("ticket_type");
 			this.invoiceStyle = rs.getString("invoice_style");
 			this.lastRun = new Date(rs.getDate("last_run").getTime());
@@ -338,10 +338,10 @@ order by division_nbr, ticket.start_date asc, address.name
 		public Integer getDivisionId() {
 			return divisionId;
 		}
-		public Integer getFleetmaticsId() {
+		public String getFleetmaticsId() {
 			return fleetmaticsId;
 		}
-		public Integer getJobFrequency() {
+		public String getJobFrequency() {
 			return jobFrequency;
 		}
 		public Date getStartDate() {
