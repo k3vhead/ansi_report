@@ -70,14 +70,14 @@ public class JoshuasReportTester {
 
 
 	private void makeClientUsage(Connection conn) throws Exception {
-		logger.info("Client Report");
+		logger.info("DO Report");
 		DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId);
 		XSSFWorkbook workbook = XLSBuilder.build(userReport);
 //		XSSFWorkbook workbook = userReport.makeXLS();
-		workbook.write(new FileOutputStream(joshuasTestResultDirectory + "clientContact.xlsx"));
+		workbook.write(new FileOutputStream(joshuasTestResultDirectory + "DOReport.xlsx"));
 
 		String html = HTMLBuilder.build(userReport);
-		FileUtils.write(new File(joshuasTestResultDirectory + "clientContact.html"), html);
+		FileUtils.write(new File(joshuasTestResultDirectory + "DOReport.html"), html);
 		
 	}
 

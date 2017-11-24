@@ -17,6 +17,7 @@ import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.db.Division;
+import com.ansi.scilla.common.invoice.InvoiceStyle;
 import com.ansi.scilla.common.jobticket.TicketStatus;
 import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.common.utils.ObjectTransformer;
@@ -244,7 +245,7 @@ order by division_nbr, ticket.start_date asc, address.name
 				new ColumnHeader("pricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobNbr","J#", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
 				new ColumnHeader("jobFrequency", "FREQ", DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("ticketType", "ST", DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("ticketStatus", "ST", DataFormats.STRING_CENTERED, SummaryType.NONE),
 				new ColumnHeader("invoiceStyle", "Invoice Style", DataFormats.STRING_FORMAT, SummaryType.NONE),
 		});
 		
@@ -326,7 +327,10 @@ order by division_nbr, ticket.start_date asc, address.name
 			this.jobFrequency = rs.getString("job_frequency");
 			String ticketType = rs.getString("ticket_type"); 
 			this.ticketType = TicketType.lookup(ticketType).display();
-			this.invoiceStyle = rs.getString("invoice_style");
+			String invoiceStyle = rs.getString("invoice_style");
+			if( invoiceStyle.equals(null) ){
+				this.invoiceStyle = InvoiceStyle.get(invoiceStyle).display();
+			}
 			Object lastRun = rs.getObject("last_run");
 			if ( lastRun != null ) {
 				this.lastRun = new Date(rs.getDate("last_run").getTime());
