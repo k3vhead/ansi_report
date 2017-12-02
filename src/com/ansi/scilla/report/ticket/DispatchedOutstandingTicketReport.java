@@ -232,8 +232,6 @@ order by division_nbr, ticket.start_date asc, address.name
 		super.setSubtitle(subtitle);
 //		super.setHeaderNotes(REPORT_NOTES);
 		
-
-		
 		super.setHeaderRow(new ColumnHeader[] {
 				new ColumnHeader("ticketId", "Ticket", DataFormats.INTEGER_FORMAT, SummaryType.NONE),
 				new ColumnHeader("fleetmaticsId", "Tkt # FM", DataFormats.STRING_FORMAT, SummaryType.NONE),
@@ -256,24 +254,25 @@ order by division_nbr, ticket.start_date asc, address.name
 		//Method getStartDateMethod = this.getClass().getMethod("getStartDate", (Class<?>[])null);
 		Method getEndDateMethod = this.getClass().getMethod("getEndDate", (Class<?>[])null);
 		Method getRunDateMethod = this.getClass().getMethod("getRunDate", (Class<?>[])null);
+		Method dataSizeMethod = this.getClass().getMethod("makeDataSize", (Class<?>[])null);
 		
 		List<ReportHeaderRow> headerLeft = Arrays.asList(new ReportHeaderRow[] {
 				new ReportHeaderRow("Created:", getRunDateMethod, 0, DataFormats.DATE_TIME_FORMAT),
-				new ReportHeaderRow("Division:", getDivMethod, 1, DataFormats.STRING_FORMAT),
+				new ReportHeaderRow("Prior To:", getEndDateMethod, 0, DataFormats.DATE_FORMAT),
+				new ReportHeaderRow("Tickets:", dataSizeMethod, 2, DataFormats.INTEGER_FORMAT)
+				//new ReportHeaderRow("Division:", getDivMethod, 1, DataFormats.STRING_FORMAT),
 				//new ReportHeaderRow("From:", getStartDateMethod, 2, DataFormats.DATE_FORMAT),
-				new ReportHeaderRow("To:", getEndDateMethod, 3, DataFormats.DATE_FORMAT)
+				//new ReportHeaderRow("To:", getEndDateMethod, 3, DataFormats.DATE_FORMAT)
 		});
 		super.makeHeaderLeft(headerLeft);
 		
-		
-		Method dataSizeMethod = this.getClass().getMethod("makeDataSize", (Class<?>[])null);
 		Method getCompletedPPC = this.getClass().getMethod("getCompletedPPC", (Class<?>[])null);
 		Method getCompletedINV = this.getClass().getMethod("getCompletedINV", (Class<?>[])null);
 		
 		List<ReportHeaderRow> headerRight = Arrays.asList(new ReportHeaderRow[] {
 				new ReportHeaderRow("Completed PPC:", getCompletedPPC, 0, DataFormats.CURRENCY_FORMAT),
 				new ReportHeaderRow("Completed INV:", getCompletedINV, 1, DataFormats.CURRENCY_FORMAT),
-				new ReportHeaderRow("Tickets:", dataSizeMethod, 2, DataFormats.INTEGER_FORMAT)
+				new ReportHeaderRow("Division:", getDivMethod, 1, DataFormats.STRING_FORMAT),
 		});
 		super.makeHeaderRight(headerRight);
 	}
