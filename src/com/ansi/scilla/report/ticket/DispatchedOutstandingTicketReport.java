@@ -268,13 +268,20 @@ order by division_nbr, ticket.start_date asc, address.name
 		
 		Method getCompletedPPC = this.getClass().getMethod("getCompletedPPC", (Class<?>[])null);
 		Method getCompletedINV = this.getClass().getMethod("getCompletedINV", (Class<?>[])null);
+		//Method getOutstanding = this.getClass().getMethod("getOutstanding", (Class<?>[])null);
 		
 		List<ReportHeaderRow> headerRight = Arrays.asList(new ReportHeaderRow[] {
 				new ReportHeaderRow("Completed PPC:", getCompletedPPC, 0, DataFormats.CURRENCY_FORMAT),
-				new ReportHeaderRow("Completed INV:", getCompletedINV, 1, DataFormats.CURRENCY_FORMAT),
-				new ReportHeaderRow("Division:", getDivMethod, 1, DataFormats.STRING_FORMAT),
+				new ReportHeaderRow("Division:", getDivMethod, 0, DataFormats.STRING_FORMAT),
+				new ReportHeaderRow("Completed INV:", getCompletedINV, 1, DataFormats.CURRENCY_FORMAT)
+				
 		});
 		super.makeHeaderRight(headerRight);
+		
+		List<ReportHeaderRow> headerFarRight = Arrays.asList(new ReportHeaderRow[] {
+				new ReportHeaderRow("Division:", getDivMethod, 1, DataFormats.STRING_FORMAT)
+		});
+		super.makeHeaderRight(headerFarRight);
 	}
 	
 	
