@@ -1,5 +1,6 @@
 package com.ansi.scilla.report.reportBuilder;
 
+import java.awt.font.LineBreakMeasurer;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -84,7 +85,8 @@ public class XLSBuilder extends AbstractXLSBuilder {
 			row = sheet.createRow(headerRowCount);
 			sheet.addMergedRegion(new CellRangeAddress(headerRowCount, headerRowCount, 0, report.getHeaderRow().length + 1));
 			cell = row.createCell(0);
-			cell.setCellValue(this.report.getHeaderNotes());
+			cell.setCellStyle(rf.cellStyleReportNote);
+			cell.setCellValue(this.report.getHeaderNotes());			
 		}
 		
 		int numberOfHeaderRows = Math.max(3, headerRowCount); // banner + title + subtitle is the minimum

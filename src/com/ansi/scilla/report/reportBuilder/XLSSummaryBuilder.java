@@ -122,6 +122,7 @@ public class XLSSummaryBuilder extends AbstractXLSBuilder {
 //			sheet.addMergedRegion(new CellRangeAddress(headerRowCount, headerRowCount, 0, report.getHeaderRow().length + 1));
 			sheet.addMergedRegion(new CellRangeAddress(headerRowCount, headerRowCount, 0, 10));
 			cell = row.createCell(0);
+			cell.setCellStyle(rf.cellStyleReportNote);
 			cell.setCellValue(this.report.getHeaderNotes());
 		}
 		

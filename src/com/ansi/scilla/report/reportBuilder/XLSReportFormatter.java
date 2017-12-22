@@ -13,6 +13,7 @@ public class XLSReportFormatter {
 	public Integer reportBannerHeight = 14;
 	public Integer reportTitleHeight = 12;
 	public Integer reportSubTitleHeight = 10;
+	public Integer reportNoteHeight = 8;
 
 	public short standardHeaderHeight = (short)400;    //this may be a good idea at some point, but we're not doing it now
 	public short standardDetailHeight = (short)400;    //this may be a good idea at some point, but we're not doing it now
@@ -24,6 +25,7 @@ public class XLSReportFormatter {
 	public XSSFFont fontReportBanner;
 	public XSSFFont fontReportTitle;
 	public XSSFFont fontReportSubTitle;
+	public XSSFFont fontReportNote;
 	
 	public short dataFormatDate;
 	public short dataFormatDateTime;
@@ -51,6 +53,7 @@ public class XLSReportFormatter {
 	public CellStyle cellStyleReportHeaderLabelCenter;
 	public CellStyle cellStyleReportHeaderLabelLeft;
 	public CellStyle cellStyleReportHeaderLabelRight;
+	public CellStyle cellStyleReportNote;
 	
 	
 	public CellStyle cellStyleSubtotalDecimal;
@@ -94,8 +97,11 @@ public class XLSReportFormatter {
 	    fontReportSubTitle.setBold(true);
 	    fontReportSubTitle.setFontHeight(reportSubTitleHeight);
 	    
+	    fontReportNote = workbook.createFont();
+	    fontReportNote.setColor(HSSFColor.BLACK.index);
+	    fontReportNote.setBold(false);
+	    fontReportNote.setFontHeight(reportNoteHeight);
 	    
-
 	    
 	    dataFormatDate = createHelper.createDataFormat().getFormat("mm/dd/yyyy");
 	    dataFormatDateTime = createHelper.createDataFormat().getFormat("mm/dd/yyyy hh:mm:ss");
@@ -222,5 +228,12 @@ public class XLSReportFormatter {
 	    cellStyleStandardCurrency.setDataFormat(dataFormatCurrency);
 	    cellStyleStandardCurrency.setAlignment(CellStyle.ALIGN_RIGHT);
 	    cellStyleStandardCurrency.setFont(fontStandardBlack);
+	    
+	    cellStyleReportNote = workbook.createCellStyle();
+	    cellStyleReportNote.setFillBackgroundColor(IndexedColors.WHITE.getIndex());
+//	    cellStyleReportNote.setDataFormat(xxx);
+	    cellStyleReportNote.setWrapText(true);
+	    cellStyleReportNote.setAlignment(CellStyle.ALIGN_LEFT);
+	    cellStyleReportNote.setFont(fontReportNote);
 	}
 }
