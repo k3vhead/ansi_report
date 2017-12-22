@@ -24,6 +24,7 @@ import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
+import com.ansi.scilla.report.reportBuilder.ReportHeaderCol;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
@@ -32,17 +33,11 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public static final  String REPORT_TITLE = "DO List";
-	
-//	private final String sql = "select ticket.process_date, ticket.ticket_id, ticket.ticket_status, ticket.act_price_per_cleaning, "
-//			+ "\n\tjob.job_id, job.job_nbr, "
-//			+ "\n\taddress.name, address.address1 "
-//			+ "\nfrom ticket "
-//			+ "\ninner join job on job.job_id=ticket.job_id "
-//			+ "\ninner join quote on quote.quote_id=job.quote_id "
-//			+ "\ninner join address on address.address_id=quote.job_site_address_id "
-//			+ "\nwhere ticket.act_division_id=? and ticket.process_date>? and ticket.process_date<? "
-//			+ "\norder by ticket.ticket_id asc";
+	public static final String REPORT_TITLE = "Dispatched and Outstanding Tickets List -- Trailing";
+	public static final String REPORT_NOTE = "* = Tickets with statuses 'Non Dispatched' or 'Locked Freq' " +
+					"require updating before they can run. Please contact the administrative team and let them " +
+					"know what you would like to do with these tickets. ** = A status of 'Finished' means that the " +
+					"ticket has been processed as being completed but has not yet been assigned to an invoice for billing";
 	
 	private final String sql = "select division.division_nbr, division.division_id, ticket.ticket_id, ticket.fleetmatics_id, address.name, address.address1, address.city, ticket.start_date, "
 			+ "\n\tjob.price_per_cleaning, job.job_nbr, job.job_frequency, ticket.ticket_status, "
@@ -65,61 +60,10 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 			+ "\nand ticket_status in (?,?) "
 			+ "\norder by division_nbr, ticket.start_date asc, address.name";
 	
-	/*
-	 * SET NOCOUNT ON;
-
-DECLARE @PRIOR_TO DateTime2(0);
-DECLARE @DIVISION_START int;
-DECLARE @DIVISION_END int;
-
---set @PRIOR_TO = EOMONTH(getdate()
-set @DIVISION_START = 12;
-SET @DIVISION_END = 89;
-
-SELECT         
-	division_nbr
-	, division_id
-	, ticket.ticket_id 
-	, ticket.fleetmatics_id 
-	, address.name 
-	, address.address1 
-	, address.city 
-	, ticket.start_date 
-	, job.price_per_cleaning 
-	, job.job_nbr 
-	, job.job_frequency 
-	, ticket.ticket_status 
-	, (	
-		select top 1 process_date 
-		from ticket 
-		where ticket.job_id = job.job_id 
-		and ticket.process_date is not null 
-		order by ticket.process_date desc
-	  ) as last_run     
-	, ticket.ticket_type
-	, job.invoice_style 
-	, dateadd(day,1, EOMONTH(getdate())) as PriorToDate 
-	, GetDate() as ReportCreatedDate 
-FROM ticket 
-INNER JOIN job 
-	ON job.job_id = ticket.job_id 
-INNER JOIN quote 
-    ON quote.quote_id = job.quote_id 
-INNER JOIN address 
-	ON address.address_id = quote.job_site_address_id 
-INNER JOIN division 
-    ON division.division_id = ticket.act_division_id 
-where ticket.start_date <= EOMONTH(getdate())
-   and division.division_nbr >= @DIVISION_START AND DIVISION.division_nbr <= @DIVISION_END
-   and ticket_type = 'job' 
-and ticket_status in ('D','N')
-order by division_nbr, ticket.start_date asc, address.name 
-	 * 
-	 * */
 	
 	
 	
-	//Asana has correct above sql
+	
 	
 	private String div;
 	private Calendar startDate;
@@ -129,6 +73,7 @@ order by division_nbr, ticket.start_date asc, address.name
 	private DispatchedOutstandingTicketReport() {		
 		super();
 		this.setTitle(REPORT_TITLE);
+		this.setHeaderNotes(REPORT_NOTE);
 	}
 	
 	private DispatchedOutstandingTicketReport(Connection conn,  Integer divisionId) throws Exception {
@@ -217,20 +162,41 @@ order by division_nbr, ticket.start_date asc, address.name
 		return data;
 	}
 	
-	public Double getCompletedINV() {
-		return 1.23D;
+	public Double getOutstanding() {
+		return 99.99D;
 	}
 	
-	public Double getCompletedPPC() {
-		return 4.56D;
+	public Double getDispatched() {
+		return 99.99D;
 	}
+	
+	public Double getNonDispatched() {
+		return 99.99D;
+	}
+	
+	public Double getLockedFreq() {
+		return 99.99D;
+	}
+		
+	public Double getDispOutstanding() {
+		return 99.99D;
+	}
+	
+	public Double getFinished() {
+		return 99.99D;
+	}
+	
+	public Double getAllTickets() {
+		return 99.99D;
+	}
+	
 	
 	@SuppressWarnings("unchecked")	
 	private void makeReport(String div, Calendar endDate, List<RowData> data, String subtitle) throws NoSuchMethodException, SecurityException {
 
 		super.setTitle(REPORT_TITLE);	
 		super.setSubtitle(subtitle);
-//		super.setHeaderNotes(REPORT_NOTES);
+		super.setHeaderNotes(REPORT_NOTE);
 		
 		super.setHeaderRow(new ColumnHeader[] {
 				new ColumnHeader("ticketId", "Ticket", DataFormats.INTEGER_FORMAT, SummaryType.NONE),
@@ -250,8 +216,6 @@ order by division_nbr, ticket.start_date asc, address.name
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
 		super.setDataRows(oData);
 		
-		Method getDivMethod = this.getClass().getMethod("getDiv", (Class<?>[])null);
-		//Method getStartDateMethod = this.getClass().getMethod("getStartDate", (Class<?>[])null);
 		Method getEndDateMethod = this.getClass().getMethod("getEndDate", (Class<?>[])null);
 		Method getRunDateMethod = this.getClass().getMethod("getRunDate", (Class<?>[])null);
 		Method dataSizeMethod = this.getClass().getMethod("makeDataSize", (Class<?>[])null);
@@ -259,29 +223,46 @@ order by division_nbr, ticket.start_date asc, address.name
 		List<ReportHeaderRow> headerLeft = Arrays.asList(new ReportHeaderRow[] {
 				new ReportHeaderRow("Created:", getRunDateMethod, 0, DataFormats.DATE_TIME_FORMAT),
 				new ReportHeaderRow("Prior To:", getEndDateMethod, 0, DataFormats.DATE_FORMAT),
-				new ReportHeaderRow("Tickets:", dataSizeMethod, 2, DataFormats.INTEGER_FORMAT)
-				//new ReportHeaderRow("Division:", getDivMethod, 1, DataFormats.STRING_FORMAT),
-				//new ReportHeaderRow("From:", getStartDateMethod, 2, DataFormats.DATE_FORMAT),
-				//new ReportHeaderRow("To:", getEndDateMethod, 3, DataFormats.DATE_FORMAT)
+				new ReportHeaderRow("Tickets:", dataSizeMethod, 2, DataFormats.INTEGER_FORMAT)				
 		});
 		super.makeHeaderLeft(headerLeft);
 		
-		Method getCompletedPPC = this.getClass().getMethod("getCompletedPPC", (Class<?>[])null);
-		Method getCompletedINV = this.getClass().getMethod("getCompletedINV", (Class<?>[])null);
-		//Method getOutstanding = this.getClass().getMethod("getOutstanding", (Class<?>[])null);
+		
+		Method getOutstanding = this.getClass().getMethod("getOutstanding", (Class<?>[])null);
+		Method getDispatched = this.getClass().getMethod("getDispatched", (Class<?>[])null);
+		Method getNonDispatched = this.getClass().getMethod("getNonDispatched", (Class<?>[])null);
+		Method getLockedFreq = this.getClass().getMethod("getLockedFreq", (Class<?>[])null);
 		
 		List<ReportHeaderRow> headerRight = Arrays.asList(new ReportHeaderRow[] {
-				new ReportHeaderRow("Completed PPC:", getCompletedPPC, 0, DataFormats.CURRENCY_FORMAT),
-				new ReportHeaderRow("Division:", getDivMethod, 0, DataFormats.STRING_FORMAT),
-				new ReportHeaderRow("Completed INV:", getCompletedINV, 1, DataFormats.CURRENCY_FORMAT)
+				new ReportHeaderRow("Outstanding:", getOutstanding, 0, DataFormats.DECIMAL_FORMAT),
+				new ReportHeaderRow("Dispatched:", getDispatched, 1, DataFormats.DECIMAL_FORMAT),
+				new ReportHeaderRow("Non-Dispatched:", getNonDispatched, 2, DataFormats.DECIMAL_FORMAT),
+				new ReportHeaderRow("Locked Freq*:", getLockedFreq, 3, DataFormats.DECIMAL_FORMAT)
 				
 		});
-		super.makeHeaderRight(headerRight);
+//		super.makeHeaderRight(headerRight);
+
 		
+		Method getDivMethod = this.getClass().getMethod("getDiv", (Class<?>[])null);
+		Method getDispOutstanding = this.getClass().getMethod("getDispOutstanding", (Class<?>[])null);
+		Method getFinished = this.getClass().getMethod("getFinished", (Class<?>[])null);
+		Method getAllTickets = this.getClass().getMethod("getAllTickets", (Class<?>[])null);
+
 		List<ReportHeaderRow> headerFarRight = Arrays.asList(new ReportHeaderRow[] {
-				new ReportHeaderRow("Division:", getDivMethod, 1, DataFormats.STRING_FORMAT)
+				new ReportHeaderRow("Division:", getDivMethod, 0, DataFormats.STRING_FORMAT),
+				new ReportHeaderRow("Disp + Outst:", getDispOutstanding, 1, DataFormats.DECIMAL_FORMAT),
+				new ReportHeaderRow("**Finished:", getFinished, 2, DataFormats.DECIMAL_FORMAT),
+				new ReportHeaderRow("All Tickets:", getAllTickets, 3, DataFormats.DECIMAL_FORMAT),
 		});
-		super.makeHeaderRight(headerFarRight);
+//		super.makeHeaderRight(headerFarRight);
+
+		List<ReportHeaderCol> headerRightCols = new ArrayList<ReportHeaderCol>();
+		ReportHeaderCol col1 = new ReportHeaderCol(headerRight, 0);
+		headerRightCols.add(col1);
+		ReportHeaderCol col2 = new ReportHeaderCol(headerFarRight, 1);
+		headerRightCols.add(col2);
+		setHeaderRight(headerRightCols);
+		
 	}
 	
 	

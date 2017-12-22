@@ -126,6 +126,6 @@ public abstract class AbstractReport extends AnsiReport {
 		setHeaderRight(headerRightCols);
 	}
 
-
+	
 
 }
