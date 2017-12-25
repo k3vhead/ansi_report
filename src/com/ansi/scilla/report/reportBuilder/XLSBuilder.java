@@ -1,11 +1,8 @@
 package com.ansi.scilla.report.reportBuilder;
 
-import java.awt.font.LineBreakMeasurer;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Footer;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -97,39 +94,7 @@ public class XLSBuilder extends AbstractXLSBuilder {
 		footer.setCenter("Page &P of &N");
 	}
 	
-	private void makeHeaderRow(Integer index, List<ReportHeaderCol> headerLeft, String text, CellStyle bannerStyle, List<ReportHeaderCol> headerRight, XSSFSheet sheet) throws Exception {
-		StandardReport report = (StandardReport)this.report;
-		Integer colCount = report.getHeaderRow().length;
-		String[] dataLeft = makeHeaderData(headerLeft, index);
-		String[] dataRight = makeHeaderData(headerRight, index);
-		
-		XSSFRow row = null;
-		XSSFCell cell = null;
-		
-		row = sheet.createRow(index);
 
-//	    row.setHeight(rf.standardDetailHeight);
-	    cell = row.createCell(0);
-	    cell.setCellValue(dataLeft[0]);
-	    cell.setCellStyle(rf.cellStyleReportHeaderLabelLeft);
-	    
-	    cell = row.createCell(1);
-	    cell.setCellValue(dataLeft[1]);
-	    cell.setCellStyle(rf.cellStyleStandardLeft);
-	    
-	    cell = row.createCell(2);
-	    cell.setCellValue(text);
-	    sheet.addMergedRegion(new CellRangeAddress(index, index, 2, colCount - 1));
-	    cell.setCellStyle(bannerStyle);
-	    
-	    cell = row.createCell(colCount);
-	    cell.setCellValue(dataRight[0]);
-	    cell.setCellStyle(rf.cellStyleReportHeaderLabelRight);
-	    
-	    cell = row.createCell(colCount+1);
-	    cell.setCellValue(dataRight[1]);
-	    cell.setCellStyle(rf.cellStyleStandardRight);
-	}
 
 
 

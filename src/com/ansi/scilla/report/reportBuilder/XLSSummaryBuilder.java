@@ -136,39 +136,7 @@ public class XLSSummaryBuilder extends AbstractXLSBuilder {
 		return numberOfHeaderRows;
 	}
 	
-	private void makeHeaderRow(Integer index, List<ReportHeaderCol> headerLeft, String text, CellStyle bannerStyle, List<ReportHeaderCol> headerRight, XSSFSheet sheet) throws Exception {		
-		StandardSummaryReport report = (StandardSummaryReport)this.report;		
-		Integer colCount = makeColumnCount(report);
-		
-		String[] dataLeft = makeHeaderData(headerLeft, index);
-		String[] dataRight = makeHeaderData(headerRight, index);
-		
-		XSSFRow row = null;
-		XSSFCell cell = null;
-		
-		row = sheet.createRow(index);
-//	    row.setHeight(rf.standardHeaderHeight);
-	    cell = row.createCell(0);
-	    cell.setCellValue(dataLeft[0]);
-	    cell.setCellStyle(rf.cellStyleReportHeaderLabelLeft);
-	    
-	    cell = row.createCell(1);
-	    cell.setCellValue(dataLeft[1]);
-	    cell.setCellStyle(rf.cellStyleStandardLeft);
-	    
-	    cell = row.createCell(2);
-	    cell.setCellValue(text);
-	    sheet.addMergedRegion(new CellRangeAddress(index, index, 2, colCount - 1));
-	    cell.setCellStyle(bannerStyle);
-	    
-	    cell = row.createCell(colCount);
-	    cell.setCellValue(dataRight[0]);
-	    cell.setCellStyle(rf.cellStyleReportHeaderLabelRight);
-	    
-	    cell = row.createCell(colCount+1);
-	    cell.setCellValue(dataRight[1]);
-	    cell.setCellStyle(rf.cellStyleStandardRight);
-	}
+
 	
 
 	private void makeReport(XSSFSheet sheet, StandardReport report, ReportStartLoc startLoc) throws Exception {

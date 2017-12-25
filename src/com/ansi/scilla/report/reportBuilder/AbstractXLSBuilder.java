@@ -88,7 +88,33 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 	}
 	
 
+	protected void makeBannerData(ReportHeaderCol headerCol, XSSFRow row, Integer colIndex, CellStyle labelStyle, CellStyle dataStyle) throws Exception {
+		XSSFCell cell;
+		
+		cell = row.createCell(colIndex);
+		cell.setCellStyle(labelStyle);
+		ReportHeaderRow headerRow = headerCol.getRowList().get(row.getRowNum());
+		cell.setCellValue(headerRow.getLabel());
+		colIndex++;
+		cell = row.createCell(colIndex);
+		Object value = headerRow.getValue().invoke(this.report, (Object[])null); 
+		String display = formatValue(headerRow.getFormatter(), value);	
+		cell.setCellValue(display);
+		cell.setCellStyle(dataStyle);
+		colIndex++;
+		
+	}
 	
+	
+
+	/**
+	 * 
+	 * @param headerData
+	 * @param index
+	 * @return
+	 * @throws Exception
+	 * @deprecated Use makeBannerData() instead
+	 */
 	protected String[] makeHeaderData(List<ReportHeaderCol> headerData, Integer index) throws Exception {
 		String[] data = new String[2];
 		if ( ! headerData.isEmpty() ) {
@@ -107,6 +133,44 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 			
 		}
 		return data;
+	}
+	
+	
+	protected void makeHeaderRow(Integer rowIndex, List<ReportHeaderCol> headerLeft, String text, CellStyle bannerStyle, List<ReportHeaderCol> headerRight, XSSFSheet sheet) throws Exception {
+		StandardReport report = (StandardReport)this.report;
+		Integer reportColCount = report.getHeaderRow().length;
+		Integer bannerMergeSize = reportColCount - (2 * headerLeft.size() + 2 * headerRight.size() ) + 1;  // nbr of columns - (label&data for left and right)
+		if ( bannerMergeSize < 0 ) {
+			bannerMergeSize = 2;
+		}
+		
+		XSSFRow row = null;
+		XSSFCell cell = null;
+		
+		row = sheet.createRow(rowIndex);
+		int colIndex = 0;
+		
+		for ( ReportHeaderCol headerCol : headerLeft ) {
+			if ( headerCol != null && ! headerCol.getRowList().isEmpty() && headerCol.getRowList().size() > rowIndex ) {
+				makeBannerData(headerCol, row, colIndex, rf.cellStyleReportHeaderLabelLeft, rf.cellStyleStandardLeft);
+			}
+			colIndex = colIndex + 2;
+		}
+		
+		cell = row.createCell(colIndex);
+		cell.setCellValue(text);
+		sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, colIndex, colIndex+bannerMergeSize));
+	    cell.setCellStyle(bannerStyle);
+		colIndex = colIndex+bannerMergeSize+1;
+	    
+	    
+		for ( ReportHeaderCol headerCol : headerRight ) {
+			if ( headerCol != null && ! headerCol.getRowList().isEmpty() && headerCol.getRowList().size() > rowIndex ) {
+				makeBannerData(headerCol, row, colIndex, rf.cellStyleReportHeaderLabelRight, rf.cellStyleStandardRight);
+			}
+			colIndex = colIndex + 2;
+		}
+
 	}
 	
 	public Double getMarginTop() {
