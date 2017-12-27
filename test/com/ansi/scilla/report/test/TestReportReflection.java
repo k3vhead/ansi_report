@@ -78,10 +78,10 @@ public class TestReportReflection {
 //			makeInvoiceRegister(conn);
 //			makePac(conn);
 //			make6mrv(conn);
-//			makeTicketStatus(conn);
+			makeTicketStatus(conn);
 //			makeAddressUsage(conn);
 //			makeClientUsage(conn);
-			makeDO(conn);
+//			makeDO(conn);
 			
 			conn.rollback();
 		} finally {
@@ -107,8 +107,9 @@ public class TestReportReflection {
 		logger.info("Starting Ticket Status");
 		TicketStatusReport tsr = TicketStatusReport.buildReport(conn, divisionId);
 		XSSFWorkbook workbook = XLSBuilder.build(tsr);
-		workbook.write(new FileOutputStream("/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/ticketStatusReport.xlsx"));
-				
+		workbook.write(new FileOutputStream(outputDirectory+"/ticketStatusReport.xlsx"));
+		String html = HTMLBuilder.build(tsr);
+		FileUtils.write(new File(outputDirectory+"/ticketStatusReport.html"), html);
 	}
 
 	private void make6mrv(Connection conn) throws Exception {

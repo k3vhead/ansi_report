@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -30,7 +31,7 @@ public class TicketStatusReport extends StandardReport {
 
 	private static final long serialVersionUID = 1L;
 
-	private final String sql = "select ticket.process_date, ticket.ticket_id, ticket.ticket_status, ticket.act_price_per_cleaning, "
+	private final String sql = "select ticket.process_date, ticket.ticket_id, ticket.ticket_status, ticket.act_price_per_cleaning, ticket.invoice_date, "
 			+ "\n\tjob.job_id, job.job_nbr, "
 			+ "\n\taddress.name, address.address1 "
 			+ "\nfrom ticket "
@@ -47,6 +48,7 @@ public class TicketStatusReport extends StandardReport {
 	private Calendar startDate;
 	private Calendar endDate;
 	private List<RowData> data;
+	private HashMap<TicketStatus, Double> bannerTotals;
 	
 	private TicketStatusReport() {		
 		super();
@@ -70,6 +72,8 @@ public class TicketStatusReport extends StandardReport {
 		
 		this.data = makeData(conn, divisionId, startDate, endDate);
 		makeReport(div, startDate, endDate, data, "Current Month to Date");
+		this.bannerTotals = makeBannerTotals(conn, divisionId, startDate, endDate);
+
 	}
 
 	private TicketStatusReport(Connection conn,  Integer divisionId, Calendar startDate, Calendar endDate) throws Exception {
@@ -78,11 +82,13 @@ public class TicketStatusReport extends StandardReport {
 		this.div = makeDivision(conn, divisionId);
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.data = makeData(conn, divisionId, startDate, endDate);
+		this.data = makeData(conn, divisionId, startDate, endDate);		
 		String startTitle = dateFormatter.format(startDate.getTime());
 		String endTitle = dateFormatter.format(endDate.getTime());
 		String subtitle = startTitle + " throught " + endTitle;
 		makeReport(div, startDate, endDate, data, subtitle);
+		makeBannerTotals(conn, divisionId, startDate, endDate);
+		this.bannerTotals = makeBannerTotals(conn, divisionId, startDate, endDate);
 	}
 	
 	
@@ -148,13 +154,49 @@ public class TicketStatusReport extends StandardReport {
 		return data;
 	}
 
+	private HashMap<TicketStatus, Double> makeBannerTotals(Connection conn, Integer divisionId, Calendar startDate, Calendar endDate) throws Exception {
+		HashMap<TicketStatus, Double> bannerTotals = new HashMap<TicketStatus, Double>();
+		String sql = "select ticket.ticket_status, sum(ticket.act_price_per_cleaning) as status_total"  
+					+ " from ticket " 
+					+ " where ticket.act_division_id=? and ticket.process_date>? and ticket.process_date<? " 
+					+ " group by ticket_status";
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ps.setInt(1, divisionId);
+		ps.setDate(2, new java.sql.Date(startDate.getTimeInMillis()));
+		ps.setDate(3, new java.sql.Date(endDate.getTimeInMillis()));
+		ResultSet rs = ps.executeQuery();
+		while ( rs.next() ) {
+			String statusCode = rs.getString("ticket_status");
+			TicketStatus ticketStatus = TicketStatus.lookup(statusCode);
+			if ( ticketStatus == null ) {
+				throw new Exception("Invalid Ticket Status: " + statusCode);
+			}
+			bannerTotals.put(ticketStatus, rs.getDouble("status_total"));
+		}
+		rs.close();
+		
+		return bannerTotals;
+	}
 	public Double getCompletedINV() {
-		return 1.23D;
+		Double completedINV = 0D;
+		for ( TicketStatus ticketStatus : new TicketStatus[] {TicketStatus.INVOICED} ) {
+			if ( this.bannerTotals.containsKey(ticketStatus)) {
+				completedINV = completedINV + this.bannerTotals.get(ticketStatus);
+			}
+		}
+		return completedINV;
 	}
 	
 	public Double getCompletedPPC() {
-		return 4.56D;
+		Double completedPPC = 0D;
+		for ( TicketStatus ticketStatus : new TicketStatus[] {TicketStatus.COMPLETED} ) {
+			if ( this.bannerTotals.containsKey(ticketStatus)) {
+				completedPPC = completedPPC + this.bannerTotals.get(ticketStatus);
+			}
+		}
+		return completedPPC;	
 	}
+	
 	
 	@SuppressWarnings("unchecked")	
 	private void makeReport(String div, Calendar startDate, Calendar endDate, List<RowData> data, String subtitle) throws NoSuchMethodException, SecurityException {
@@ -236,6 +278,10 @@ public class TicketStatusReport extends StandardReport {
 			this.jobNbr = rs.getInt("job_nbr");
 			this.name = rs.getString("name");
 			this.address1 = rs.getString("address1");
+			java.sql.Date invoiceDate = rs.getDate("invoice_date");
+			if ( invoiceDate != null ) {
+				this.invoiceDate = new Date(invoiceDate.getTime());
+			}
 		}
 
 		public Date getProcessDate() {
