@@ -1,11 +1,8 @@
 package com.ansi.scilla.report.reportBuilder;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Level;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Footer;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -16,7 +13,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.ApplicationObject;
-import com.ansi.scilla.common.utils.AppUtils;
 
 public class XLSSummaryBuilder extends AbstractXLSBuilder {
 
@@ -25,11 +21,11 @@ public class XLSSummaryBuilder extends AbstractXLSBuilder {
 
 	public XLSSummaryBuilder(StandardSummaryReport report) {
 		super(report);
-		try {
-			AppUtils.makeLogger(this.getClass().getName(), Level.DEBUG, "/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/crrReport.log");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			AppUtils.makeLogger(this.getClass().getName(), Level.DEBUG, "/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/crrReport.log");
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	private void buildReport(XSSFSheet sheet) throws Exception {

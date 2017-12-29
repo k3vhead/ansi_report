@@ -1,19 +1,9 @@
 package com.ansi.scilla.report.test;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-
-import com.ansi.scilla.common.utils.AppUtils;
-import com.ansi.scilla.common.utils.PropertyNames;
-
-
-
 public class TesterUtils {
 	
 	
-	public TesterUtils() {
+	/*public TesterUtils() {
 		makeLoggers();
 	}
 	
@@ -34,7 +24,7 @@ public class TesterUtils {
 		logger.setLevel(level);
 		
 	}
-	
+	*/
 	
 
 }

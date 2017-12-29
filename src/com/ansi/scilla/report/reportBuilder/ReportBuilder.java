@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.common.ApplicationObject;
 
@@ -35,11 +38,13 @@ public abstract class ReportBuilder extends ApplicationObject {
 	protected HashMap<String, List<Object>> subtotalCountDistinct = new HashMap<String, List<Object>>();
 	
 	protected AbstractReport report;
+	private Logger logger;
 
 
 
 	public ReportBuilder(StandardReport report) {
 		this.report = report;
+		this.logger = LogManager.getLogger(this.getClass());
 		if ( report.getHeaderLeft() == null ) {
 			// this is just so we do't need to null check later
 			report.setHeaderLeft(new ArrayList<ReportHeaderCol>());
@@ -188,7 +193,7 @@ public abstract class ReportBuilder extends ApplicationObject {
 		} else if ( value instanceof String ) {
 			// skip this one
 		} else {
-			System.out.println("Skipping a value I don't recognize: " + value.getClass().getName());
+			logger.log(Level.ERROR, "Skipping a value I don't recognize: " + value.getClass().getName());			
 		}
 		return sum;
 	}

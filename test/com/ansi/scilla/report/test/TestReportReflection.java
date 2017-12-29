@@ -50,8 +50,8 @@ public class TestReportReflection {
 	
 	public static void main(String[] args) {
 		try {
-			TesterUtils.makeLoggers();
-			TesterUtils.makeLogger("com.ansi.scilla.common.test", Level.DEBUG);
+//			TesterUtils.makeLoggers();
+//			TesterUtils.makeLogger("com.ansi.scilla.common.test", Level.DEBUG);
 			new TestReportReflection().makEmAll();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -59,7 +59,8 @@ public class TestReportReflection {
 	}
 	
 	private void makEmAll() throws Exception {
-		this.logger = Logger.getLogger("com.ansi.scilla.common.test");
+		this.logger = Logger.getLogger(this.getClass());
+		logger.setLevel(Level.DEBUG);
 		logger.info("Start");
 		Connection conn = null;
 		

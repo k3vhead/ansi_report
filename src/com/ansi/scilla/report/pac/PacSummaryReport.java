@@ -29,19 +29,19 @@ public class PacSummaryReport extends StandardReport {
 
 	private static final long serialVersionUID = 1L;
 
-	private final String someSQL = "select "
-			+ " 'Proposed' as job_status, "
-			+ " count(*) as job_count, "
-			+ " isnull(sum(job.price_per_cleaning),'0.00') as price_per_cleaning, "
-			+ JobFrequency.makeVolumeCalculationSQL("job.job_frequency", "job.price_per_cleaning", "volume")
-			+ " from job "
-			+ " join quote on quote.quote_id = job.quote_id "
-			+ " join division on division.division_id = job.division_id "
-
-			+ " where job.division_id = ? "
-			+ " and quote.proposal_date >= ? "
-			+ " and quote.proposal_date <= ? "
-			+ " and job.job_status in ('" + JobStatus.PROPOSED.code() +"','" + JobStatus.ACTIVE.code() + "','"+ JobStatus.CANCELED.code()+"')";
+//	private final String someSQL = "select "
+//			+ " 'Proposed' as job_status, "
+//			+ " count(*) as job_count, "
+//			+ " isnull(sum(job.price_per_cleaning),'0.00') as price_per_cleaning, "
+//			+ JobFrequency.makeVolumeCalculationSQL("job.job_frequency", "job.price_per_cleaning", "volume")
+//			+ " from job "
+//			+ " join quote on quote.quote_id = job.quote_id "
+//			+ " join division on division.division_id = job.division_id "
+//
+//			+ " where job.division_id = ? "
+//			+ " and quote.proposal_date >= ? "
+//			+ " and quote.proposal_date <= ? "
+//			+ " and job.job_status in ('" + JobStatus.PROPOSED.code() +"','" + JobStatus.ACTIVE.code() + "','"+ JobStatus.CANCELED.code()+"')";
 	
 	
 	private final String proposedSql = "select "
@@ -146,7 +146,6 @@ public class PacSummaryReport extends StandardReport {
 		this.totalPpc = 0.00;
 		this.totalVolume = 0.00;
 		this.data = makeData(conn, this, divisionId, startDate, endDate);
-//		System.out.println("PacSummaryReport:this.data:"+data+"\tStart:"+startDate.getTime()+"\tEnd:"+endDate.getTime());
 
 		String startTitle = dateFormatter.format(startDate.getTime());
 		String endTitle = dateFormatter.format(endDate.getTime());
@@ -221,13 +220,11 @@ public class PacSummaryReport extends StandardReport {
 		PreparedStatement ps;
 		ResultSet rs;
 		
-//		System.out.println("PacSummaryReport:makeData:Div:"+divisionId+"\tStart:"+startDate.getTime()+"\tEnd:"+endDate.getTime());
 		ps = conn.prepareStatement(proposedSql);
 		ps.setInt(1, divisionId);
 		ps.setDate(2, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(3, new java.sql.Date(endDate.getTimeInMillis()));
 		rs = ps.executeQuery();
-//		System.out.println("PacSummaryReport:makeData:proposedSql:"+proposedSql+"\n\tps:"+ps);
 		
 		while ( rs.next() ) {
 			data.add(new RowData(rs, report));
@@ -267,7 +264,6 @@ public class PacSummaryReport extends StandardReport {
 		}
 		rs.close();
 		
-//		System.out.println("PacSummaryReport:makeData:data:"+data);
 		return data;
 	}
 

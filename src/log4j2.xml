@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="ANSI Common">
+	<Appenders>
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{yyyy/MM/dd HH:mm:ss.S} | %p | %l | %m%n"/>
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Logger name="com.thewebthing" level="info">
+	</Logger>
+	<Logger name="com.ansi.scilla.report" level="debug">
+		<appender-ref ref="STDOUT" level="debug" />
+	</Logger>
+	<Logger name="org.apache" level="fatal">
+		<appender-ref ref="STDOUT" level="fatal" />
+	</Logger>
+    <Root level="error">
+      <AppenderRef ref="STDOUT"/>
+    </Root>
+  </Loggers>
+</Configuration>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="ANSI Common">
+	<Appenders>
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{yyyy/MM/dd HH:mm:ss.S} | %p | %l | %m%n"/>
+		</Console>
+		<!-- Use this if you want your logging to go to a file -->
+		<!-- 
+		<File name="FILE-OUTPUT" fileName="/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report.log" append="false">
+			<PatternLayout pattern="%d{yyyy/MM/dd HH:mm:ss.S} | %p | %l | %m%n"/>
+		</File>
+		-->
+	</Appenders>
+	<Loggers>
+		<Logger name="com.thewebthing" level="info">
+	</Logger>
+	<Logger name="com.ansi.scilla.report.test" level="debug">
+		<appender-ref ref="STDOUT" level="debug" />
+		<!-- Use this if you want your logging to go to a file -->
+		<!-- 
+		<appender-ref ref="FILE-OUTPUT" level="debug" />
+		 -->
+	</Logger>
+	<Logger name="com.ansi.scilla.report" level="error">
+		<appender-ref ref="STDOUT" level="error" />
+	</Logger>
+	<Logger name="org.apache" level="fatal">
+		<appender-ref ref="STDOUT" level="fatal" />
+	</Logger>
+    <Root level="error">
+      <AppenderRef ref="STDOUT"/>
+    </Root>
+  </Loggers>
+</Configuration>

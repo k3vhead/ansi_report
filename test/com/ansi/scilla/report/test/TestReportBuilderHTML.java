@@ -16,7 +16,7 @@ public class TestReportBuilderHTML {
 
 	public static void main(String[] args) {
 		try {
-			TesterUtils.makeLoggers();
+//			TesterUtils.makeLoggers();
 			new TestReportBuilderHTML().go();
 //			Calendar calendar = Calendar.getInstance();
 //			GregorianCalendar gCal = new GregorianCalendar();

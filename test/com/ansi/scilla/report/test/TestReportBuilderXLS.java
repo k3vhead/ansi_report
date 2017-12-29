@@ -30,8 +30,8 @@ public class TestReportBuilderXLS {
 	}
 	
 	public void go() throws Exception {
-		AppUtils.makeLogger("com.ansi.scilla.common.report", Level.DEBUG, "/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/xlsBuilderOut.log");
-		TesterUtils.makeLoggers();
+//		AppUtils.makeLogger("com.ansi.scilla.common.report", Level.DEBUG, "/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/xlsBuilderOut.log");
+//		TesterUtils.makeLoggers();
 		Connection conn = null;
 		try {
 			conn = AppUtils.getDevConn();

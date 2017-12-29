@@ -34,8 +34,8 @@ public class JoshuasReportTester {
 	
 	public static void main(String[] args) {
 		try {
-			TesterUtils.makeLoggers();
-			TesterUtils.makeLogger("com.ansi.scilla.common.test", Level.DEBUG);
+//			TesterUtils.makeLoggers();
+//			TesterUtils.makeLogger("com.ansi.scilla.common.test", Level.DEBUG);
 			new JoshuasReportTester().makeMyReport();
 		} catch (Exception e) {
 			e.printStackTrace();

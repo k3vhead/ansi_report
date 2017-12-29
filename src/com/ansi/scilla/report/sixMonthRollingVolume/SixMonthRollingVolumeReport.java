@@ -15,6 +15,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Footer;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -117,10 +120,11 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 
 	public static SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 	private SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.S");
-	
+	private Logger logger;
 
 	private SixMonthRollingVolumeReport() {
 		super();
+		this.logger = LogManager.getLogger(this.getClass());
 		this.setTitle(REPORT_TITLE);
 		this.dataRows = new ArrayList<Object>();
 	}
@@ -140,7 +144,7 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		x.add(sdf2.format(startTime.getTime()));
 		x.add(sdf2.format(endTime.getTime()));
 		x.add(String.valueOf((endTime.getTimeInMillis()-startTime.getTimeInMillis())));
-		System.out.println(StringUtils.join(x, "\t"));
+		logger.log(Level.DEBUG, StringUtils.join(x, "\t"));
 		
 	}
 
@@ -226,7 +230,7 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 
 	private List<SixMonthRollingVolumeReport> makeReportList(List<Connection> connectionList, Integer divisionId, Calendar startDate) throws Exception {
 		Calendar everythingstart = Calendar.getInstance(new AnsiTime());
-		System.out.println("Starting everything " + sdf2.format(everythingstart.getTime()));
+		logger.log(Level.DEBUG, "Starting everything " + sdf2.format(everythingstart.getTime()));
 		List<SixMonthRollingVolumeReport> reportList = new ArrayList<SixMonthRollingVolumeReport>();
 		
 		Division division = new Division();
@@ -241,13 +245,13 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 			PreparedStatement ps = conn.prepareStatement(sql);
 			Calendar reportDate = (Calendar)startDate.clone();			
 			reportDate.add(Calendar.MONTH, 6*i);
-			System.out.println(sdf.format(reportDate.getTime()) + " Creating Report Maker");
+			logger.log(Level.DEBUG, sdf.format(reportDate.getTime()) + " Creating Report Maker");
 			volumeList.add(new ReportRunnable(ps, division, reportDate));
 			i++;
 		}
 
 		Calendar cal2 = Calendar.getInstance(new AnsiTime());
-		System.out.println("Starting threads " + sdf2.format(cal2.getTime()));
+		logger.log(Level.DEBUG, "Starting threads " + sdf2.format(cal2.getTime()));
 
 
 		for ( ReportRunnable volume : volumeList ) {
@@ -260,7 +264,7 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		}
 		
 		Calendar cal3 = Calendar.getInstance(new AnsiTime());
-		System.out.println("Joining threads " + sdf2.format(cal3.getTime()));
+		logger.log(Level.DEBUG, "Joining threads " + sdf2.format(cal3.getTime()));
 
 
 		while ( true ) {
@@ -275,7 +279,7 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		}
 
 		Calendar cal4 = Calendar.getInstance(new AnsiTime());
-		System.out.println("Done threads " + sdf2.format(cal4.getTime()));
+		logger.log(Level.DEBUG, "Done threads " + sdf2.format(cal4.getTime()));
 
 
 		for ( ReportRunnable volume : volumeList ) {
@@ -283,7 +287,7 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		}
 		
 		Calendar cal5 = Calendar.getInstance(new AnsiTime());
-		System.out.println("Sorting reports " + sdf2.format(cal5.getTime()));
+		logger.log(Level.DEBUG, "Sorting reports " + sdf2.format(cal5.getTime()));
 
 
 		Collections.sort(reportList);
@@ -291,11 +295,12 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 	}
 
 	private static List<SixMonthRollingVolumeReport> makeReport(List<Connection> connectionList, Integer divisionId, Calendar startDate) throws Exception {
+		Logger logger = LogManager.getLogger(SixMonthRollingVolumeReport.class);
 		SixMonthRollingVolumeReport reportMaker = new SixMonthRollingVolumeReport();
 		List<SixMonthRollingVolumeReport> reportList = reportMaker.makeReportList(connectionList, divisionId, startDate);
 		
 		for ( SixMonthRollingVolumeReport report : reportList ) {
-			System.out.println(sdf.format(report.getStartDate().getTime()) + "\t" + report.getDataRows().size());
+			logger.log(Level.DEBUG, sdf.format(report.getStartDate().getTime()) + "\t" + report.getDataRows().size());
 		}
 		return reportList;
 		

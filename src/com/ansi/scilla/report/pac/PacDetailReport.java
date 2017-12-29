@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.LogManager;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -69,9 +71,11 @@ public class PacDetailReport extends StandardReport {
 	private Double totalVolume;
 	private List<RowData> data;
 	private PacDetailReportType reportType;
+	private Logger logger;
 	
 	public PacDetailReport(PacDetailReportType reportType) {
 		super();
+		this.logger = LogManager.getLogger(this.getClass());
 		this.reportType = reportType;
 		this.setTitle(this.reportType.reportTitle);		
 	}
@@ -95,7 +99,6 @@ public class PacDetailReport extends StandardReport {
 		this.totalPpc = 0.00;
 		this.totalVolume = 0.00;
 		this.data = makeData(conn, this, divisionId, startDate, endDate);
-//		System.out.println("PacDetailReport:this.data:"+data+"\tStart:"+startDate.getTime()+"\tEnd:"+endDate.getTime());
 
 		String startTitle = dateFormatter.format(startDate.getTime());
 		String endTitle = dateFormatter.format(endDate.getTime());
@@ -168,11 +171,9 @@ public class PacDetailReport extends StandardReport {
 		endDate.set(Calendar.SECOND, 0);
 		endDate.set(Calendar.MILLISECOND, 0);
 		
-//		System.out.println("PacDetailReport:makeData:Div:"+divisionId+"\tStart:"+startDate.getTime()+"\tEnd:"+endDate.getTime());
-//		System.out.println("PacDetailReport:makeData:Start:"+new java.sql.Date(startDate.getTimeInMillis())+"\tEnd:"+new java.sql.Date(endDate.getTimeInMillis()));
 		String sql = this.sql.replaceAll("\\$REPORT_DATE\\$", this.reportType.fieldName); //get the right date for this report
 		PreparedStatement ps = conn.prepareStatement(sql);
-//		System.out.println("PacDetailReport:makeData:sql:"+sql);
+		this.logger.debug(sql);
 		ps.setInt(1, divisionId);
 		ps.setDate(2, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(3, new java.sql.Date(endDate.getTimeInMillis()));
@@ -181,11 +182,9 @@ public class PacDetailReport extends StandardReport {
 		List<RowData> data = new ArrayList<RowData>();
 		while ( rs.next() ) {
 			data.add(new RowData(rs, report));
-//			System.out.println("PacDetailReport:makeData:data:"+data);
 		}
 		rs.close();
 		
-//		System.out.println("PacDetailReport:makeData:data:"+data);
 		return data;
 	}
 
