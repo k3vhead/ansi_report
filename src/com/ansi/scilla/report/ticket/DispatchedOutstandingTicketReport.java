@@ -9,9 +9,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -61,7 +65,15 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 			+ "\norder by division_nbr, ticket.start_date asc, address.name";
 	
 	
-	
+	private final String sqlHeader = "select sum(job.price_per_cleaning) as sumppc, ticket.ticket_status "
+			+ "from ticket "
+			+ "inner join job on job.job_id=ticket.job_id "
+			+ "inner join division on division.division_id=ticket.act_division_id "
+			+ "where ticket.start_date <= ? "
+			+ "and division.division_id=? "
+			+ "and ticket_type = ? "
+			+ "and ticket_status in (?,?) "
+			+ "group by ticket_status";
 	
 	
 	
@@ -69,6 +81,9 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 	private Calendar startDate;
 	private Calendar endDate;
 	private List<RowData> data;
+	
+	Logger logger = LogManager.getLogger(this.getClass());
+	private HashMap <String, Float> bannerData;
 	
 	private DispatchedOutstandingTicketReport() {		
 		super();
@@ -86,6 +101,7 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		endDate = Midnight.getInstance(new AnsiTime());
 		
 		this.data = makeData(conn, divisionId, endDate);
+		this.bannerData = makeBannerData(conn, divisionId, endDate);
 		makeReport(div, endDate, data, "Prior to Today");
 	}
 
@@ -138,8 +154,8 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 	}
 
 	private List<RowData> makeData(Connection conn, Integer divisionId, Calendar endDate) throws Exception {
-		System.out.println(sql);
-		System.out.println(divisionId + "\n" + endDate);
+		logger.log(Level.DEBUG, sql);
+		logger.log(Level.DEBUG, divisionId + "\n" + endDate);
 		PreparedStatement ps = conn.prepareStatement(sql);
 		int n = 1;
 		ps.setDate(n, new java.sql.Date(endDate.getTimeInMillis()));
@@ -162,16 +178,51 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		return data;
 	}
 	
+	private HashMap<String, Float> makeBannerData(Connection conn, Integer divisionId, Calendar endDate) throws Exception {
+		logger.log(Level.DEBUG, sqlHeader);
+		logger.log(Level.DEBUG, divisionId + "\n" + endDate);
+		PreparedStatement ps = conn.prepareStatement(sqlHeader);
+		int n = 1;
+		ps.setDate(n, new java.sql.Date(endDate.getTimeInMillis()));
+		n++;
+		ps.setInt(n, divisionId);
+		n++;
+		ps.setString(n, TicketType.JOB.code());
+		n++;
+		ps.setString(n, TicketStatus.DISPATCHED.code());
+		n++;
+		ps.setString(n, TicketStatus.NOT_DISPATCHED.code());
+		ResultSet rs = ps.executeQuery();
+		
+		HashMap<String, Float> bannerData = new HashMap<String, Float>();
+		while ( rs.next() ) {
+			String ticketStatus = rs.getString("ticket_status");
+			Float sumPPC = rs.getFloat("sumppc");
+			bannerData.put(ticketStatus, sumPPC);
+		}
+		rs.close();
+		
+		return bannerData;
+	}
+	
 	public Double getOutstanding() {
 		return 99.99D;
 	}
 	
-	public Double getDispatched() {
-		return 99.99D;
+	public Float getDispatched() {
+		Float dispatched = 0F;
+		if (bannerData.containsKey(TicketStatus.DISPATCHED.code())){
+			dispatched = bannerData.get(TicketStatus.DISPATCHED.code());
+		}
+		return dispatched;
 	}
 	
-	public Double getNonDispatched() {
-		return 99.99D;
+	public Float getNonDispatched() {
+		Float nDis = 0F;
+		if(bannerData.containsKey(TicketStatus.NOT_DISPATCHED.code())){
+			nDis = bannerData.get(TicketStatus.NOT_DISPATCHED.code());
+		}
+		return nDis;
 	}
 	
 	public Double getLockedFreq() {
@@ -186,8 +237,12 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		return 99.99D;
 	}
 	
-	public Double getAllTickets() {
-		return 99.99D;
+	public Float getAllTickets() {
+		Float all = 0F;
+		for(Float value: bannerData.values()){
+			all = all + value;
+		}
+		return all;
 	}
 	
 	
