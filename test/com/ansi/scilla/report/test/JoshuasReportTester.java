@@ -51,11 +51,11 @@ public class JoshuasReportTester {
 			conn = AppUtils.getProdConn();
 			conn.setAutoCommit(false);
 			
-			this.divisionId = 102;
-			this.month=7;
+			this.divisionId = 101;
+			this.month=12;
 			this.year=2017;
-			this.startDate = new Midnight(2017, Calendar.JULY, 5);
-			this.endDate = new Midnight(2017, Calendar.JULY, 5);
+			this.startDate = new Midnight(2017, Calendar.DECEMBER, 31);
+			this.endDate = new Midnight(2017, Calendar.DECEMBER, 31);
 			
 			makeClientUsage(conn);
 			
@@ -71,7 +71,7 @@ public class JoshuasReportTester {
 
 	private void makeClientUsage(Connection conn) throws Exception {
 		logger.info("DO Report");
-		DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId);
+		DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId, endDate);
 		XSSFWorkbook workbook = XLSBuilder.build(userReport);
 //		XSSFWorkbook workbook = userReport.makeXLS();
 		workbook.write(new FileOutputStream(joshuasTestResultDirectory + "DOReport.xlsx"));

@@ -112,9 +112,10 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		//this.startDate = startDate;
 		this.endDate = endDate;
 		this.data = makeData(conn, divisionId, endDate);
-		String startTitle = dateFormatter.format(startDate.getTime());
+		this.bannerData = makeBannerData(conn, divisionId, endDate);
+		//String startTitle = dateFormatter.format(startDate.getTime());
 		String endTitle = dateFormatter.format(endDate.getTime());
-		String subtitle = startTitle + " through " + endTitle;
+		String subtitle = "Beginning through " + endTitle;
 		makeReport(div, endDate, data, subtitle);
 	}
 	
