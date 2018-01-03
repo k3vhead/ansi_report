@@ -61,7 +61,7 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 			+ "\n\tand division.division_id=? "
 			+ "\n\tand ticket_type = ? "
 			+ "\nand ticket_status in (?,?) "
-			+ "\norder by division_nbr, ticket.start_date asc, address.name";
+			+ "\norder by ticket.ticket_status, ticket.start_date";
 	
 	
 	private final String sqlHeader = "select sum(job.price_per_cleaning) as sumppc, ticket.ticket_status "

@@ -1,9 +1,13 @@
 package com.ansi.scilla.report.reportBuilder;
 
+import java.util.List;
+import java.util.SortedSet;
+
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -236,4 +240,10 @@ public class XLSReportFormatter {
 	    cellStyleReportNote.setAlignment(CellStyle.ALIGN_LEFT);
 	    cellStyleReportNote.setFont(fontReportNote);
 	}
+	
+//	public static short calculateLineHeight(Sheet sheet, List<RowInfo> rows, SortedSet<Integer> createdColNum){
+//		
+//	}
+	
+	
 }
