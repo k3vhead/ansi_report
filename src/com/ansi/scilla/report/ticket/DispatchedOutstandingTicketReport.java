@@ -28,7 +28,6 @@ import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderCol;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
@@ -284,40 +283,42 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		super.makeHeaderLeft(headerLeft);
 		
 		
-		Method getOutstanding = this.getClass().getMethod("getOutstanding", (Class<?>[])null);
+		//Method getOutstanding = this.getClass().getMethod("getOutstanding", (Class<?>[])null);
+		Method getDivMethod = this.getClass().getMethod("getDiv", (Class<?>[])null);
 		Method getDispatched = this.getClass().getMethod("getDispatched", (Class<?>[])null);
 		Method getNonDispatched = this.getClass().getMethod("getNonDispatched", (Class<?>[])null);
-		Method getLockedFreq = this.getClass().getMethod("getLockedFreq", (Class<?>[])null);
+		Method getAllTickets = this.getClass().getMethod("getAllTickets", (Class<?>[])null);
+		//Method getLockedFreq = this.getClass().getMethod("getLockedFreq", (Class<?>[])null);
 		
 		List<ReportHeaderRow> headerRight = Arrays.asList(new ReportHeaderRow[] {
-				new ReportHeaderRow("Outstanding:", getOutstanding, 0, DataFormats.DECIMAL_FORMAT),
+				//new ReportHeaderRow("Outstanding:", getOutstanding, 0, DataFormats.DECIMAL_FORMAT),
+				new ReportHeaderRow("Division:", getDivMethod, 0, DataFormats.STRING_FORMAT),
 				new ReportHeaderRow("Dispatched:", getDispatched, 1, DataFormats.DECIMAL_FORMAT),
 				new ReportHeaderRow("Non-Dispatched:", getNonDispatched, 2, DataFormats.DECIMAL_FORMAT),
-				new ReportHeaderRow("Locked Freq*:", getLockedFreq, 3, DataFormats.DECIMAL_FORMAT)
-				
+				new ReportHeaderRow("All Tickets:", getAllTickets, 3, DataFormats.DECIMAL_FORMAT)
+				//new ReportHeaderRow("Locked Freq*:", getLockedFreq, 3, DataFormats.DECIMAL_FORMAT)
 		});
-//		super.makeHeaderRight(headerRight);
+		super.makeHeaderRight(headerRight);
 
 		
-		Method getDivMethod = this.getClass().getMethod("getDiv", (Class<?>[])null);
-		Method getDispOutstanding = this.getClass().getMethod("getDispOutstanding", (Class<?>[])null);
-		Method getFinished = this.getClass().getMethod("getFinished", (Class<?>[])null);
-		Method getAllTickets = this.getClass().getMethod("getAllTickets", (Class<?>[])null);
+		//Method getDispOutstanding = this.getClass().getMethod("getDispOutstanding", (Class<?>[])null);
+		//Method getFinished = this.getClass().getMethod("getFinished", (Class<?>[])null);
+		
 
-		List<ReportHeaderRow> headerFarRight = Arrays.asList(new ReportHeaderRow[] {
-				new ReportHeaderRow("Division:", getDivMethod, 0, DataFormats.STRING_FORMAT),
-				new ReportHeaderRow("Disp + Outst:", getDispOutstanding, 1, DataFormats.DECIMAL_FORMAT),
-				new ReportHeaderRow("**Finished:", getFinished, 2, DataFormats.DECIMAL_FORMAT),
-				new ReportHeaderRow("All Tickets:", getAllTickets, 3, DataFormats.DECIMAL_FORMAT),
-		});
+//		List<ReportHeaderRow> headerFarRight = Arrays.asList(new ReportHeaderRow[] {
+//				
+//				//new ReportHeaderRow("Disp + Outst:", getDispOutstanding, 1, DataFormats.DECIMAL_FORMAT),
+//				//new ReportHeaderRow("**Finished:", getFinished, 2, DataFormats.DECIMAL_FORMAT),
+//				
+//		});
 //		super.makeHeaderRight(headerFarRight);
-
-		List<ReportHeaderCol> headerRightCols = new ArrayList<ReportHeaderCol>();
-		ReportHeaderCol col1 = new ReportHeaderCol(headerRight, 0);
-		headerRightCols.add(col1);
-		ReportHeaderCol col2 = new ReportHeaderCol(headerFarRight, 1);
-		headerRightCols.add(col2);
-		setHeaderRight(headerRightCols);
+//
+//		List<ReportHeaderCol> headerRightCols = new ArrayList<ReportHeaderCol>();
+//		ReportHeaderCol col1 = new ReportHeaderCol(headerRight, 0);
+//		headerRightCols.add(col1);
+//		ReportHeaderCol col2 = new ReportHeaderCol(headerFarRight, 1);
+//		headerRightCols.add(col2);
+//		setHeaderRight(headerRightCols);
 		
 	}
 	
