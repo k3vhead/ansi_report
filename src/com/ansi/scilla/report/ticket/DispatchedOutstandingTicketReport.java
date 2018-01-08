@@ -61,7 +61,7 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 			+ "\n\tand division.division_id=? "
 			+ "\n\tand ticket_type = ? "
 			+ "\nand ticket_status in (?,?) "
-			+ "\norder by ticket.ticket_status, ticket.start_date";
+			+ "\norder by ticket.ticket_status, ticket.start_date, address.name";
 	
 	
 	private final String sqlHeader = "select sum(job.price_per_cleaning) as sumppc, ticket.ticket_status "
@@ -262,14 +262,14 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		super.setHeaderNotes(REPORT_NOTE);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("ticketId", "Ticket", DataFormats.INTEGER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("ticketId", "Ticket", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
 				new ColumnHeader("fleetmaticsId", "Tkt # FM", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("name","Site", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("address1","Street 1", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("city","City", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("lastRun","Last Run", DataFormats.DATE_FORMAT, SummaryType.NONE),
 				new ColumnHeader("startDate","Run Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("pricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("pricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "ticketStatus"),
 				new ColumnHeader("jobNbr","J#", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
 				new ColumnHeader("jobFrequency", "FREQ", DataFormats.STRING_CENTERED, SummaryType.NONE),
 				new ColumnHeader("ticketStatus", "ST", DataFormats.STRING_CENTERED, SummaryType.NONE),
