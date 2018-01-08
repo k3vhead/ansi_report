@@ -245,6 +245,14 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		return all;
 	}
 	
+	public Float getSubtotal(){
+		Float sub = 0F;
+		for(Float value: bannerData.values()){
+			sub = getAllTickets() - value;
+		}
+		return sub;
+	}
+	
 	
 	@SuppressWarnings("unchecked")	
 	private void makeReport(String div, Calendar endDate, List<RowData> data, String subtitle) throws NoSuchMethodException, SecurityException {
@@ -348,6 +356,7 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		public String city;	//
 		public Date startDate;	//
 		public Double pricePerCleaning;	//
+		public Double ppcSubtotal;
 		public Integer jobNbr;	//
 		public String jobFrequency;
 		public String ticketStatus;	//
@@ -360,6 +369,7 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 			this.ticketId = rs.getInt("ticket_id");
 			this.ticketStatus = TicketStatus.lookup(rs.getString("ticket_status")).display();
 			this.pricePerCleaning = rs.getBigDecimal("price_per_cleaning").doubleValue();
+			this.ppcSubtotal = rs.getBigDecimal("price_per_cleaning").doubleValue();
 			//this.jobId = rs.getInt("job_id");
 			this.jobNbr = rs.getInt("job_nbr");
 			this.name = rs.getString("name");
@@ -407,6 +417,9 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		}
 		public Double getPricePerCleaning() {
 			return pricePerCleaning;
+		}
+		public Double getPPCSubtotal(){
+			return ppcSubtotal;
 		}
 //		public Integer getJobId() {
 //			return jobId;
