@@ -68,21 +68,21 @@ public class TestReportReflection {
 			conn = AppUtils.getProdConn();
 			conn.setAutoCommit(false);
 			
-			this.divisionId = 102;
+			this.divisionId = 101;
 			this.month=7;
 			this.year=2017;
-			this.startDate = new Midnight(2017, Calendar.JULY, 5);
-			this.endDate = new Midnight(2017, Calendar.JULY, 5);
+			this.startDate = new Midnight(2017, Calendar.DECEMBER, 31);
+			this.endDate = new Midnight(2017, Calendar.DECEMBER, 31);
 			
 //			makeCashReceipts(conn);
 //			makeUserList(conn);
 //			makeInvoiceRegister(conn);
 //			makePac(conn);
 //			make6mrv(conn);
-			makeTicketStatus(conn);
+//			makeTicketStatus(conn);
 //			makeAddressUsage(conn);
 //			makeClientUsage(conn);
-//			makeDO(conn);
+			makeDO(conn);
 			
 			conn.rollback();
 		} finally {
