@@ -80,10 +80,13 @@ public class XLSBuilder extends AbstractXLSBuilder {
 		
 		if ( ! StringUtils.isBlank(report.getHeaderNotes())) {			
 			row = sheet.createRow(headerRowCount);
-			sheet.addMergedRegion(new CellRangeAddress(headerRowCount, headerRowCount, 0, report.getHeaderRow().length + 1));
+			String reportNote = this.report.getHeaderNotes();
+			Integer endCell = report.getHeaderRow().length + 1;
+			sheet.addMergedRegion(new CellRangeAddress(headerRowCount, headerRowCount, 0, endCell));
 			cell = row.createCell(0);
 			cell.setCellStyle(rf.cellStyleReportNote);
-			cell.setCellValue(this.report.getHeaderNotes());			
+			cell.setCellValue(reportNote);
+			row.setHeight(XLSReportFormatter.calculateRowHeight(sheet, endCell, reportNote));
 		}
 		
 		int numberOfHeaderRows = Math.max(3, headerRowCount); // banner + title + subtitle is the minimum

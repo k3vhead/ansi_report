@@ -1,21 +1,16 @@
 package com.ansi.scilla.report.reportBuilder;
 
-import java.awt.font.LineBreakMeasurer;
-import java.awt.font.TextAttribute;
-import java.text.AttributedString;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.SortedSet;
-
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import com.sun.rowset.internal.Row;
 
 public class XLSReportFormatter {
 	
@@ -68,6 +63,27 @@ public class XLSReportFormatter {
 	
 	public CellStyle cellStyleSubtotalDecimal;
 	
+	public static short calculateRowHeight(XSSFSheet sheet, int endCell, String text) {
+		Logger logger = LogManager.getLogger(XLSReportFormatter.class);
+		XSSFCell cell = sheet.getRow(1).getCell(0);
+		XSSFFont myFont = cell.getCellStyle().getFont();
+		short rowHeight = sheet.getRow(1).getHeight();
+		float cellWidth = sheet.getColumnWidth(0); // in units of 1/256 character width
+		logger.log(Level.DEBUG, "CellWidth: " + cellWidth);
+		float charactersThatWillFit = cellWidth / 256 * myFont.getFontHeightInPoints() * (endCell + 1);
+		logger.log(Level.DEBUG, "charactersThatWillFit: " + charactersThatWillFit);
+		float charactersThatWeHave = text.length();
+		logger.log(Level.DEBUG, "charactersThatWeHave: " + charactersThatWeHave);
+		Float linesWeNeed = charactersThatWeHave / charactersThatWillFit;
+		logger.log(Level.DEBUG, "linesWeNeed: " + linesWeNeed);
+		int lineCount = linesWeNeed.intValue() + 1;  // round up for partial lines
+		logger.log(Level.DEBUG, "lineCount: " + lineCount);
+		short newHeight = (short)(rowHeight * lineCount * 1.8);  // include a fudge factor
+		
+		return newHeight;
+	}
+
+
 	//public Calendar runDate;
 	
 	public XLSReportFormatter(XSSFWorkbook workbook) {
@@ -246,6 +262,7 @@ public class XLSReportFormatter {
 	    cellStyleReportNote.setAlignment(CellStyle.ALIGN_LEFT);
 	    cellStyleReportNote.setFont(fontReportNote);
 	}
+	
 	
 //	private void adjustRowHeights(Sheet sheet, List<RowInfo> rows, SortedSet<Integer> createdColumnNumbers) {
 //		SortedMap<Integer, Float> columnWidthsInPx = [] as TreeMap;
