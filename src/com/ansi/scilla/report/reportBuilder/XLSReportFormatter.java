@@ -1,6 +1,10 @@
 package com.ansi.scilla.report.reportBuilder;
 
+import java.awt.font.LineBreakMeasurer;
+import java.awt.font.TextAttribute;
+import java.text.AttributedString;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.SortedSet;
 
 import org.apache.poi.hssf.util.HSSFColor;
@@ -10,6 +14,8 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.sun.rowset.internal.Row;
 
 public class XLSReportFormatter {
 	
@@ -241,9 +247,46 @@ public class XLSReportFormatter {
 	    cellStyleReportNote.setFont(fontReportNote);
 	}
 	
-//	public static short calculateLineHeight(Sheet sheet, List<RowInfo> rows, SortedSet<Integer> createdColNum){
-//		
+//	private void adjustRowHeights(Sheet sheet, List<RowInfo> rows, SortedSet<Integer> createdColumnNumbers) {
+//		SortedMap<Integer, Float> columnWidthsInPx = [] as TreeMap;
+//		createdColumnNumbers.each {
+//			columnWidthsInPx.put(it,  sheet.getColumnWidthInPixels(it));
+//		}
+//
+//		Row excelRow = sheet.getRow(rowInfo.rowIndex);
+//
+//		// Figure out available width in pixels, taking colspans into account
+//		//
+//		float columnWidthInPx = columnWidthsInPx[colIdx];
+//
+//
+//		// Setup the font we'll use for figuring out where the text will be wrapped
+//		//
+//		XSSFFont cellFont = longestCell.getCellFont();
+//
+//		AttributedString attrStr = new AttributedString(cellText);
+//		attrStr.addAttribute(TextAttribute.FONT, currFont);
+//
+//		// Use LineBreakMeasurer to count number of lines needed for the text
+//		//
+//
+//		LineBreakMeasurer measurer = new LineBreakMeasurer(attrStr.getIterator(), frc);
+//		int nextPos = 0;
+//		int lineCnt = 0;
+//		while (measurer.getPosition() < cellText.length()) {
+//			nextPos = measurer.nextOffset( columnWidthInPx );
+//			lineCnt++;
+//			measurer.setPosition(nextPos);
+//		}
+//
+//		if ( lineCnt > 1 ) {
+//			excelRow.setHeight((short)(excelRow.getHeight() * lineCnt * /* fudge factor */ 0.7));
+//		}
 //	}
-	
-	
 }
+	        
+	    
+	
+	
+	
+

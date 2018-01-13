@@ -19,8 +19,11 @@ import com.ansi.scilla.report.reportBuilder.XLSReportFormatter;
 
 public class XLSCellMerge {
 
-	private final String REPORT_NOTE = "Four scoare and seven years ago our fathers brought forth on this continent a new nation, conceived in liberty";
-	private final String testFile = "/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/mergetest.xlsx";
+	private final String REPORT_NOTE = "* = Tickets with statuses 'Non Dispatched' or 'Locked Freq' " +
+			"require updating before they can run. Please contact the administrative team and let them " +
+			"know what you would like to do with these tickets. \n** = A status of 'Finished' means that the " +
+			"ticket has been processed as being completed but has not yet been assigned to an invoice for billing";
+	private final String testFile = "/Users/jwlew/Documents/mergetest.xlsx";
 	
 	public static void main(String[] args) {
 		System.out.println("start");
@@ -62,7 +65,8 @@ public class XLSCellMerge {
 		XSSFCell bigcell = row.createCell(0);
 		bigcell.setCellValue(REPORT_NOTE);
 		bigcell.setCellStyle(cellStyle);
-		sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 1));
+		int endCell = 13;
+		sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, endCell));
 		
 		row = sheet.createRow(2);
 		cell = row.createCell(0);
@@ -77,7 +81,7 @@ public class XLSCellMerge {
 		
 		
 //		short newHeight = option1(sheet, myFont);
-		short newHeight = option2(sheet);
+		short newHeight = option2(sheet, endCell);
 		
 		
 		System.out.println("New Height: " + newHeight);
@@ -87,13 +91,13 @@ public class XLSCellMerge {
 	}
 
 	
-	private short option2(XSSFSheet sheet) {
+	private short option2(XSSFSheet sheet, int endCell) {
 		XSSFCell cell = sheet.getRow(1).getCell(0);
 		XSSFFont myFont = cell.getCellStyle().getFont();
 		short rowHeight = sheet.getRow(1).getHeight();
 		float cellWidth = sheet.getColumnWidth(0); // in units of 1/256 character width
 		System.out.println("CellWidth: " + cellWidth);
-		float charactersThatWillFit = cellWidth / 256 * myFont.getFontHeightInPoints();
+		float charactersThatWillFit = cellWidth / 256 * myFont.getFontHeightInPoints() * (endCell + 1);
 		System.out.println("charactersThatWillFit: " + charactersThatWillFit);
 		float charactersThatWeHave = REPORT_NOTE.length();
 		System.out.println("charactersThatWeHave: " + charactersThatWeHave);
@@ -101,7 +105,7 @@ public class XLSCellMerge {
 		System.out.println("linesWeNeed: " + linesWeNeed);
 		int lineCount = linesWeNeed.intValue() + 1;  // round up for partial lines
 		System.out.println("lineCount: " + lineCount);
-		short newHeight = (short)(rowHeight * lineCount * 1.1);  // include a fudge factor
+		short newHeight = (short)(rowHeight * lineCount * 1.8);  // include a fudge factor
 		
 		return newHeight;
 	}
