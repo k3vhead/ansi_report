@@ -44,6 +44,8 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 			", ticket_payment.tax_amt\r\n" + 
 			", ticket_payment.amount + ticket_payment.tax_amt as total\r\n" + 
 			", job_site.name as job_site_name\r\n" + 
+			", payment.check_nbr\r\n" +
+			", payment.check_date\r\n" +
 			"from ticket \r\n" + 
 			"join job on job.job_id = ticket.job_id\r\n" + 
 			"join division on division.division_id = job.division_id\r\n" + 
@@ -236,6 +238,8 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 				new ColumnHeader("divisionDisplay", "Div", DataFormats.STRING_CENTERED, SummaryType.NONE),
 				new ColumnHeader("paymentNote","Payment Notes", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("paymentDate", "Payment Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("checkNbr", "Check Number", DataFormats.INTEGER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("checkDate", "Check Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
 				new ColumnHeader("amount","PPC\nPaid", DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
 				new ColumnHeader("taxAmt","Taxes\nPaid", DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
 				new ColumnHeader("total","Total\nPaid", DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
@@ -288,6 +292,11 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 		public Double taxAmt;
 		public Double total;
 		public String jobSiteName;
+		public String checkNbr;
+		public Date checkDate;
+		
+//		", payment.check_nbr\r\n" +
+//		", payment.check_date\r\n" +
 
 		public RowData(ResultSet rs, CashReceiptsRegisterDetailReport report) throws SQLException {
 			this.billToName = StringUtils.substring(rs.getString("bill_to_name"), 0, 25);
@@ -300,6 +309,8 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 			this.paymentNote = StringUtils.substring(rs.getString("payment_note"), 0, 15);
 //			this.paymentNote = this.paymentNote.substring(0, Math.min(this.paymentNote.length(), 15));
 			this.paymentDate = new Date( rs.getDate("payment_date").getTime());
+			this.checkNbr = rs.getString("check_nbr");
+			this.checkDate = new Date(rs.getDate("check_date").getTime());
 			this.amount = rs.getBigDecimal("amount").doubleValue();
 			this.taxAmt = rs.getBigDecimal("tax_amt").doubleValue();
 			this.total = rs.getBigDecimal("total").doubleValue();
@@ -368,6 +379,12 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 		}
 		public String getDivisionDisplay() {
 			return this.getDivisionNbr() + "-" + this.getDivisionCode();
+		}
+		public String getCheckNbr(){
+			return checkNbr;
+		}
+		public Date getCheckDate(){
+			return checkDate;
 		}
 	}
 

@@ -13,6 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.utils.AppUtils;
+import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
 import com.ansi.scilla.report.reportBuilder.HTMLBuilder;
 import com.ansi.scilla.report.reportBuilder.XLSBuilder;
 import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
@@ -71,13 +72,15 @@ public class JoshuasReportTester {
 
 	private void makeClientUsage(Connection conn) throws Exception {
 		logger.info("DO Report");
-		DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId, endDate);
-		XSSFWorkbook workbook = XLSBuilder.build(userReport);
+//		DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId, endDate);
+//		XSSFWorkbook workbook = XLSBuilder.build(userReport);
 //		XSSFWorkbook workbook = userReport.makeXLS();
-		workbook.write(new FileOutputStream(joshuasTestResultDirectory + "DOReport.xlsx"));
+		CashReceiptsRegisterDetailReport userReport = CashReceiptsRegisterDetailReport.buildReport(conn, startDate, endDate);
+		XSSFWorkbook workbook = XLSBuilder.build(userReport);
+		workbook.write(new FileOutputStream(joshuasTestResultDirectory + "cashReceipts.xlsx"));
 
 		String html = HTMLBuilder.build(userReport);
-		FileUtils.write(new File(joshuasTestResultDirectory + "DOReport.html"), html);
+		FileUtils.write(new File(joshuasTestResultDirectory + "cashReceipts.html"), html);
 		
 	}
 
