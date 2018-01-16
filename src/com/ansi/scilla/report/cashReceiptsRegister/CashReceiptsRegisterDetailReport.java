@@ -238,7 +238,7 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 				new ColumnHeader("divisionDisplay", "Div", DataFormats.STRING_CENTERED, SummaryType.NONE),
 				new ColumnHeader("paymentNote","Payment Notes", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("paymentDate", "Payment Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("checkNbr", "Check Number", DataFormats.INTEGER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("checkNbr", "Check Number", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("checkDate", "Check Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
 				new ColumnHeader("amount","PPC\nPaid", DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
 				new ColumnHeader("taxAmt","Taxes\nPaid", DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
