@@ -79,11 +79,13 @@ public class PacDetailReport extends StandardReport {
 		this.reportType = reportType;
 		this.setTitle(this.reportType.reportTitle);		
 	}
+	
 	/**
 	 * Default date range is current month-to-date
-	 * @param conn
-	 * @param divisionId
-	 * @throws Exception
+	 * @param conn Database Connection
+	 * @param reportType Which report is to be generated
+	 * @param divisionId Division Filter
+	 * @throws Exception Something bad happened
 	 */
 	public PacDetailReport(Connection conn, PacDetailReportType reportType, Integer divisionId) throws Exception {
 		this(reportType);

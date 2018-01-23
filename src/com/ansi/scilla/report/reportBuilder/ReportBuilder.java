@@ -78,7 +78,7 @@ public abstract class ReportBuilder extends ApplicationObject {
 	 * a single row for the banner. Count is incremented for title and subtitle, and for each row
 	 * of header data (right/left columns) beyond the banner/title/subtitle.
 	 * @deprecated Use ReportUtils.makeHeaderRowCount()
-	 * @return
+	 * @return Number of rows in the header
 	 */
 	protected int makeHeaderRowCount() {
 		int headerRowCount = 1;  // we've always got a banner
@@ -103,14 +103,14 @@ public abstract class ReportBuilder extends ApplicationObject {
 
 	/**
 	 * Format arbitrary value according to the standard report formats
-	 * @param dataFormat
-	 * @param value
-	 * @return
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
+	 * @param dataFormat Format for the data value
+	 * @param value The data to be formatted
+	 * @return formatted data
+	 * @throws NoSuchMethodException A mismatch in the name of the formatter 
+	 * @throws SecurityException Java reflection error -- this shouldn't happen
+	 * @throws IllegalAccessException Java reflection error -- this shouldn't happen
+	 * @throws IllegalArgumentException A mismatch in the type of data and the type that the formatter is expecting
+	 * @throws InvocationTargetException Java reflection error -- this shouldn't happen
 	 */
 	protected String formatValue(DataFormats dataFormat, Object value) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		ReportFormatter formatter = dataFormat.formatter();
@@ -122,7 +122,7 @@ public abstract class ReportBuilder extends ApplicationObject {
 	/**
 	 * The summary data needs to be initialized to zeros before starting. Else we've got to null check
 	 * on every value, and I don't want to do that. This method is called by the constructor
-	 * @param headerRow
+	 * @param headerRow The list of columns in the report.
 	 */
 	protected void initializeSummaries(ColumnHeader[] headerRow) {
 		if ( headerRow != null ) {
@@ -146,8 +146,8 @@ public abstract class ReportBuilder extends ApplicationObject {
 	/**
 	 * Every time a row is added to the report, add the non-null values to the summary trackers. We
 	 * only do this for fields that will be in the summary row.
-	 * @param columnHeader
-	 * @param value
+	 * @param columnHeader Build summary values
+	 * @param value The value to be added to the summary
 	 */
 	protected void doSummaries(ColumnHeader columnHeader, Object value) {		
 		if ( value != null && columnHeader.getSummaryType() != SummaryType.NONE) {
@@ -205,9 +205,9 @@ public abstract class ReportBuilder extends ApplicationObject {
 	 * where summary type is not "NONE", call this method to get/format the data from the 
 	 * summary trackers. Averages and sums are formatted in the same way as the data. Counts 
 	 * are formatted as pretty integers. 
-	 * @param columnHeader
-	 * @return
-	 * @throws Exception
+	 * @param columnHeader Which column are we building a summary for
+	 * @return The formatted summary data
+	 * @throws Exception Something bad happened
 	 */
 	protected String makeSummaryData(ColumnHeader columnHeader) throws Exception {
 		String display = "";
@@ -263,14 +263,14 @@ public abstract class ReportBuilder extends ApplicationObject {
 	}
 	/**
 	 * Get the data from an arbitrary row object
-	 * @param columnHeader
-	 * @param row
-	 * @return
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
+	 * @param columnHeader Which column of the report are we building
+	 * @param row The row data object which contains the data to be displayed
+	 * @return The data to be displayed
+	 * @throws NoSuchMethodException The method in the formatter is wrong
+	 * @throws SecurityException java reflection error - this shouldn't happen
+	 * @throws IllegalAccessException java reflection error - this shouldn't happen
+	 * @throws IllegalArgumentException Mismatch in the getter's parameters (there are no parms, so this shouldn't happen either)
+	 * @throws InvocationTargetException java reflection error - this shouldn't happen
 	 */
 	protected Object makeDisplayData(ColumnHeader columnHeader, Object row) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException  {
 		String methodName = "get" + StringUtils.capitalize(columnHeader.getFieldName());
@@ -282,14 +282,14 @@ public abstract class ReportBuilder extends ApplicationObject {
 
 	/**
 	 * Format the data according to the standard method specified.
-	 * @param dataFormats
-	 * @param value
-	 * @return
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
+	 * @param dataFormats How to format the value
+	 * @param value the data to be formatted
+	 * @return Formatted data
+	 * @throws NoSuchMethodException The formatter has an invalid formatting method name
+	 * @throws SecurityException java reflection error - this shouldn't happen
+	 * @throws IllegalAccessException java reflection error - this shouldn't happen
+	 * @throws IllegalArgumentException The formatting method has a mismatch in the expected arguments
+	 * @throws InvocationTargetException java reflection error - this shouldn't happen
 	 */
 	protected String makeFormattedDisplayData(DataFormats dataFormats, Object value) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		String display = "";

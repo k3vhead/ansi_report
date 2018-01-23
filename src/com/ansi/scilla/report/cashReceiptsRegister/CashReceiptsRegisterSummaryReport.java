@@ -41,11 +41,11 @@ public class CashReceiptsRegisterSummaryReport extends StandardSummaryReport {
 		this.setTitle(REPORT_TITLE);
 		setReportOrientation(ReportOrientation.LANDSCAPE);
 	}
+	
 	/**
 	 * Default date range is current month-to-date
-	 * @param conn
-	 * @param divisionId
-	 * @throws Exception
+	 * @param conn Database Connection
+	 * @throws Exception Something bad happened
 	 */
 	protected CashReceiptsRegisterSummaryReport(Connection conn) throws Exception {
 		super(

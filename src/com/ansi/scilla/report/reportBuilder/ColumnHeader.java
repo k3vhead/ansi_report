@@ -17,11 +17,11 @@ public class ColumnHeader extends ApplicationObject {
 	}
 	
 	/**
-	 * 
-	 * @param fieldName
-	 * @param label
-	 * @param formatter
-	 * @param summaryType
+	 * Make a column header for report details
+	 * @param fieldName Field name
+	 * @param label Text for the column header
+	 * @param formatter Method for formatting the data
+	 * @param summaryType Whether/what kind of summary to display at end of column
 	 * @param subTotalTrigger - name of the field that, upon value change, triggers the display of a subtotal
 	 */
 	public ColumnHeader(String fieldName, String label, DataFormats formatter, SummaryType summaryType, String subTotalTrigger) {

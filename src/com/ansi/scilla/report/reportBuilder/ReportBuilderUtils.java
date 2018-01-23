@@ -15,7 +15,8 @@ public class ReportBuilderUtils extends ApplicationObject {
 	 * Figure out how many rows of titles and/or header data we have. There is always at least 
 	 * a single row for the banner. Count is incremented for title and subtitle, and for each row
 	 * of header data (right/left columns) beyond the banner/title/subtitle.
-	 * @return
+	 * @param report Any ansi report
+	 * @return number of rows in the report page header
 	 */
 	public static int makeHeaderRowCount(AbstractReport report) {
 		int headerRowCount = 1;  // we've always got a banner
@@ -45,8 +46,8 @@ public class ReportBuilderUtils extends ApplicationObject {
 	
 	/**
 	 * Figure out how wide a summary report by looking at the included reports.
-	 * @param report
-	 * @return
+	 * @param report Any standard summary report
+	 * @return the number of columns in the report
 	 */
 	public static Integer makeColumnCount(StandardSummaryReport report) {
 		StandardSummaryReport myReport = (StandardSummaryReport)report;
@@ -59,14 +60,14 @@ public class ReportBuilderUtils extends ApplicationObject {
 	
 	/**
 	 * Format arbitrary value according to the standard report formats
-	 * @param dataFormat
-	 * @param value
-	 * @return
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
+	 * @param dataFormat	The function for formatting the data
+	 * @param value	The data to be formatted
+	 * @return	Formatted data
+	 * @throws NoSuchMethodException The formatter doesn't have a correct formatting method
+	 * @throws SecurityException Java reflection error - this shouldn't happen
+	 * @throws IllegalAccessException Java reflection error - this shouldn't happen
+	 * @throws IllegalArgumentException The formatting method doesn't accept java.lang.Object as a parm
+	 * @throws InvocationTargetException Java reflection error - this shouldn't happen
 	 */
 	public static String formatValue(DataFormats dataFormat, Object value) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		ReportFormatter formatter = dataFormat.formatter();

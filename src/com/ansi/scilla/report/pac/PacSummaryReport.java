@@ -120,9 +120,9 @@ public class PacSummaryReport extends StandardReport {
 	}
 	/**
 	 * Default date range is current month-to-date
-	 * @param conn
-	 * @param divisionId
-	 * @throws Exception
+	 * @param conn Database connection
+	 * @param divisionId Division filter
+	 * @throws Exception something bad happened
 	 */
 	public PacSummaryReport(Connection conn,  Integer divisionId) throws Exception {
 		super();

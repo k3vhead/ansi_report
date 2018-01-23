@@ -43,9 +43,7 @@ public abstract class StandardReport extends AbstractReport {
 	public List<Object> getDataRows() {
 		return dataRows;
 	}
-	/**
-	 * We removed this so we can more easily track the length of the report
-	 */
+
 	public void setDataRows(List<Object> dataRows) {
 		this.dataRows = dataRows;
 	}

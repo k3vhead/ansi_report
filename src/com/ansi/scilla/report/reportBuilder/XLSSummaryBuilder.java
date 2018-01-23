@@ -80,9 +80,9 @@ public class XLSSummaryBuilder extends AbstractXLSBuilder {
 	/**
 	 * Use XLSReportBuilderUtils.makeSummaryHeader
 	 * @deprecated
-	 * @param sheet
-	 * @return
-	 * @throws Exception
+	 * @param sheet Excel sheet to be populated
+	 * @return Number of header Rows
+	 * @throws Exception Something bad happened
 	 */
 	protected Integer makeHeader(XSSFSheet sheet) throws Exception {
 		StandardSummaryReport report = (StandardSummaryReport)this.report; 

@@ -55,8 +55,9 @@ public class XLSBuilder extends AbstractXLSBuilder {
 	/**
 	 * Use XLSReportBuilderUtils.makeStandardHeader()
 	 * 
-	 * @param sheet
-	 * @throws Exception
+	 * @deprecated
+	 * @param sheet The sheet upon which to put the header
+	 * @throws Exception Something bad happened
 	 */
 	protected void makeHeader(XSSFSheet sheet) throws Exception {
 		StandardReport report = (StandardReport)this.report; 

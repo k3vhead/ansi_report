@@ -116,7 +116,7 @@ public abstract class AbstractReport extends AnsiReport {
 	/**
 	 * Figure out how many rows are in the report banner.
 	 * 
-	 * @return
+	 * @return nuber of rows in the banner
 	 */
 	public Integer getReportHeight() {
 		Integer bannerHeight = StringUtils.isBlank(banner) ? 0 : 1;
@@ -155,7 +155,7 @@ public abstract class AbstractReport extends AnsiReport {
 	/**
 	 * In many (most?) cases, there will only be a single column of header data to be
 	 * displayed to the side of the banner.
-	 * @param headerLeft
+	 * @param headerLeft Label/Data for data on the left side of the banner
 	 */
 	public void makeHeaderLeft(List<ReportHeaderRow> headerLeft) {
 		List<ReportHeaderCol> headerLeftCols = new ArrayList<ReportHeaderCol>();
@@ -166,7 +166,7 @@ public abstract class AbstractReport extends AnsiReport {
 	/**
 	 * In many (most?) cases, there will only be a single column of header data to be
 	 * displayed to the side of the banner.
-	 * @param headerLeft
+	 * @param headerRight Label/Data for data on the right side of the banner
 	 */
 	public void makeHeaderRight(List<ReportHeaderRow> headerRight) {
 		List<ReportHeaderCol> headerRightCols = new ArrayList<ReportHeaderCol>();

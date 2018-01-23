@@ -109,11 +109,11 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 	
 
 	/**
-	 * 
-	 * @param headerData
-	 * @param index
-	 * @return
-	 * @throws Exception
+	 * Make banner data display
+	 * @param headerData What type of data to display
+	 * @param index where to display it
+	 * @return the formatted display
+	 * @throws Exception Something bad happened
 	 * @deprecated Use makeBannerData() instead
 	 */
 	protected String[] makeHeaderData(List<ReportHeaderCol> headerData, Integer index) throws Exception {
@@ -217,13 +217,13 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 	/**
 	 * The POI setCellValue methods only accept a limited number of value types. So we translate what
 	 * we have to what we need.
-	 * @param cell
-	 * @param value
+	 * @param cell The Excel cell we're going to populate
+	 * @param value The data to be put in the cell
 	 * @throws NoSuchMethodException Indicates we have encountered a value type for which we do not have a translator
-	 * @throws SecurityException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
+	 * @throws SecurityException Java reflection error - this shouldn't happen
+	 * @throws IllegalAccessException Java reflection error - this shouldn't happen
+	 * @throws IllegalArgumentException XSSFCell.set value didn't match expectations 
+	 * @throws InvocationTargetException Java reflection error - this shouldn't happen
 	 */
 	public static void setCellValue(XSSFCell cell, Object value) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		if ( value != null ) {

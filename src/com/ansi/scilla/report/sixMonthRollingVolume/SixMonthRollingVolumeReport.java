@@ -45,7 +45,7 @@ import com.ansi.scilla.report.reportBuilder.XLSBuilder;
 import com.ansi.scilla.report.reportBuilder.XLSReportFormatter;
 
 /**
- * Six Month Rolling Volume Report. Static methods make<format> accept a number of 6-month
+ * Six Month Rolling Volume Report. Static methods make&lt;format&gt; accept a number of 6-month
  * reports to get created. Be careful, because each report requires it's own connection, and
  * system resources can get consumed quickly. All reports are created simultaneously and then
  * combined. 
@@ -603,12 +603,12 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 	
 	/**
 	 * Create a 6-Month Rolling Volume report object for a single 6-month period
-	 * @param conn
-	 * @param divisionId
+	 * @param conn Database Connection
+	 * @param divisionId Division Filter
 	 * @param month Month of the year (1-12)
 	 * @param year 4-digit year (eg 2017, not 17)
 	 * @return Report Object
-	 * @throws Exception
+	 * @throws Exception something bad happened
 	 */
 	public static SixMonthRollingVolumeReport buildReport(Connection conn, Integer divisionId, Integer month, Integer year) throws Exception {		
 		List<Connection> connectionList = Arrays.asList(new Connection[] {conn});
@@ -620,11 +620,11 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 	/**
 	 * Create list of 6-Month Rolling Volume Report objects for sequential 6-month periods. The number
 	 * of periods is dependent on the number of connections in the list
-	 * @param connectionList
-	 * @param divisionId
-	 * @param startDate
-	 * @return
-	 * @throws Exception
+	 * @param connectionList Database connections for parallel processing of report builds
+	 * @param divisionId Division Filter
+	 * @param startDate Start Date
+	 * @return Report Object
+	 * @throws Exception Something bad happened
 	 */
 	public static List<SixMonthRollingVolumeReport> buildReport(List<Connection> connectionList, Integer divisionId, Calendar startDate) throws Exception {
 		return makeReport(connectionList, divisionId, startDate);

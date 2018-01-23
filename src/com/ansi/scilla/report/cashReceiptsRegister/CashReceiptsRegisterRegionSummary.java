@@ -68,9 +68,8 @@ public class CashReceiptsRegisterRegionSummary extends StandardReport {
 	}
 	/**
 	 * Default date range is current month-to-date
-	 * @param conn
-	 * @param divisionId
-	 * @throws Exception
+	 * @param conn Database connection
+	 * @throws Exception something bad happened
 	 */
 	protected CashReceiptsRegisterRegionSummary(Connection conn) throws Exception {
 		this();

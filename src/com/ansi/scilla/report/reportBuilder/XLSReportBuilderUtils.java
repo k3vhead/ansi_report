@@ -18,10 +18,10 @@ public class XLSReportBuilderUtils extends ReportBuilderUtils {
 	
 	/**
 	 * Builds standard header for standard reports. (Can't get much more generic than that)
-	 * @param report
-	 * @param reportStartLoc
-	 * @param sheet
-	 * @throws Exception
+	 * @param report Any ANSI Standard report object
+	 * @param reportStartLoc Where in the sheet to put the report
+	 * @param sheet The sheet we're working with
+	 * @throws Exception Something bad happened
 	 */
 	public static void makeStandardHeader(StandardReport report, ReportStartLoc reportStartLoc, XSSFSheet sheet) throws Exception {
 		int headerRowCount = makeHeaderRowCount(report);
@@ -77,11 +77,11 @@ public class XLSReportBuilderUtils extends ReportBuilderUtils {
 
 	/**
 	 * Builds standard header for summary reports
-	 * @param report
-	 * @param reportStartLoc
-	 * @param sheet
-	 * @return
-	 * @throws Exception
+	 * @param report Any ANSI Summary Report
+	 * @param reportStartLoc	Where on the sheet we should put the report
+	 * @param sheet	The Excel worksheet we're working with
+	 * @return The number of rows in the report header
+	 * @throws Exception something bad happened
 	 */
 	public static Integer makeSummaryHeader(StandardSummaryReport report, ReportStartLoc reportStartLoc, XSSFSheet sheet) throws Exception {
 //		StandardSummaryReport report = (StandardSummaryReport)this.report; 
@@ -182,12 +182,12 @@ public class XLSReportBuilderUtils extends ReportBuilderUtils {
 	/**
 	 * Creates left/right side data for banner rows in an Excel-formatted report
 	 * @param report Any ANSI report
-	 * @param headerCol
-	 * @param row
-	 * @param colIndex
-	 * @param labelStyle
-	 * @param dataStyle
-	 * @throws Exception
+	 * @param headerCol The label/data definition
+	 * @param row	Which row in the banner are we working with
+	 * @param colIndex Which column in the banner are we working with
+	 * @param labelStyle How to format the label
+	 * @param dataStyle How to format the data
+	 * @throws Exception Something bad happened
 	 */
 	public static void makeBannerData(AbstractReport report, ReportHeaderCol headerCol, XSSFRow row, Integer colIndex, CellStyle labelStyle, CellStyle dataStyle) throws Exception {
 		XSSFCell cell;
@@ -210,9 +210,9 @@ public class XLSReportBuilderUtils extends ReportBuilderUtils {
 	
 	/**
 	 * Returns an existing row, if it exist, or creates a new one, if it does not already exist
-	 * @param sheet
-	 * @param rowNum
-	 * @return
+	 * @param sheet Sheet from which a row will be used, or to which a row will be added
+	 * @param rowNum Where in the sheet are we going to work
+	 * @return Excel row to be populated
 	 */
 	public static XSSFRow makeRow(XSSFSheet sheet, Integer rowNum) {		
 		return sheet.getRow(rowNum) == null ? sheet.createRow(rowNum) : sheet.getRow(rowNum);
