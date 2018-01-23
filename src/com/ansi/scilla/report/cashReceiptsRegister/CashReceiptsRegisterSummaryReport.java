@@ -7,7 +7,10 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.Midnight;
@@ -15,8 +18,11 @@ import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.ReportOrientation;
+import com.ansi.scilla.report.reportBuilder.ReportStartLoc;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.StandardSummaryReport;
+import com.ansi.scilla.report.reportBuilder.XLSBuilder;
+import com.ansi.scilla.report.reportBuilder.XLSReportBuilderUtils;
 
 public class CashReceiptsRegisterSummaryReport extends StandardSummaryReport {
 
@@ -28,7 +34,7 @@ public class CashReceiptsRegisterSummaryReport extends StandardSummaryReport {
 	private Calendar startDate;
 	private Calendar endDate;
 
-	Logger logger = Logger.getLogger("com.ansi.scilla.common.report");
+	Logger logger = LogManager.getLogger(this.getClass());
 	
 	public CashReceiptsRegisterSummaryReport() {
 		super((StandardReport)null, (StandardReport)null, (StandardReport)null);
@@ -114,6 +120,28 @@ public class CashReceiptsRegisterSummaryReport extends StandardSummaryReport {
 	}
 	public Calendar getEndDate() {
 		return endDate;
+	}
+	
+	public void makeXLS(XSSFWorkbook workbook) throws Exception {
+		XSSFSheet sheet = workbook.createSheet();
+		StandardReport companySummary = this.getCompanySummary();
+		StandardReport regionSummary = this.getRegionSummary();
+		StandardReport divisionSummary = this.getDivisionSummary();
+		
+		Integer nbrOfHeaderRows = XLSReportBuilderUtils.makeSummaryHeader(this, new ReportStartLoc(0,0), sheet);
+		
+		Integer companyStartRow = nbrOfHeaderRows + 1;
+		Integer companyStartCol = 0;
+		
+		Integer regionStartRow = companyStartRow + companySummary.getReportHeight() + 2;
+		Integer regionStartCol = 0;
+		
+		Integer divisionStartRow = nbrOfHeaderRows + 1;
+		Integer divisionStartCol = Math.max(companySummary.getReportWidth(), regionSummary.getReportWidth()) + 1; 
+		
+		XLSBuilder.build(companySummary, sheet, new ReportStartLoc(companyStartCol, companyStartRow));		
+		XLSBuilder.build(regionSummary, sheet, new ReportStartLoc(regionStartCol, regionStartRow));
+		XLSBuilder.build(divisionSummary, sheet, new ReportStartLoc(divisionStartCol, divisionStartRow));
 	}
 	
 	

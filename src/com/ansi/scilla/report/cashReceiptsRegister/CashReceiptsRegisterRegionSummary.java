@@ -9,7 +9,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -58,7 +60,7 @@ public class CashReceiptsRegisterRegionSummary extends StandardReport {
 	private Calendar endDate;
 	private List<RowData> data;
 
-	Logger logger = Logger.getLogger("com.ansi.scilla.common.report");
+	Logger logger = LogManager.getLogger(this.getClass());
 	
 	public CashReceiptsRegisterRegionSummary() {
 		super();
@@ -146,11 +148,11 @@ public class CashReceiptsRegisterRegionSummary extends StandardReport {
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
 		super.setDataRows(oData);
 		
-		List<ReportHeaderRow> headerLeft = new ArrayList<ReportHeaderRow>();
-		super.makeHeaderLeft(headerLeft);
+//		List<ReportHeaderRow> headerLeft = new ArrayList<ReportHeaderRow>();
+//		super.makeHeaderLeft(headerLeft);
 		
-		List<ReportHeaderRow> headerRight = new ArrayList<ReportHeaderRow>();
-		super.makeHeaderRight(headerRight);
+//		List<ReportHeaderRow> headerRight = new ArrayList<ReportHeaderRow>();
+//		super.makeHeaderRight(headerRight);
 	}
 	
 	

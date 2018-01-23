@@ -10,8 +10,8 @@ import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.Midnight;
@@ -22,14 +22,11 @@ import com.ansi.scilla.report.datadumps.ClientContact;
 import com.ansi.scilla.report.datadumps.UserListReport;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
 import com.ansi.scilla.report.pac.PacReport;
-import com.ansi.scilla.report.reportBuilder.AbstractReport;
 import com.ansi.scilla.report.reportBuilder.AnsiReport;
 import com.ansi.scilla.report.reportBuilder.CustomReport;
 import com.ansi.scilla.report.reportBuilder.HTMLBuilder;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.StandardSummaryReport;
 import com.ansi.scilla.report.reportBuilder.XLSBuilder;
-import com.ansi.scilla.report.reportBuilder.XLSSummaryBuilder;
 import com.ansi.scilla.report.sixMonthRollingVolume.SixMonthRollingVolumeReport;
 import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
 import com.ansi.scilla.report.ticket.TicketStatusReport;
@@ -59,8 +56,7 @@ public class TestReportReflection {
 	}
 	
 	private void makEmAll() throws Exception {
-		this.logger = Logger.getLogger(this.getClass());
-		logger.setLevel(Level.DEBUG);
+		this.logger = LogManager.getLogger(this.getClass());
 		logger.info("Start");
 		Connection conn = null;
 		
@@ -71,18 +67,18 @@ public class TestReportReflection {
 			this.divisionId = 101;
 			this.month=7;
 			this.year=2017;
-			this.startDate = new Midnight(2017, Calendar.DECEMBER, 31);
-			this.endDate = new Midnight(2017, Calendar.DECEMBER, 31);
+			this.startDate = new Midnight(2017, Calendar.DECEMBER, 6);
+			this.endDate = new Midnight(2017, Calendar.DECEMBER, 7);
 			
-//			makeCashReceipts(conn);
-//			makeUserList(conn);
-//			makeInvoiceRegister(conn);
-//			makePac(conn);
-//			make6mrv(conn);
+//			makeDO(conn);
 //			makeTicketStatus(conn);
+//			make6mrv(conn);
+			makePac(conn);
+//			makeInvoiceRegister(conn);
+//			makeUserList(conn);
 //			makeAddressUsage(conn);
 //			makeClientUsage(conn);
-			makeDO(conn);
+//			makeCashReceipts(conn);
 			
 			conn.rollback();
 		} finally {
@@ -117,30 +113,25 @@ public class TestReportReflection {
 		logger.info("Starting 6mrv");
 		SixMonthRollingVolumeReport smrv = SixMonthRollingVolumeReport.buildReport(conn, divisionId, month, year);
 		XSSFWorkbook workbook = smrv.makeXLS();
-		workbook.write(new FileOutputStream("/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/smrv.xlsx"));
+		workbook.write(new FileOutputStream(outputDirectory + "smrv.xlsx"));
 		String html = smrv.makeHTML();
-		FileUtils.write(new File("/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/smrv.html"), html);
+		FileUtils.write(new File(outputDirectory + "smrv.html"), html);
 	}
 
 	private void makePac(Connection conn) throws Exception {
 		logger.info("Starting PAC");
+		XSSFWorkbook workbook = new XSSFWorkbook();
 		PacReport pacReport = PacReport.buildReport(conn, divisionId);
-		for ( int idx = 0; idx < pacReport.getReports().length; idx++ ) {
-			AbstractReport report = pacReport.getReports()[idx];
-			try {
-				XSSFWorkbook workbook = XLSBuilder.build((StandardReport)report);
-				workbook.write(new FileOutputStream("/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/pacReport" +idx + ".xlsx"));
-			} catch ( ClassCastException e) {
-				logger.info("Can't cast pac report " + idx);
-			}
-		}		
+		pacReport.makeXLS(workbook);
+		workbook.write(new FileOutputStream(outputDirectory + "pacReport.xlsx"));
+		
 	}
 
 	private void makeInvoiceRegister(Connection conn) throws Exception {
 		logger.info("Starting Invoice REgister");
 		InvoiceRegisterReport irr = InvoiceRegisterReport.buildReport(conn, divisionId, month, year);
 		XSSFWorkbook workbook = XLSBuilder.build(irr);
-		workbook.write(new FileOutputStream("/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/invoiceRegisterReport.xlsx"));
+		workbook.write(new FileOutputStream(outputDirectory + "invoiceRegisterReport.xlsx"));
 				
 	}
 
@@ -149,7 +140,7 @@ public class TestReportReflection {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		UserListReport userReport = UserListReport.buildReport(conn);
 		workbook = userReport.makeXLS();
-		workbook.write(new FileOutputStream("/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/userReport.xlsx"));		
+		workbook.write(new FileOutputStream(outputDirectory + "userReport.xlsx"));		
 	}
 
 
@@ -157,10 +148,10 @@ public class TestReportReflection {
 		logger.info("Address Report");
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		AddressUsage userReport = AddressUsage.buildReport(conn);
-//		workbook = userReport.makeXLS();
-//		workbook.write(new FileOutputStream("/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/addressUsage.xlsx"));
+		workbook = userReport.makeXLS();
+		workbook.write(new FileOutputStream(outputDirectory + "addressUsage.xlsx"));
 		String html = userReport.makeHTML();
-		FileUtils.write(new File("/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/addressUsage.html"), html);
+		FileUtils.write(new File(outputDirectory + "addressUsage.html"), html);
 	}
 
 	
@@ -169,34 +160,32 @@ public class TestReportReflection {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		ClientContact userReport = ClientContact.buildReport(conn);
 		workbook = userReport.makeXLS();
-		workbook.write(new FileOutputStream("/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/clientContact.xlsx"));		
+		workbook.write(new FileOutputStream(outputDirectory + "clientContact.xlsx"));		
 	}
 
 	
 	private void makeCashReceipts(Connection conn) throws Exception {
 		logger.info("Starting Cash Receipts");
+		
 		XSSFWorkbook workbook = new XSSFWorkbook();
+		
+		
 		CashReceiptsRegisterReport crrReport = CashReceiptsRegisterReport.buildReport(conn, startDate, endDate);
-		try {
-			workbook = XLSSummaryBuilder.build((StandardSummaryReport)crrReport.getReports()[0]);
-			workbook.write(new FileOutputStream("/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/crrReportSummary.xlsx"));			
-		} catch ( Exception e ) {
-			e.printStackTrace();
-		}
-		for ( int idx = 1; idx < crrReport.getReports().length; idx++ ) {
-			AbstractReport report = crrReport.getReports()[idx];
-			try {
-				workbook = XLSBuilder.build((StandardReport)report);
-				workbook.write(new FileOutputStream("/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/crrReport" +idx + ".xlsx"));
-			} catch ( ClassCastException e) {
-				logger.info("Can't cast crr report " + idx);
-			}
-		}
+//		CashReceiptsRegisterSummaryReport report0 = (CashReceiptsRegisterSummaryReport)crrReport.getReports()[0];
+//		report0.makeXLS(workbook);
+//		CashReceiptsRegisterDetailReport report1 = (CashReceiptsRegisterDetailReport)crrReport.getReports()[1];
+//		report1.makeXLS(workbook);
+		crrReport.makeXLS(workbook);
+//		CashReceiptsRegisterDivisionSummary crrCompany = CashReceiptsRegisterDivisionSummary.buildReport(conn, startDate, endDate);
+//		XLSBuilder.build(crrCompany, workbook);
+		workbook.write(new FileOutputStream(outputDirectory + "crrReport.xlsx"));
+		
+
 		
 	}
 
 	public void go3() throws Exception {
-		this.logger = Logger.getLogger("com.ansi.scilla.common.test");
+		this.logger = LogManager.getLogger("com.ansi.scilla.common.test");
 		logger.info("Start");
 		Connection conn = null;
 		
@@ -218,7 +207,7 @@ public class TestReportReflection {
 	}
 	
 	public void go2() throws Exception {
-		this.logger = Logger.getLogger("com.ansi.scilla.common.test");
+		this.logger = LogManager.getLogger("com.ansi.scilla.common.test");
 		logger.debug("Start");
 		Connection conn = null;
 		
@@ -246,7 +235,7 @@ public class TestReportReflection {
 		}
 	}
 	public void go() throws Exception {
-		this.logger = Logger.getLogger("com.ansi.scilla.common.test");
+		this.logger = LogManager.getLogger("com.ansi.scilla.common.test");
 		logger.debug("Start");
 		Connection conn = null;
 		

@@ -1,10 +1,16 @@
 package com.ansi.scilla.report.reportBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.ansi.scilla.common.AnsiTime;
+import com.thewebthing.commons.lang.StringUtils;
 
 public abstract class AbstractReport extends AnsiReport {
 
@@ -24,6 +30,8 @@ public abstract class AbstractReport extends AnsiReport {
 	protected ReportPageLayout reportPageLayout;
 	protected Calendar runDate;
 	protected ReportOrientation reportOrientation = ReportOrientation.LANDSCAPE;
+	
+	private Logger logger = LogManager.getLogger(this.getClass());
 	
 	public AbstractReport() {
 		super();
@@ -103,6 +111,47 @@ public abstract class AbstractReport extends AnsiReport {
 	}
 
 	
+	public abstract Integer getReportWidth();
+
+	/**
+	 * Figure out how many rows are in the report banner.
+	 * 
+	 * @return
+	 */
+	public Integer getReportHeight() {
+		Integer bannerHeight = StringUtils.isBlank(banner) ? 0 : 1;
+		Integer titleHeight = StringUtils.isBlank(title) ? 0 : 1;
+		Integer subTitle = StringUtils.isBlank(subtitle) ? 0 : 1;
+		Integer noteHeight = StringUtils.isBlank(headerNotes) ? 0 : 1;
+		Integer pageBannerHeight = bannerHeight + titleHeight + subTitle + noteHeight;
+		
+		Integer headerRightSize = headerRight == null ? 0 : makeHeaderDataSize(headerRight);
+		Integer headerLeftSize = headerLeft == null ? 0 : makeHeaderDataSize(headerLeft);;	
+		
+		List<Integer> testList = Arrays.asList(new Integer[] {pageBannerHeight, headerRightSize, headerLeftSize});
+		Collections.sort(testList);
+		Integer headerHeight = testList.get(testList.size()-1);  // get length of longest header column
+		
+		
+		
+		Integer footerRightSize = footerRight == null ? 0 : makeHeaderDataSize(footerRight);
+		Integer footerLeftSize = footerLeft == null ? 0 : makeHeaderDataSize(footerLeft);
+		Integer footerDataHeight = Math.max(footerRightSize, footerLeftSize);
+
+		Integer reportHeight = headerHeight + footerDataHeight;		
+		return reportHeight;
+	}
+
+	private int makeHeaderDataSize(List<ReportHeaderCol> headerColumnList) {
+		Integer maxSize = 0;
+		for ( ReportHeaderCol reportHeaderCol : headerColumnList ) {
+			if (reportHeaderCol.size() > maxSize ) {
+				maxSize = reportHeaderCol.size();
+			}
+		}
+		return maxSize;
+	}
+
 	/**
 	 * In many (most?) cases, there will only be a single column of header data to be
 	 * displayed to the side of the banner.

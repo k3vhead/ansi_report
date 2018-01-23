@@ -149,6 +149,11 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 	}
 
 
+	@Override
+	public Integer getReportWidth() {
+		return colHeaders.length;
+	}
+
 	public String getDiv() {
 		return div;
 	}

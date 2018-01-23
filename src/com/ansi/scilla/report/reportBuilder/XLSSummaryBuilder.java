@@ -12,8 +12,6 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.ansi.scilla.common.ApplicationObject;
-
 public class XLSSummaryBuilder extends AbstractXLSBuilder {
 
 	private static final long serialVersionUID = 1L;
@@ -21,11 +19,6 @@ public class XLSSummaryBuilder extends AbstractXLSBuilder {
 
 	public XLSSummaryBuilder(StandardSummaryReport report) {
 		super(report);
-//		try {
-//			AppUtils.makeLogger(this.getClass().getName(), Level.DEBUG, "/home/dclewis/Documents/webthing_v2/projects/ANSI/testResults/crrReport.log");
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 	}
 
 	private void buildReport(XSSFSheet sheet) throws Exception {
@@ -44,7 +37,8 @@ public class XLSSummaryBuilder extends AbstractXLSBuilder {
 		boolean hasDivisionSummary = report.hasDivisionSummary();
 		
 		ReportStartLoc startLoc = new ReportStartLoc(0,0);		
-		Integer numberOfHeaderRows = makeHeader(sheet);
+//		Integer numberOfHeaderRows = makeHeader(sheet);
+		Integer numberOfHeaderRows = XLSReportBuilderUtils.makeSummaryHeader((StandardSummaryReport)this.getReport(), new ReportStartLoc(0,0), sheet);
 		// number of data rows + column headers + summary header
 		Integer numberOfCompanyRows = hasCompanySummary ? report.getCompanyData().size() + 2 : 0;
 		
@@ -83,6 +77,13 @@ public class XLSSummaryBuilder extends AbstractXLSBuilder {
 	}
 
 
+	/**
+	 * Use XLSReportBuilderUtils.makeSummaryHeader
+	 * @deprecated
+	 * @param sheet
+	 * @return
+	 * @throws Exception
+	 */
 	protected Integer makeHeader(XSSFSheet sheet) throws Exception {
 		StandardSummaryReport report = (StandardSummaryReport)this.report; 
 		int headerRowCount = makeHeaderRowCount();
@@ -227,7 +228,13 @@ public class XLSSummaryBuilder extends AbstractXLSBuilder {
 		rowNum++;
 	}
 	
-	
+
+	/**
+	 * Figure out how wide a summary report is, based on existence and width of constituent reports
+	 * @deprecated use ReportBuilderUtils.makeColumnCount()
+	 * @param report
+	 * @return
+	 */
 	private Integer makeColumnCount(StandardSummaryReport report) {
 		Integer companyColumnCount = report.hasCompanySummary() ? report.getCompanySummary().getHeaderRow().length : 0;
 		Integer regionColumnCount = report.hasRegionSummary() ? report.getRegionSummary().getHeaderRow().length : 0;
@@ -262,18 +269,5 @@ public class XLSSummaryBuilder extends AbstractXLSBuilder {
 	}
 	
 	
-	public class ReportStartLoc extends ApplicationObject {
-
-		private static final long serialVersionUID = 1L;
-
-		public Integer columnIndex;
-		public Integer rowIndex;
-		public ReportStartLoc(Integer columnIndex, Integer rowIndex) {
-			super();
-			this.columnIndex = columnIndex;
-			this.rowIndex = rowIndex;
-		}
-		
-		
-	}
+	
 }

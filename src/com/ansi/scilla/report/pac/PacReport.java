@@ -3,8 +3,12 @@ package com.ansi.scilla.report.pac;
 import java.sql.Connection;
 import java.util.Calendar;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import com.ansi.scilla.report.reportBuilder.AbstractReport;
 import com.ansi.scilla.report.reportBuilder.CompoundReport;
+import com.ansi.scilla.report.reportBuilder.StandardReport;
+import com.ansi.scilla.report.reportBuilder.XLSBuilder;
 
 public class PacReport extends CompoundReport {
 
@@ -31,6 +35,12 @@ public class PacReport extends CompoundReport {
 		});
 	}
 
+	public void makeXLS(XSSFWorkbook workbook) throws Exception {
+		for ( AbstractReport report : this.reports ) {
+			XLSBuilder.build((StandardReport)report, workbook);
+		}
+	}
+	
 	public static PacReport buildReport(Connection conn, Integer divisionId, Calendar startDate, Calendar endDate) throws Exception {
 		return new PacReport(conn, divisionId, startDate, endDate);
 	}

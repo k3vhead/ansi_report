@@ -3,6 +3,7 @@ package com.ansi.scilla.report.reportBuilder;
 import java.text.SimpleDateFormat;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.poi.ss.usermodel.Footer;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -12,14 +13,13 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
+
 public class XLSBuilder extends AbstractXLSBuilder {
 
 
 	
 	private static final long serialVersionUID = 1L;
 
-	
-	
 	
 	private XLSBuilder(StandardReport report) {
 		super(report);
@@ -29,15 +29,19 @@ public class XLSBuilder extends AbstractXLSBuilder {
 		super(report);
 	}
 	
-
-
-
 	private void buildReport(XSSFSheet sheet) throws Exception {
 		sheet.setMargin(XSSFSheet.BottomMargin, this.marginBottom);
 		sheet.setMargin(XSSFSheet.TopMargin, this.marginTop);
 		sheet.setMargin(XSSFSheet.RightMargin, this.marginRight);
 		sheet.setMargin(XSSFSheet.LeftMargin, this.marginLeft);
-		makeHeader(sheet);
+
+		if ( this.report instanceof StandardSummaryReport ) {
+			XLSReportBuilderUtils.makeSummaryHeader((StandardSummaryReport)report, reportStartLoc, sheet);
+		} else {
+			XLSReportBuilderUtils.makeStandardHeader((StandardReport)report, reportStartLoc, sheet);
+		}
+//		makeHeader(sheet);
+
 		makeColumnHeader(sheet);		
 		makeDetails(sheet);
 		makeFinalSubtotal(sheet);
@@ -48,7 +52,12 @@ public class XLSBuilder extends AbstractXLSBuilder {
 	}
 
 
-
+	/**
+	 * Use XLSReportBuilderUtils.makeStandardHeader()
+	 * 
+	 * @param sheet
+	 * @throws Exception
+	 */
 	protected void makeHeader(XSSFSheet sheet) throws Exception {
 		StandardReport report = (StandardReport)this.report; 
 		int headerRowCount = makeHeaderRowCount();
@@ -65,21 +74,23 @@ public class XLSBuilder extends AbstractXLSBuilder {
 		XSSFRow row = null;
 		XSSFCell cell = null;
 		
-		makeHeaderRow(0, report.getHeaderLeft(), report.getBanner(), rf.cellStyleReportBanner, report.getHeaderRight(), sheet);
+		int startingRow = this.reportStartLoc.rowIndex;
+		
+		makeHeaderRow(startingRow, report.getHeaderLeft(), report.getBanner(), rf.cellStyleReportBanner, report.getHeaderRight(), sheet);
 		if ( headerRowCount > 1 ) {
-			makeHeaderRow(1, report.getHeaderLeft(), report.getTitle(), rf.cellStyleReportTitle, report.getHeaderRight(), sheet);	
+			makeHeaderRow(startingRow + 1, report.getHeaderLeft(), report.getTitle(), rf.cellStyleReportTitle, report.getHeaderRight(), sheet);	
 		}
 		if ( headerRowCount > 2 ) {
-			makeHeaderRow(2, report.getHeaderLeft(), report.getSubtitle(), rf.cellStyleReportSubTitle, report.getHeaderRight(), sheet);
+			makeHeaderRow(startingRow + 2, report.getHeaderLeft(), report.getSubtitle(), rf.cellStyleReportSubTitle, report.getHeaderRight(), sheet);
 		}
 		if ( headerRowCount > 3 ) {
-			for ( int i=3;i<headerRowCount;i++) {
+			for ( int i=startingRow + 3;i<headerRowCount;i++) {
 				makeHeaderRow(i, report.getHeaderLeft(), "", rf.cellStyleStandardCenter, report.getHeaderRight(), sheet);
 			}
 		}
 		
 		if ( ! StringUtils.isBlank(report.getHeaderNotes())) {			
-			row = sheet.createRow(headerRowCount);
+			row = XLSReportBuilderUtils.makeRow(sheet, startingRow + headerRowCount); //sheet.createRow(startingRow + headerRowCount);
 			String reportNote = this.report.getHeaderNotes();
 			Integer endCell = report.getHeaderRow().length + 1;
 			sheet.addMergedRegion(new CellRangeAddress(headerRowCount, headerRowCount, 0, endCell));
@@ -89,7 +100,7 @@ public class XLSBuilder extends AbstractXLSBuilder {
 			row.setHeight(XLSReportFormatter.calculateRowHeight(sheet, endCell, reportNote));
 		}
 		
-		int numberOfHeaderRows = Math.max(3, headerRowCount); // banner + title + subtitle is the minimum
+		int numberOfHeaderRows = Math.max(3, startingRow + headerRowCount); // banner + title + subtitle is the minimum
 		numberOfHeaderRows++;  // need to include headers + column labels
 		sheet.setRepeatingRows(new CellRangeAddress(0,numberOfHeaderRows, 0, report.getHeaderRow().length));
 	    
@@ -107,19 +118,20 @@ public class XLSBuilder extends AbstractXLSBuilder {
 		XSSFRow row = null;
 		XSSFCell cell = null;
 		
-		int rowNum = makeHeaderRowCount() + 1;
-		int columnIndex = 0;
-		row = sheet.createRow(rowNum);
+		int rowNum = this.reportStartLoc.rowIndex + XLSReportBuilderUtils.makeHeaderRowCount(this.report) + 1;
+		int columnIndex = this.reportStartLoc.columnIndex;
+		int startingColumn = this.reportStartLoc.columnIndex;
+		row = XLSReportBuilderUtils.makeRow(sheet, rowNum);  //sheet.createRow(rowNum);
 
 //		row.setHeight(rf.standardHeaderHeight);
 		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
 			ColumnHeader columnHeader = report.getHeaderRow()[i];
 			if ( i == 1 ) {
-				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn, startingColumn + 1));
 				columnIndex++;
 			}
 			if ( i == report.getHeaderRow().length - 1 ) {
-				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, report.getHeaderRow().length, report.getHeaderRow().length+1));
+				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn + report.getHeaderRow().length, startingColumn + report.getHeaderRow().length+1));
 			}
 			cell = row.createCell(columnIndex);
 			cell.setCellValue(columnHeader.getLabel());
@@ -132,21 +144,25 @@ public class XLSBuilder extends AbstractXLSBuilder {
 		XSSFRow row = null;
 		StandardReport report = (StandardReport)this.report;
 		
-		int rowNum = makeHeaderRowCount() + 2;
+		int rowNum = this.reportStartLoc.rowIndex + XLSReportBuilderUtils.makeHeaderRowCount(this.report) + 2;
 		for ( Object dataRow : report.getDataRows() ) {
 			rowNum = makeSubtotal(report, sheet, dataRow, rowNum);
-			row = sheet.createRow(rowNum);	
-			int columnIndex = 0;
+			row = XLSReportBuilderUtils.makeRow(sheet, rowNum);   //sheet.createRow(rowNum);	
+			int columnIndex = this.reportStartLoc.columnIndex;
 			for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
 				ColumnHeader columnHeader = report.getHeaderRow()[i];				
 				Object value = makeDisplayData(columnHeader, dataRow);
 				super.doSummaries(columnHeader, value);
 				if ( i == 1 ) {
 					columnIndex++;
-					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1)); 
+					Integer startMerge = this.reportStartLoc.columnIndex;
+					Integer endMerge = this.reportStartLoc.columnIndex + 1;
+					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startMerge, endMerge)); 
 				}
 				if ( i == report.getHeaderRow().length - 1 ) {
-					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, report.getHeaderRow().length, report.getHeaderRow().length+1));
+					Integer startMerge = this.reportStartLoc.columnIndex + report.getHeaderRow().length;
+					Integer endMerge = this.reportStartLoc.columnIndex + report.getHeaderRow().length + 1;
+					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startMerge, endMerge));
 				}
 				super.populateCell(columnHeader, value, columnIndex, dataRow, row);
 				columnIndex++;
@@ -175,14 +191,16 @@ public class XLSBuilder extends AbstractXLSBuilder {
 	}
 	
 	public static XSSFWorkbook build(StandardReport report) throws Exception {
-		XLSBuilder builder = new XLSBuilder(report);
 		XSSFWorkbook workbook = new XSSFWorkbook();
-		builder.makeFormatters(workbook);
-		XSSFSheet sheet = workbook.createSheet();
-		
-
-		builder.buildReport(sheet);
+		build(report, workbook);
 		return workbook;
+	}
+
+	public static void build(StandardReport report, XSSFSheet sheet, ReportStartLoc reportStartLoc) throws Exception {
+		XLSBuilder builder = new XLSBuilder(report);
+		builder.setReportStartLoc(reportStartLoc);
+		builder.makeFormatters(sheet.getWorkbook());
+		builder.buildReport(sheet);
 	}
 
 }

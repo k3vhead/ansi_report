@@ -12,7 +12,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -23,8 +27,10 @@ import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.ReportOrientation;
+import com.ansi.scilla.report.reportBuilder.ReportStartLoc;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.XLSBuilder;
 import com.thewebthing.commons.lang.StringUtils;
 
 public class CashReceiptsRegisterDetailReport extends StandardReport {
@@ -59,7 +65,7 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 			"order by division_nbr, bill_to_name";
 	
 	public static final String REPORT_TITLE = "Cash Receipts Register Detail";
-	private final String REPORT_NOTES = "notes go here";
+//	private final String REPORT_NOTES = "notes go here";
 	
 	private Calendar startDate;
 	private Calendar endDate;
@@ -75,7 +81,7 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 	
 	private List<RowData> data;
 	
-	Logger logger = Logger.getLogger("com.ansi.scilla.common.report");
+	Logger logger = LogManager.getLogger(this.getClass());
 	
 	public CashReceiptsRegisterDetailReport() {
 		super();
@@ -91,7 +97,7 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 	 */
 	protected CashReceiptsRegisterDetailReport(Connection conn) throws Exception {
 		this();
-
+		logger.log(Level.DEBUG, "constructor1");
 		DateFormatter dateFormatter = (DateFormatter)DataFormats.DATE_FORMAT.formatter();
 		startDate = (Calendar)Midnight.getInstance(new AnsiTime());
 		startDate.set(Calendar.DAY_OF_MONTH, 1);
@@ -267,6 +273,10 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 		super.makeHeaderRight(headerRight);
 	}
 	
+	public void makeXLS(XSSFWorkbook workbook) throws Exception {
+		XSSFSheet sheet = workbook.createSheet();
+		XLSBuilder.build(this, sheet, new ReportStartLoc(0, 0));
+	}
 	
 	public static CashReceiptsRegisterDetailReport buildReport(Connection conn) throws Exception {
 		return new CashReceiptsRegisterDetailReport(conn);

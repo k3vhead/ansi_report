@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Footer;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -50,12 +51,19 @@ public abstract class DataDumpReport extends CustomReport {
 	
 	protected DataDumpReport() throws Exception {
 		super();		
-		this.logger = Logger.getLogger("com.ansi.scilla.common.reportBuilder.DataDumpReport");
+		this.logger = LogManager.getLogger(this.getClass());
 		makeCellStyles();
 		makeCellContentStyles();
 		makeDataFormatters();
 	}
 	
+	
+	@Override
+	public Integer getReportWidth() {
+		return columnHeaders.size();
+	}
+
+
 	/**
 	 * Default formatting for HTML Cells. This method can be overridden for custom formatting
 	 */

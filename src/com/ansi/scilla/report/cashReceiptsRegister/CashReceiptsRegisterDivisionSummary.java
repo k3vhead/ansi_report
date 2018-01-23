@@ -9,7 +9,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -53,7 +55,7 @@ public class CashReceiptsRegisterDivisionSummary extends StandardReport {
 	private Calendar endDate;
 	private List<RowData> data;
 
-	Logger logger = Logger.getLogger("com.ansi.scilla.common.report");
+	Logger logger = LogManager.getLogger(this.getClass());
 	
 	public CashReceiptsRegisterDivisionSummary() {
 		super();
@@ -113,6 +115,7 @@ public class CashReceiptsRegisterDivisionSummary extends StandardReport {
 		PreparedStatement ps = conn.prepareStatement(DIVISION_SUMMARY_SQL);
 		ps.setDate(1, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(2, new java.sql.Date(endDate.getTimeInMillis()));
+
 		ResultSet rs = ps.executeQuery();
 		while ( rs.next() ) {
 			data.add(new RowData(rs));
@@ -121,6 +124,8 @@ public class CashReceiptsRegisterDivisionSummary extends StandardReport {
 		
 		return data;
 	}
+	
+	
 	@SuppressWarnings("unchecked")
 	private void makeReport(Calendar startDate, Calendar endDate, List<RowData> data, String subtitle) throws NoSuchMethodException, SecurityException {
 
@@ -139,11 +144,11 @@ public class CashReceiptsRegisterDivisionSummary extends StandardReport {
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
 		super.setDataRows(oData);
 		
-		List<ReportHeaderRow> headerLeft = new ArrayList<ReportHeaderRow>();
-		super.makeHeaderLeft(headerLeft);
+//		List<ReportHeaderRow> headerLeft = new ArrayList<ReportHeaderRow>();
+//		super.makeHeaderLeft(headerLeft);
 		
-		List<ReportHeaderRow> headerRight = new ArrayList<ReportHeaderRow>();
-		super.makeHeaderRight(headerRight);
+//		List<ReportHeaderRow> headerRight = new ArrayList<ReportHeaderRow>();
+//		super.makeHeaderRight(headerRight);
 	}
 	
 	

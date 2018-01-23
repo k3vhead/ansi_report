@@ -23,16 +23,51 @@ public class XLSCellMerge {
 			"require updating before they can run. Please contact the administrative team and let them " +
 			"know what you would like to do with these tickets. \n** = A status of 'Finished' means that the " +
 			"ticket has been processed as being completed but has not yet been assigned to an invoice for billing";
-	private final String testFile = "/Users/jwlew/Documents/mergetest.xlsx";
+//	private final String testFile = "/Users/jwlew/Documents/mergetest.xlsx";
+	private final String testFile = "/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/mergetest.xlsx";
 	
 	public static void main(String[] args) {
 		System.out.println("start");
 		try {
-			new XLSCellMerge().go();
+//			new XLSCellMerge().go();
+			new XLSCellMerge().testRow();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		System.out.println("end");
+	}
+
+	private void testRow() throws Exception {
+		XSSFWorkbook workbook = new XSSFWorkbook();	
+		XSSFSheet sheet = workbook.createSheet();
+
+		for ( int j = 0; j < 5; j++ ) {
+			System.out.println("Trying row " + j);
+			XSSFRow row = sheet.getRow(j);
+			if ( row == null ) {
+				System.out.println("\tcreating " + j);
+				row = sheet.createRow(j);
+			}
+			for ( int i = 0 ; i < 5; i++ ) {
+				XSSFCell cell = row.createCell(i);
+				cell.setCellValue("Col " + j + "-" + i);
+			}
+		}
+		
+		for ( int j = 0; j < 10; j++ ) {
+			System.out.println("Trying row " + j);
+
+			XSSFRow row = sheet.getRow(j);
+			if ( row == null ) {
+				System.out.println("\tcreating " + j);
+				row = sheet.createRow(j);
+			}
+			for ( int i = 3 ; i < 12; i++ ) {
+				XSSFCell cell = row.createCell(i);
+				cell.setCellValue("v2 " + j + "-" + i);
+			}
+		}
+		workbook.write(new FileOutputStream(testFile));
 	}
 
 	public void go() throws Exception {

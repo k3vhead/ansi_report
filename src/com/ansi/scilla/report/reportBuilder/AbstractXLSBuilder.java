@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -41,7 +42,7 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 	protected Date runDate;
 	protected Date startDate;
 	protected Date endDate;
-
+	protected ReportStartLoc reportStartLoc = new ReportStartLoc(0,0);
 
 
 
@@ -148,7 +149,7 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 		XSSFCell cell = null;
 		
 		row = sheet.createRow(rowIndex);
-		int colIndex = 0;
+		int colIndex = this.reportStartLoc.columnIndex;
 		
 		for ( ReportHeaderCol headerCol : headerLeft ) {
 			if ( headerCol != null && ! headerCol.getRowList().isEmpty() && headerCol.getRowList().size() > rowIndex ) {
@@ -203,6 +204,14 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 
 	public void setMarginRight(Double marginRight) {
 		this.marginRight = marginRight;
+	}
+
+	public ReportStartLoc getReportStartLoc() {
+		return reportStartLoc;
+	}
+
+	public void setReportStartLoc(ReportStartLoc reportStartLoc) {
+		this.reportStartLoc = reportStartLoc;
 	}
 
 	/**
@@ -327,8 +336,10 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 		}
 		
 		if ( addASub ) {
-			int rowNum = sheet.getLastRowNum() + 1;
-			XSSFRow reportRow = sheet.createRow(rowNum);
+			//subtract 1 because getReportHeight includes this row that we're getting ready to add
+			//subtract another 1 because the rownumbers are zero-based
+			int rowNum = this.reportStartLoc.rowIndex + report.getReportHeight() - 2;  
+			XSSFRow reportRow = XLSReportBuilderUtils.makeRow(sheet, rowNum); 
 
 			int columnIndex = 0;
 			for ( int i = 0; i < subtotalValues.length; i++ ) {
@@ -356,15 +367,22 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 		XSSFRow row = null;
 		XSSFCell cell = null;
 
-		int rowNum = sheet.getLastRowNum() + 1;
+		int rowNum = this.getReportStartLoc().rowIndex + report.getReportHeight() - 1;
 		row = sheet.createRow(rowNum);
 
-		int columnIndex = 0;
+		int columnIndex = this.reportStartLoc.columnIndex;
 		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
 			ColumnHeader columnHeader = report.getHeaderRow()[i];
 			if ( i == 1 ) {
-				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+				Integer startMerge = this.reportStartLoc.columnIndex;
+				Integer endMerge = this.reportStartLoc.columnIndex + 1;
+				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startMerge, endMerge));
 				columnIndex++;
+			}
+			if ( i == report.getHeaderRow().length - 1 ) {
+				Integer startMerge = this.reportStartLoc.columnIndex + report.getHeaderRow().length;
+				Integer endMerge = this.reportStartLoc.columnIndex + report.getHeaderRow().length + 1;
+				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startMerge, endMerge));
 			}
 			cell = row.createCell(columnIndex);
 			if ( !columnHeader.getSummaryType().equals(SummaryType.NONE)) {

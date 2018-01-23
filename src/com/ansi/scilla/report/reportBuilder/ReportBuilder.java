@@ -38,7 +38,7 @@ public abstract class ReportBuilder extends ApplicationObject {
 	protected HashMap<String, List<Object>> subtotalCountDistinct = new HashMap<String, List<Object>>();
 	
 	protected AbstractReport report;
-	private Logger logger;
+	protected Logger logger;
 
 
 
@@ -77,6 +77,7 @@ public abstract class ReportBuilder extends ApplicationObject {
 	 * Figure out how many rows of titles and/or header data we have. There is always at least 
 	 * a single row for the banner. Count is incremented for title and subtitle, and for each row
 	 * of header data (right/left columns) beyond the banner/title/subtitle.
+	 * @deprecated Use ReportUtils.makeHeaderRowCount()
 	 * @return
 	 */
 	protected int makeHeaderRowCount() {

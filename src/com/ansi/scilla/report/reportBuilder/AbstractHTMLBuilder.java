@@ -38,7 +38,8 @@ public abstract class AbstractHTMLBuilder extends ReportBuilder {
 	
 	protected String makeHeader() throws Exception {
 		StringBuffer buffer = new StringBuffer();
-		int headerRowCount = makeHeaderRowCount();
+//		int headerRowCount = makeHeaderRowCount();
+		int headerRowCount = ReportBuilderUtils.makeHeaderRowCount(this.getReport());
 		
 		buffer.append(makeHeaderRow(0, report.getHeaderLeft(), report.getBanner(), report.getHeaderRight(), HTMLReportFormatter.CSS_BANNER, HTMLReportFormatter.CSS_BANNER_TEXT));
 		if ( headerRowCount > 1 ) {

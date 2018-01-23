@@ -30,6 +30,11 @@ public class ReportHeaderCol extends ApplicationObject implements Comparable<Rep
 	public void setSeq(Integer seq) {
 		this.seq = seq;
 	}
+	
+	public Integer size() {
+		return rowList.size();
+	}
+	
 	@Override
 	public int compareTo(ReportHeaderCol o) {
 		return this.seq.compareTo(o.getSeq());

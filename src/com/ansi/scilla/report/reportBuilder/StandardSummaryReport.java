@@ -20,6 +20,17 @@ public abstract class StandardSummaryReport extends AbstractReport {
 		this.companySummary = companySummary;
 	}
 
+	
+	@Override
+	public Integer getReportWidth() {
+		Integer divisionWidth = divisionSummary == null ? 0 : divisionSummary.getReportWidth();
+		Integer regionWidth = regionSummary == null ? 0 : regionSummary.getReportWidth();
+		Integer companyWidth = companySummary == null ? 0 : companySummary.getReportWidth();
+		
+		return Math.max(divisionWidth, regionWidth) + companyWidth;
+	}
+
+
 	public StandardReport getDivisionSummary() {
 		return divisionSummary;
 	}

@@ -13,16 +13,14 @@
 	</Appenders>
 	<Loggers>
 		<Logger name="com.thewebthing" level="info">
+		<appender-ref ref="STDOUT" level="info" />		
 	</Logger>
-	<Logger name="com.ansi.scilla.report.test" level="debug">
+	<Logger name="com.ansi.scilla.report" level="debug">
 		<appender-ref ref="STDOUT" level="debug" />
 		<!-- Use this if you want your logging to go to a file -->
 		<!-- 
 		<appender-ref ref="FILE-OUTPUT" level="debug" />
 		 -->
-	</Logger>
-	<Logger name="com.ansi.scilla.report" level="error">
-		<appender-ref ref="STDOUT" level="error" />
 	</Logger>
 	<Logger name="org.apache" level="fatal">
 		<appender-ref ref="STDOUT" level="fatal" />
