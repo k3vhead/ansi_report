@@ -381,9 +381,10 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 			this.jobFrequency = rs.getString("job_frequency");
 			String ticketType = rs.getString("ticket_type"); 
 			this.ticketType = TicketType.lookup(ticketType).display();
-			String invoiceStyle = rs.getString("invoice_style");
-			if( invoiceStyle.equals(null) ){
-				this.invoiceStyle = InvoiceStyle.get(invoiceStyle).display();
+			//String invoiceStyle = rs.getString("invoice_style");
+			Object invoiceStyle = rs.getObject("invoice_style");
+			if( invoiceStyle != null ){
+				this.invoiceStyle = new String(rs.getString("invoice_style"));
 			}
 			Object lastRun = rs.getObject("last_run");
 			if ( lastRun != null ) {

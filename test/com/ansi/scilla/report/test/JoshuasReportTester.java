@@ -72,15 +72,15 @@ public class JoshuasReportTester {
 
 	private void makeClientUsage(Connection conn) throws Exception {
 		logger.info("DO Report");
-//		DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId, endDate);
-//		XSSFWorkbook workbook = XLSBuilder.build(userReport);
-//		XSSFWorkbook workbook = userReport.makeXLS();
-		CashReceiptsRegisterDetailReport userReport = CashReceiptsRegisterDetailReport.buildReport(conn, startDate, endDate);
+		DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId, endDate);
 		XSSFWorkbook workbook = XLSBuilder.build(userReport);
-		workbook.write(new FileOutputStream(joshuasTestResultDirectory + "cashReceipts.xlsx"));
+//		XSSFWorkbook workbook = userReport.makeXLS();
+//		CashReceiptsRegisterDetailReport userReport = CashReceiptsRegisterDetailReport.buildReport(conn, startDate, endDate);
+//		XSSFWorkbook workbook = XLSBuilder.build(userReport);
+		workbook.write(new FileOutputStream(joshuasTestResultDirectory + "DOReport.xlsx"));
 
 		String html = HTMLBuilder.build(userReport);
-		FileUtils.write(new File(joshuasTestResultDirectory + "cashReceipts.html"), html);
+		FileUtils.write(new File(joshuasTestResultDirectory + "DOReport.html"), html);
 		
 	}
 
