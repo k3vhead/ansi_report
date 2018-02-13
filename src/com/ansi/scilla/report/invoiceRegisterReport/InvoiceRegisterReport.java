@@ -54,11 +54,13 @@ public class InvoiceRegisterReport extends StandardReport {
 		+ "\n\tticket.act_price_per_cleaning as invoice_amount, "
 		+ "\n\tjob_site.name as building_name "
 		+ "\nfrom ticket "
-		+ "\ninner join job on job.job_id=ticket.job_id and job.division_id=? "
+//		+ "\ninner join job on job.job_id=ticket.job_id and job.division_id=? "
+		+ "\ninner join job on job.job_id=ticket.job_id "
 		+ "\ninner join quote on quote.quote_id=job.quote_id "
 		+ "\ninner join address bill_to on bill_to.address_id=quote.bill_to_address_id "
 		+ "\ninner join address job_site on job_site.address_id = quote.job_site_address_id "
-		+ "\nwhere ticket.invoice_date is not null and year(ticket.invoice_date)=? and month(ticket.invoice_date)=? ";
+		+ "\nwhere ticket.act_division_id=? and ticket.invoice_date is not null and year(ticket.invoice_date)=? and month(ticket.invoice_date)=? "
+		+ "\n ";
 	
 	public static final String REPORT_TITLE = "Invoice Register";
 //	private final String REPORT_NOTES = "notes go here";
