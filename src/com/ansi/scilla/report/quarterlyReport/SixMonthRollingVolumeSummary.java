@@ -3,12 +3,12 @@ package com.ansi.scilla.report.quarterlyReport;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +25,8 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.ansi.scilla.common.ApplicationObject;
+import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport.RowData;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
@@ -72,18 +74,23 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 	
 	private Integer jobCount;
 	private Integer contracts;
+	private Date quarterEnd;
 	private Integer volForcastOct;
 	private Integer volForcastNov;
 	private Integer volForcastDec;
+	private Integer quarter1;
 	private Integer volForcastJan;
 	private Integer volForcastFeb;
 	private Integer volForcastMar;
+	private Integer quarter2;
 	private Integer volForcastApr;
 	private Integer volForcastMay;
 	private Integer volForcastJun;
+	private Integer quarter3;
 	private Integer volForcastJul;
 	private Integer volForcastAug;
 	private Integer volForcastSep;
+	private Integer quarter4;
 	
 	private SixMonthRollingVolumeSummary() {
 		super();
@@ -106,6 +113,10 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 	public Integer getContracts() {
 		return contracts;
 	}
+	
+	public Date getQuarterEnd(){
+		return quarterEnd;
+	}
 
 	public Integer getVolForcastOct() {
 		return volForcastOct;
@@ -117,6 +128,10 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 
 	public Integer getVolForcastDec() {
 		return volForcastDec;
+	}
+	
+	public Integer getQuarter1() {
+		return quarter1;
 	}
 
 	public Integer getVolForcastJan() {
@@ -130,6 +145,10 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 	public Integer getVolForcastMar() {
 		return volForcastMar;
 	}
+	
+	public Integer getQuarter2() {
+		return quarter2;
+	}
 
 	public Integer getVolForcastApr() {
 		return volForcastApr;
@@ -142,7 +161,11 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 	public Integer getVolForcastJun() {
 		return volForcastJun;
 	}
-
+	
+	public Integer getQuarter3() {
+		return quarter3;
+	}
+	
 	public Integer getVolForcastJul() {
 		return volForcastJul;
 	}
@@ -155,48 +178,34 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 		return volForcastSep;
 	}
 	
+	public Integer getQuarter4() {
+		return quarter4;
+	}
+	
 
 	private void makeData(Connection conn) throws Exception {
 		//super.setSubtitle(makeSubtitle());
 		super.setHeaderRow(new ColumnHeader[] {
+			new ColumnHeader("quarterEnd", "Quarter End", DataFormats.DATE_FORMAT, SummaryType.NONE),
 			new ColumnHeader("jobCount","Job Count", DataFormats.STRING_FORMAT, SummaryType.NONE),
 			new ColumnHeader("contracts", "Contracts", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastOct", "Volume Forcast Oct", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
-			new ColumnHeader("volForcastNov", "Volume Forcast Oct", DataFormats.STRING_CENTERED, SummaryType.NONE),
-			new ColumnHeader("volForcastDec", "Volume Forcast Oct", DataFormats.DATE_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastJan", "Volume Forcast Oct", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastFeb", "Volume Forcast Oct", DataFormats.DATE_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastmar", "Volume Forcast Oct", DataFormats.DECIMAL_FORMAT, SummaryType.SUM, "clientName"),
-			new ColumnHeader("volForcastApr", "Volume Forcast Oct", DataFormats.STRING_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastMay", "Volume Forcast Oct", DataFormats.STRING_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastJun", "Volume Forcast Oct", DataFormats.STRING_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastJul", "Volume Forcast Oct", DataFormats.STRING_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastAug", "Volume Forcast Oct", DataFormats.STRING_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastSep", "Volume Forcast Oct", DataFormats.STRING_FORMAT, SummaryType.NONE)
-		});
-		
-		Method getRunDateMethod = this.getClass().getMethod("getRunDate", (Class<?>[])null);
-		Method getStartDateMethod = this.getClass().getMethod("getStartDate", (Class<?>[])null);
-		Method getEndDateMethod = this.getClass().getMethod("getEndDate", (Class<?>[])null);
-		Method getDivMethod = this.getClass().getMethod("getDiv", (Class<?>[])null);
-		Method getTotalInvoicedMethod = this.getClass().getMethod("getTotalInvoiced", (Class<?>[])null);
-		Method getTicketCountMethod = this.getClass().getMethod("getTicketCount", (Class<?>[])null);
-		
-		List<ReportHeaderRow> headerLeft = Arrays.asList(new ReportHeaderRow[] {
-			new ReportHeaderRow("Created:", getRunDateMethod, 0, DataFormats.DATE_TIME_FORMAT),
-			new ReportHeaderRow("From:", getStartDateMethod, 2, DataFormats.DATE_FORMAT),
-			new ReportHeaderRow("To:", getEndDateMethod, 3, DataFormats.DATE_FORMAT)
-		});
-		super.makeHeaderLeft(headerLeft);
-		
-
-		List<ReportHeaderRow> headerRight = Arrays.asList(new ReportHeaderRow[] {
-			new ReportHeaderRow("Division:", getDivMethod, 0, DataFormats.STRING_FORMAT),
-			new ReportHeaderRow("Total Invoiced:", getTotalInvoicedMethod, 0, DataFormats.DECIMAL_FORMAT),
-			new ReportHeaderRow("Tickets:", getTicketCountMethod, 0, DataFormats.INTEGER_FORMAT)
-		});
-		super.makeHeaderRight(headerRight);
-		
+			new ColumnHeader("volForcastOct", "Oct", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
+			new ColumnHeader("volForcastNov", "Nov", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
+			new ColumnHeader("volForcastDec", "Dec", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("quarter1", "Quarter", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForcastJan", "Jan", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForcastFeb", "Feb", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForcastmar", "Mar", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("quarter2", "Quarter", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForcastApr", "Apr", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForcastMay", "May", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForcastJun", "Jun", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("quarter3", "Quarter", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForcastJul", "Jul", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForcastAug", "Aug", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForcastSep", "Sep", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("quarter4", "Quarter", DataFormats.NUMBER_FORMAT, SummaryType.NONE)
+		});		
 		
 		
 //		PreparedStatement psData = conn.prepareStatement(sql + "\norder by bill_to.name, ticket.invoice_date");
@@ -394,109 +403,8 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 //	    cellStyleBuildingName.setIndention((short)20);
 	    cellStyleBuildingName.setFont(fontBuildingName);
 	    
-	    
-	    
 	    rowNum = 0;
 	    colNum = 0;
-	    row = sheet.createRow(rowNum);
-	    row.setHeight((short)400);
-	    sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,1,2));
-	    sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,3,7));
-	    cell = row.createCell(colNum);	
-//	    cell.setCellStyle(cellStyleHeaderLabel);
-	    cell.setCellStyle(cellStyleCreatedLabel);	    
-	    cell.setCellValue("Created:");
-	    colNum++;
-	    cell = row.createCell(colNum);
-	    cell.setCellStyle(cellStyleRunDate);
-	    cell.setCellValue(this.runDate);
-	    colNum++;
-	    colNum++;  // make up for merged rows
-	    cell = row.createCell(colNum);
-	    cell.setCellStyle(cellStyleAnsi);
-	    cell.setCellValue("American National Skyline, Inc.");
-	    colNum = 9;
-	    cell = row.createCell(colNum);
-	    cell.setCellStyle(cellStyleCreatedLabel);
-	    //cell.setCellValue("Division:");
-	    colNum++;
-	    cell = row.createCell(colNum);
-	    cell.setCellStyle(cellStyleHeaderDivision);
-	    //cell.setCellValue(this.div);
-	    
-	    
-	    rowNum++;
-	    colNum = 0;
-	    row = sheet.createRow(rowNum);
-	    row.setHeight((short)300);
-	    sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,3,7));
-	    cell = row.createCell(colNum);
-	    cell.setCellStyle(cellStyleCreatedLabel);
-	    cell.setCellValue("From:");
-	    colNum++;
-	    cell = row.createCell(colNum);
-	    cell.setCellStyle(cellStyleHeaderDate);
-	    //cell.setCellValue(this.startDate);
-	    colNum++;
-	    colNum++;
-	    cell = row.createCell(colNum);
-	    cell.setCellStyle(cellStyleReportTitle);
-	    cell.setCellValue("Invoice Register");
-	    colNum = 9;
-	    cell = row.createCell(colNum);
-	    cell.setCellStyle(cellStyleCreatedLabel);
-	    cell.setCellValue("Total Invoiced:");
-	    colNum++;
-	    cell = row.createCell(colNum);	    
-	    cell.setCellStyle(cellStyleHeaderDecimal);
-	    //cell.setCellValue(this.totalInvoiced.doubleValue());
-	    
-	    rowNum++;
-	    colNum = 0;
-	    row = sheet.createRow(rowNum);
-	    sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,3,7));
-	    cell = row.createCell(colNum);
-	    cell.setCellStyle(cellStyleCreatedLabel);
-	    cell.setCellValue("To:");
-	    colNum++;
-	    cell = row.createCell(colNum);
-	    cell.setCellStyle(cellStyleHeaderDate);
-	    //cell.setCellValue(this.endDate);
-	    colNum++;
-	    colNum++;
-	    XSSFCell mycell = row.createCell(colNum);
-	    mycell.setCellStyle(cellStyleSubtitle);
-	    mycell.setCellValue(subtitle);
-	    colNum=9;
-	    cell = row.createCell(colNum);
-	    cell.setCellStyle(cellStyleCreatedLabel);
-	    cell.setCellValue("Tickets:");
-	    colNum++;
-	    cell = row.createCell(colNum);	   
-	    cell.setCellStyle(cellStyleHeaderInteger);
-	    //cell.setCellValue(this.ticketCount);
-	    
-	    rowNum++;
-	    row = sheet.createRow(rowNum);
-	    sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,0,1));
-	    sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,9,10));
-	    colNum = 0;
-	    cell = row.createCell(colNum);
-    	cell.setCellStyle(cellStyleColHdr);
-    	cell.setCellValue("Client Name");
-    	colNum++;	//colNum 1
-    	colNum++; 	//colNum 2
-	    for ( String colHdr : new String[] {
-	    		"Job ID",			"Ticket ID",	"Type",
-	    		"Date Complete",	"Invoice #",	"Invoice Date",
-	    		"Invoice Amount",	"Building Name"}) {
-	    	cell = row.createCell(colNum);
-	    	cell.setCellStyle(cellStyleColHdr);
-	    	cell.setCellValue(colHdr);
-	    	colNum++; //colNum 3-10
-	    }
-	    rowNum++;
-	    
 	    String previousClient = null;
 	    Double clientTotal = 0.0D;	    
 	    
@@ -511,111 +419,121 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 		for ( Object rowObject : super.getDataRows() ) {
 			RowData rowData = (RowData)rowObject;
 			colNum = 0;
-			if ( ! StringUtils.isBlank(previousClient) && ! rowData.getClientName().equals(previousClient)) {
-				row = sheet.createRow(rowNum);
-			    sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,0,1));
-			    sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,9,10));
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleSummaryRowName);
-				cell.setCellValue(previousClient + " sum");
-				
-				cell = row.createCell(8);
-				cell.setCellStyle(cellStyleSummaryAmt);;
-				cell.setCellValue(clientTotal);
-				
-				clientTotal = 0.0D;
-				rowNum++;
-			}
-			previousClient = rowData.getClientName();
-			clientTotal = clientTotal + rowData.getInvoiceAmount().doubleValue();
-			
 			
 			row = sheet.createRow(rowNum);
-		    sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,0,1));
-		    sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,9,10));
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleDateComplete);
+			cell.setCellValue(rowData.getQuarterEnd());
+			colNum++;
+			
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleClientName);
-			cell.setCellValue(rowData.getClientName());
-			colNum++;
-			colNum++;    // add 2 because we're merging cells to get the header to line up
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleJobId);
-			cell.setCellValue(rowData.getJobId());
+			cell.setCellValue(rowData.getJobCount());
 			colNum++;
 
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleTicketId);
-			cell.setCellValue(rowData.getTicketId());
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getContracts());
 			colNum++;
 
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleTicketType);
-			cell.setCellValue(rowData.getTicketType());
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getVolForcastOct());
 			colNum++;
 			
 			cell = row.createCell(colNum);
-		    cell.setCellStyle(cellStyleDateComplete);
-			if ( rowData.getDateComplete() != null ) {
-				cell.setCellValue(rowData.getDateComplete());
-			}
+		    cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getVolForcastNov());
 			colNum++;
 
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleInvoiceId);
-			cell.setCellValue(rowData.getInvoiceId());
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getVolForcastDec());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getQuarter1());
 			colNum++;
 
 			cell = row.createCell(colNum);
-		    cell.setCellStyle(cellStyleInvoiceDate);
-			cell.setCellValue(rowData.getInvoiceDate());
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getVolForcastJan());
 			colNum++;
 
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleInvoiceAmount);
-			cell.setCellValue(rowData.getInvoiceAmount().doubleValue());
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getVolForcastFeb());
 			colNum++;
 
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleBuildingName);
-			cell.setCellValue(rowData.getBuildingName());
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getVolForcastMar());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getQuarter2());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getVolForcastApr());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+		    cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getVolForcastMay());
+			colNum++;
+
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getVolForcastJun());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getQuarter3());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getVolForcastJul());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+		    cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getVolForcastAug());
+			colNum++;
+
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getVolForcastSep());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getQuarter4());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getAnnual());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getJobAvg());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleClientName);
+			cell.setCellValue(rowData.getContractAvg());
 			colNum++;
 
 			rowNum++;
 		}
 		
-		// show the last group total
-		if ( previousClient != null ) {
-			row = sheet.createRow(rowNum);
-		    sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,0,1));
-		    sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,9,10));
-			cell = row.createCell(0);
-			cell.setCellStyle(cellStyleSummaryRowName);
-			cell.setCellValue(previousClient + " sum");
-			
-			cell = row.createCell(8);
-			cell.setCellStyle(cellStyleSummaryAmt);;
-			cell.setCellValue(clientTotal);
-			
-			rowNum++;
-		}
-		
-		
-		// show the grand total
-		row = sheet.createRow(rowNum);
-		cell = row.createCell(0);
-		cell.setCellStyle(cellStyleSummaryRowName);
-		cell.setCellValue("Grand Total:");
-		cell = row.createCell(8);
-		cell.setCellStyle(cellStyleSummaryAmt);
-		//cell.setCellValue(this.totalInvoiced.doubleValue());
-		
-		sheet.setColumnWidth(0, 3000);
-		sheet.setColumnWidth(1, 3700);
-		sheet.setColumnWidth(5, 2500);
-		sheet.setColumnWidth(7, 2500);
-		sheet.setColumnWidth(9, 3400);
-		sheet.setColumnWidth(10, 4200);
 		return workbook;
 	}
 	
@@ -634,7 +552,150 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 		return StringUtils.join(subtitle, " ");
 	}
 	
-	
+	public class RowData extends ApplicationObject {
+		private static final long serialVersionUID = 1L;
+
+		private Integer jobCount;
+		private Integer contracts;
+		private Date quarterEnd;
+		private Integer volForcastOct;
+		private Integer volForcastNov;
+		private Integer volForcastDec;
+		private Integer quarter1;
+		private Integer volForcastJan;
+		private Integer volForcastFeb;
+		private Integer volForcastMar;
+		private Integer quarter2;
+		private Integer volForcastApr;
+		private Integer volForcastMay;
+		private Integer volForcastJun;
+		private Integer quarter3;
+		private Integer volForcastJul;
+		private Integer volForcastAug;
+		private Integer volForcastSep;
+		private Integer quarter4;
+		private Integer annual;
+		private Integer jobAvg;
+		private Integer contractAvg;
+		
+		public RowData(ResultSet rs) throws SQLException {
+			java.sql.Date quarterEndTime = rs.getDate("quarter_end");
+			if (quarterEndTime != null ) {
+				this.quarterEnd = new Date(quarterEndTime.getTime());
+			}
+			this.jobCount = rs.getInt("job_count");
+			this.contracts = rs.getInt("contracts");
+			this.volForcastOct = rs.getInt("vol_forcast_oct");
+			this.volForcastNov = rs.getInt("vol_forcast_nov");
+			this.volForcastDec = rs.getInt("vol_forcast_dec");
+			this.volForcastJan = rs.getInt("vol_forcast_jan");
+			this.volForcastFeb = rs.getInt("vol_forcast_feb");
+			this.volForcastMar = rs.getInt("vol_forcast_mar");
+			this.volForcastApr = rs.getInt("vol_forcast_apr");
+			this.volForcastMay = rs.getInt("vol_forcast_may");
+			this.volForcastJun = rs.getInt("vol_forcast_jun");
+			this.volForcastJul = rs.getInt("vol_forcast_jul");
+			this.volForcastAug = rs.getInt("vol_forcast_aug");
+			this.volForcastSep = rs.getInt("vol_forcast_sep");
+		}
+
+		public Integer getJobCount() {
+			return jobCount;
+		}
+
+		public Integer getContracts() {
+			return contracts;
+		}
+
+		public Date getQuarterEnd() {
+			return quarterEnd;
+		}
+
+		public Integer getVolForcastOct() {
+			return volForcastOct;
+		}
+
+		public Integer getVolForcastNov() {
+			return volForcastNov;
+		}
+
+		public Integer getVolForcastDec() {
+			return volForcastDec;
+		}
+		
+		public Integer getQuarter1() {
+			this.quarter1 = getVolForcastOct() + getVolForcastNov() + getVolForcastDec();
+			return quarter1;
+		}
+
+		public Integer getVolForcastJan() {
+			return volForcastJan;
+		}
+
+		public Integer getVolForcastFeb() {
+			return volForcastFeb;
+		}
+
+		public Integer getVolForcastMar() {
+			return volForcastMar;
+		}
+		
+		public Integer getQuarter2() {
+			this.quarter2 = getVolForcastJan() + getVolForcastFeb() + getVolForcastMar();
+			return quarter2;
+		}
+
+		public Integer getVolForcastApr() {
+			return volForcastApr;
+		}
+
+		public Integer getVolForcastMay() {
+			return volForcastMay;
+		}
+
+		public Integer getVolForcastJun() {
+			return volForcastJun;
+		}
+		
+		public Integer getQuarter3() {
+			this.quarter3 = getVolForcastApr() + getVolForcastMay() + getVolForcastJun();
+			return quarter3;
+		}
+
+		public Integer getVolForcastJul() {
+			return volForcastJul;
+		}
+
+		public Integer getVolForcastAug() {
+			return volForcastAug;
+		}
+
+		public Integer getVolForcastSep() {
+			return volForcastSep;
+		}
+
+		public Integer getQuarter4() {
+			this.quarter4 = getVolForcastJul() + getVolForcastAug() + getVolForcastSep();
+			return quarter4;
+		}
+		
+		public Integer getAnnual() {
+			this.annual = getQuarter1() + getQuarter2() + getQuarter3() + getQuarter4();
+			return annual;
+		}
+		
+		public Integer getJobAvg() {
+			this.jobAvg = getAnnual()/getJobCount();
+			return jobAvg;
+		}
+		
+		public Integer getContractAvg() {
+			this.contractAvg = getAnnual()/getContracts();
+			return contractAvg;
+		}
+
+
+	}
 }
 
 
