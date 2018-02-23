@@ -1,13 +1,10 @@
 package com.ansi.scilla.report.quarterlyReport;
 
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -26,11 +23,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.ApplicationObject;
-import com.ansi.scilla.common.jobticket.TicketType;
-import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport.RowData;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
@@ -91,11 +85,15 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 	private Integer volForcastAug;
 	private Integer volForcastSep;
 	private Integer quarter4;
+	private Integer annual;
+	private Integer jobAvg;
+	private Integer contractAvg;
 	
-	private SixMonthRollingVolumeSummary() {
+	private SixMonthRollingVolumeSummary(Connection conn) throws Exception {
 		super();
 		this.setTitle(REPORT_TITLE);
 		super.setReportOrientation(ReportOrientation.LANDSCAPE);
+		makeData(conn);
 	}
 	
 //	private SixMonthRollingVolumeSummary(Connection conn,  Integer divisionId, Calendar startDate) throws Exception {
@@ -182,6 +180,17 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 		return quarter4;
 	}
 	
+	public Integer getAnnual(){
+		return annual;
+	}
+	
+	public Integer getJobAvg(){
+		return jobAvg;
+	}
+	
+	public Integer getContractAvg(){
+		return contractAvg;
+	}
 
 	private void makeData(Connection conn) throws Exception {
 		//super.setSubtitle(makeSubtitle());
@@ -204,7 +213,10 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 			new ColumnHeader("volForcastJul", "Jul", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 			new ColumnHeader("volForcastAug", "Aug", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 			new ColumnHeader("volForcastSep", "Sep", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("quarter4", "Quarter", DataFormats.NUMBER_FORMAT, SummaryType.NONE)
+			new ColumnHeader("quarter4", "Quarter", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("annual", "Annual", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("jobAvg", "Ave $/Job", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("contractAvg", "Ave $/Cont", DataFormats.NUMBER_FORMAT, SummaryType.NONE)
 		});		
 		
 		
