@@ -7,16 +7,15 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.utils.AppUtils;
-import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
+import com.ansi.scilla.report.quarterlyReport.SixMonthRollingVolumeSummary;
 import com.ansi.scilla.report.reportBuilder.HTMLBuilder;
 import com.ansi.scilla.report.reportBuilder.XLSBuilder;
-import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
+import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;;
 
 
 public class JoshuasReportTester {
@@ -44,12 +43,12 @@ public class JoshuasReportTester {
 	}
 	
 	private void makeMyReport() throws Exception {
-		this.logger = Logger.getLogger("com.ansi.scilla.common.test");
+		this.logger = Logger.getLogger("com.ansi.scilla.report.quarterlyReport");
 		logger.info("Start");
 		Connection conn = null;
 		
 		try {
-			conn = AppUtils.getProdConn();
+			conn = AppUtils.getDevConn();
 			conn.setAutoCommit(false);
 			
 			this.divisionId = 101;
@@ -71,16 +70,17 @@ public class JoshuasReportTester {
 
 
 	private void makeClientUsage(Connection conn) throws Exception {
-		logger.info("DO Report");
-		DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId, endDate);
+		logger.info("SixMonthRollingVolumeSummary");
+		//DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId, endDate);
+		SixMonthRollingVolumeSummary userReport = SixMonthRollingVolumeSummary.buildReport(conn);
 		XSSFWorkbook workbook = XLSBuilder.build(userReport);
 //		XSSFWorkbook workbook = userReport.makeXLS();
 //		CashReceiptsRegisterDetailReport userReport = CashReceiptsRegisterDetailReport.buildReport(conn, startDate, endDate);
 //		XSSFWorkbook workbook = XLSBuilder.build(userReport);
-		workbook.write(new FileOutputStream(joshuasTestResultDirectory + "DOReport.xlsx"));
+		workbook.write(new FileOutputStream(joshuasTestResultDirectory + "6mrvs.xlsx"));
 
 		String html = HTMLBuilder.build(userReport);
-		FileUtils.write(new File(joshuasTestResultDirectory + "DOReport.html"), html);
+		FileUtils.write(new File(joshuasTestResultDirectory + "6mrvs.html"), html);
 		
 	}
 

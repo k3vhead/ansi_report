@@ -3,8 +3,10 @@ package com.ansi.scilla.report.quarterlyReport;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -28,12 +30,13 @@ import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
 
 public class SixMonthRollingVolumeSummary extends StandardReport {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private final String sql = "select " +
+	private final String sql = "select * from (select top(43)" +
 				"\nCASE" +
 				"\nwhen month(QUARTER) in (1,2,3) then DATEFROMPARTS(year(quarter), 3, 31)" +
 				"\nwhen month(QUARTER) in (4,5,6) then DATEFROMPARTS(year(quarter), 6, 30)" +
@@ -62,32 +65,9 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 				"\nwhen month(QUARTER) in (7,8,9) then DATEFROMPARTS(year(quarter), 9, 30)" +
 				"\nwhen month(QUARTER) in (10,11,12) then DATEFROMPARTS(year(quarter), 12, 31)" +
 				"\nEND" +
-				"\norder by quarter_end";
+				"\norder by quarter_end desc) x order by quarter_end asc";
 	
 	public static final String REPORT_TITLE = "Six Month Rolling Volume Summary";
-	
-	private Integer jobCount;
-	private Integer contracts;
-	private Date quarterEnd;
-	private Integer volForcastOct;
-	private Integer volForcastNov;
-	private Integer volForcastDec;
-	private Integer quarter1;
-	private Integer volForcastJan;
-	private Integer volForcastFeb;
-	private Integer volForcastMar;
-	private Integer quarter2;
-	private Integer volForcastApr;
-	private Integer volForcastMay;
-	private Integer volForcastJun;
-	private Integer quarter3;
-	private Integer volForcastJul;
-	private Integer volForcastAug;
-	private Integer volForcastSep;
-	private Integer quarter4;
-	private Integer annual;
-	private Integer jobAvg;
-	private Integer contractAvg;
 	
 	private SixMonthRollingVolumeSummary(Connection conn) throws Exception {
 		super();
@@ -103,116 +83,28 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 //	makeDates(startDate);
 //	makeData(conn);	
 //}
-	
-	public Integer getJobCount() {
-		return jobCount;
-	}
-
-	public Integer getContracts() {
-		return contracts;
-	}
-	
-	public Date getQuarterEnd(){
-		return quarterEnd;
-	}
-
-	public Integer getVolForcastOct() {
-		return volForcastOct;
-	}
-
-	public Integer getVolForcastNov() {
-		return volForcastNov;
-	}
-
-	public Integer getVolForcastDec() {
-		return volForcastDec;
-	}
-	
-	public Integer getQuarter1() {
-		return quarter1;
-	}
-
-	public Integer getVolForcastJan() {
-		return volForcastJan;
-	}
-
-	public Integer getVolForcastFeb() {
-		return volForcastFeb;
-	}
-
-	public Integer getVolForcastMar() {
-		return volForcastMar;
-	}
-	
-	public Integer getQuarter2() {
-		return quarter2;
-	}
-
-	public Integer getVolForcastApr() {
-		return volForcastApr;
-	}
-
-	public Integer getVolForcastMay() {
-		return volForcastMay;
-	}
-
-	public Integer getVolForcastJun() {
-		return volForcastJun;
-	}
-	
-	public Integer getQuarter3() {
-		return quarter3;
-	}
-	
-	public Integer getVolForcastJul() {
-		return volForcastJul;
-	}
-
-	public Integer getVolForcastAug() {
-		return volForcastAug;
-	}
-
-	public Integer getVolForcastSep() {
-		return volForcastSep;
-	}
-	
-	public Integer getQuarter4() {
-		return quarter4;
-	}
-	
-	public Integer getAnnual(){
-		return annual;
-	}
-	
-	public Integer getJobAvg(){
-		return jobAvg;
-	}
-	
-	public Integer getContractAvg(){
-		return contractAvg;
-	}
 
 	private void makeData(Connection conn) throws Exception {
 		//super.setSubtitle(makeSubtitle());
 		super.setHeaderRow(new ColumnHeader[] {
 			new ColumnHeader("quarterEnd", "Quarter End", DataFormats.DATE_FORMAT, SummaryType.NONE),
-			new ColumnHeader("jobCount","Job Count", DataFormats.STRING_FORMAT, SummaryType.NONE),
+			new ColumnHeader("jobCount","Job Count", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 			new ColumnHeader("contracts", "Contracts", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastOct", "Oct", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
-			new ColumnHeader("volForcastNov", "Nov", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
-			new ColumnHeader("volForcastDec", "Dec", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastOct", "Oct", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
+			new ColumnHeader("volForecastNov", "Nov", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
+			new ColumnHeader("volForecastDec", "Dec", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 			new ColumnHeader("quarter1", "Quarter", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastJan", "Jan", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastFeb", "Feb", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastmar", "Mar", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastJan", "Jan", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastFeb", "Feb", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastMar", "Mar", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 			new ColumnHeader("quarter2", "Quarter", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastApr", "Apr", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastMay", "May", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastJun", "Jun", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastApr", "Apr", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastMay", "May", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastJun", "Jun", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 			new ColumnHeader("quarter3", "Quarter", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastJul", "Jul", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastAug", "Aug", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForcastSep", "Sep", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastJul", "Jul", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastAug", "Aug", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastSep", "Sep", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 			new ColumnHeader("quarter4", "Quarter", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 			new ColumnHeader("annual", "Annual", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 			new ColumnHeader("jobAvg", "Ave $/Job", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
@@ -220,52 +112,18 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 		});		
 		
 		
-//		PreparedStatement psData = conn.prepareStatement(sql + "\norder by bill_to.name, ticket.invoice_date");
-//		int n=1;
-//		psData.setInt(n, divisionId);
-//		n++;
-//		psData.setInt(n, this.startDate.get(Calendar.YEAR));
-//		n++;
-//		psData.setInt(n, this.startDate.get(Calendar.MONTH)+1);  // because JANUARY is 0
-//		
-//		ResultSet rsData = psData.executeQuery();
+		Statement psData = conn.createStatement();
 		
-//		this.data = new ArrayList<RowData>();
+		ResultSet rsData = psData.executeQuery(sql);
 		
-//		while ( rsData.next() ) {
-//			this.data.add(new RowData(rsData));
-//			super.addDataRow(new RowData(rsData));
-//		}
-//		rsData.close();
+		while ( rsData.next() ) {
+			super.addDataRow(new RowData(rsData));
+		}
+		rsData.close();
 
-		
-//		PreparedStatement psMeta = conn.prepareStatement( 
-//				"select count(*) as ticket_count, sum(invoice_amount) as total_invoiced from ( "
-//				+ sql
-//				+ ") t");
-//		n=1;
-//		psMeta.setInt(n, divisionId);
-//		n++;
-//		psMeta.setInt(n, this.startDate.get(Calendar.YEAR));
-//		n++;
-//		psMeta.setInt(n, this.startDate.get(Calendar.MONTH)+1);  // because JANUARY is 0		
-//		ResultSet rsMeta = psMeta.executeQuery();
-//		
-//		if ( rsMeta.next() ) {
-//			this.ticketCount = rsMeta.getInt("ticket_count");
-//			this.totalInvoiced = rsMeta.getBigDecimal("total_invoiced");
-//		} 
-//		rsMeta.close();
-//		
-//		if ( this.ticketCount == null ) {
-//			this.ticketCount = 0;
-//		}
-//		if ( this.totalInvoiced == null ) {
-//			this.totalInvoiced = BigDecimal.ZERO;
-//		}
 	}
 	
-	private XSSFWorkbook makeXLS() {
+	public XSSFWorkbook makeXLS() {
 		String subtitle = makeSubtitle();
 		
 		XSSFWorkbook workbook = new XSSFWorkbook();
@@ -450,17 +308,17 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleClientName);
-			cell.setCellValue(rowData.getVolForcastOct());
+			cell.setCellValue(rowData.getVolForecastOct());
 			colNum++;
 			
 			cell = row.createCell(colNum);
 		    cell.setCellStyle(cellStyleClientName);
-			cell.setCellValue(rowData.getVolForcastNov());
+			cell.setCellValue(rowData.getVolForecastNov());
 			colNum++;
 
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleClientName);
-			cell.setCellValue(rowData.getVolForcastDec());
+			cell.setCellValue(rowData.getVolForecastDec());
 			colNum++;
 			
 			cell = row.createCell(colNum);
@@ -470,17 +328,17 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleClientName);
-			cell.setCellValue(rowData.getVolForcastJan());
+			cell.setCellValue(rowData.getVolForecastJan());
 			colNum++;
 
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleClientName);
-			cell.setCellValue(rowData.getVolForcastFeb());
+			cell.setCellValue(rowData.getVolForecastFeb());
 			colNum++;
 
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleClientName);
-			cell.setCellValue(rowData.getVolForcastMar());
+			cell.setCellValue(rowData.getVolForecastMar());
 			colNum++;
 			
 			cell = row.createCell(colNum);
@@ -490,17 +348,17 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 			
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleClientName);
-			cell.setCellValue(rowData.getVolForcastApr());
+			cell.setCellValue(rowData.getVolForecastApr());
 			colNum++;
 			
 			cell = row.createCell(colNum);
 		    cell.setCellStyle(cellStyleClientName);
-			cell.setCellValue(rowData.getVolForcastMay());
+			cell.setCellValue(rowData.getVolForecastMay());
 			colNum++;
 
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleClientName);
-			cell.setCellValue(rowData.getVolForcastJun());
+			cell.setCellValue(rowData.getVolForecastJun());
 			colNum++;
 			
 			cell = row.createCell(colNum);
@@ -510,17 +368,17 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 			
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleClientName);
-			cell.setCellValue(rowData.getVolForcastJul());
+			cell.setCellValue(rowData.getVolForecastJul());
 			colNum++;
 			
 			cell = row.createCell(colNum);
 		    cell.setCellStyle(cellStyleClientName);
-			cell.setCellValue(rowData.getVolForcastAug());
+			cell.setCellValue(rowData.getVolForecastAug());
 			colNum++;
 
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleClientName);
-			cell.setCellValue(rowData.getVolForcastSep());
+			cell.setCellValue(rowData.getVolForecastSep());
 			colNum++;
 			
 			cell = row.createCell(colNum);
@@ -564,27 +422,31 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 		return StringUtils.join(subtitle, " ");
 	}
 	
+	public static SixMonthRollingVolumeSummary buildReport(Connection conn) throws Exception {
+		return new SixMonthRollingVolumeSummary(conn);
+	}
+	
 	public class RowData extends ApplicationObject {
 		private static final long serialVersionUID = 1L;
 
 		private Integer jobCount;
 		private Integer contracts;
 		private Date quarterEnd;
-		private Integer volForcastOct;
-		private Integer volForcastNov;
-		private Integer volForcastDec;
+		private Integer volForecastOct;
+		private Integer volForecastNov;
+		private Integer volForecastDec;
 		private Integer quarter1;
-		private Integer volForcastJan;
-		private Integer volForcastFeb;
-		private Integer volForcastMar;
+		private Integer volForecastJan;
+		private Integer volForecastFeb;
+		private Integer volForecastMar;
 		private Integer quarter2;
-		private Integer volForcastApr;
-		private Integer volForcastMay;
-		private Integer volForcastJun;
+		private Integer volForecastApr;
+		private Integer volForecastMay;
+		private Integer volForecastJun;
 		private Integer quarter3;
-		private Integer volForcastJul;
-		private Integer volForcastAug;
-		private Integer volForcastSep;
+		private Integer volForecastJul;
+		private Integer volForecastAug;
+		private Integer volForecastSep;
 		private Integer quarter4;
 		private Integer annual;
 		private Integer jobAvg;
@@ -597,18 +459,18 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 			}
 			this.jobCount = rs.getInt("job_count");
 			this.contracts = rs.getInt("contracts");
-			this.volForcastOct = rs.getInt("vol_forcast_oct");
-			this.volForcastNov = rs.getInt("vol_forcast_nov");
-			this.volForcastDec = rs.getInt("vol_forcast_dec");
-			this.volForcastJan = rs.getInt("vol_forcast_jan");
-			this.volForcastFeb = rs.getInt("vol_forcast_feb");
-			this.volForcastMar = rs.getInt("vol_forcast_mar");
-			this.volForcastApr = rs.getInt("vol_forcast_apr");
-			this.volForcastMay = rs.getInt("vol_forcast_may");
-			this.volForcastJun = rs.getInt("vol_forcast_jun");
-			this.volForcastJul = rs.getInt("vol_forcast_jul");
-			this.volForcastAug = rs.getInt("vol_forcast_aug");
-			this.volForcastSep = rs.getInt("vol_forcast_sep");
+			this.volForecastOct = rs.getInt("vol_forecast_oct");
+			this.volForecastNov = rs.getInt("vol_forecast_nov");
+			this.volForecastDec = rs.getInt("vol_forecast_dec");
+			this.volForecastJan = rs.getInt("vol_forecast_jan");
+			this.volForecastFeb = rs.getInt("vol_forecast_feb");
+			this.volForecastMar = rs.getInt("vol_forecast_mar");
+			this.volForecastApr = rs.getInt("vol_forecast_apr");
+			this.volForecastMay = rs.getInt("vol_forecast_may");
+			this.volForecastJun = rs.getInt("vol_forecast_jun");
+			this.volForecastJul = rs.getInt("vol_forecast_jul");
+			this.volForecastAug = rs.getInt("vol_forecast_aug");
+			this.volForecastSep = rs.getInt("vol_forecast_sep");
 		}
 
 		public Integer getJobCount() {
@@ -623,71 +485,71 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 			return quarterEnd;
 		}
 
-		public Integer getVolForcastOct() {
-			return volForcastOct;
+		public Integer getVolForecastOct() {
+			return volForecastOct;
 		}
 
-		public Integer getVolForcastNov() {
-			return volForcastNov;
+		public Integer getVolForecastNov() {
+			return volForecastNov;
 		}
 
-		public Integer getVolForcastDec() {
-			return volForcastDec;
+		public Integer getVolForecastDec() {
+			return volForecastDec;
 		}
 		
 		public Integer getQuarter1() {
-			this.quarter1 = getVolForcastOct() + getVolForcastNov() + getVolForcastDec();
+			this.quarter1 = getVolForecastOct() + getVolForecastNov() + getVolForecastDec();
 			return quarter1;
 		}
 
-		public Integer getVolForcastJan() {
-			return volForcastJan;
+		public Integer getVolForecastJan() {
+			return volForecastJan;
 		}
 
-		public Integer getVolForcastFeb() {
-			return volForcastFeb;
+		public Integer getVolForecastFeb() {
+			return volForecastFeb;
 		}
 
-		public Integer getVolForcastMar() {
-			return volForcastMar;
+		public Integer getVolForecastMar() {
+			return volForecastMar;
 		}
 		
 		public Integer getQuarter2() {
-			this.quarter2 = getVolForcastJan() + getVolForcastFeb() + getVolForcastMar();
+			this.quarter2 = getVolForecastJan() + getVolForecastFeb() + getVolForecastMar();
 			return quarter2;
 		}
 
-		public Integer getVolForcastApr() {
-			return volForcastApr;
+		public Integer getVolForecastApr() {
+			return volForecastApr;
 		}
 
-		public Integer getVolForcastMay() {
-			return volForcastMay;
+		public Integer getVolForecastMay() {
+			return volForecastMay;
 		}
 
-		public Integer getVolForcastJun() {
-			return volForcastJun;
+		public Integer getVolForecastJun() {
+			return volForecastJun;
 		}
 		
 		public Integer getQuarter3() {
-			this.quarter3 = getVolForcastApr() + getVolForcastMay() + getVolForcastJun();
+			this.quarter3 = getVolForecastApr() + getVolForecastMay() + getVolForecastJun();
 			return quarter3;
 		}
 
-		public Integer getVolForcastJul() {
-			return volForcastJul;
+		public Integer getVolForecastJul() {
+			return volForecastJul;
 		}
 
-		public Integer getVolForcastAug() {
-			return volForcastAug;
+		public Integer getVolForecastAug() {
+			return volForecastAug;
 		}
 
-		public Integer getVolForcastSep() {
-			return volForcastSep;
+		public Integer getVolForecastSep() {
+			return volForecastSep;
 		}
 
 		public Integer getQuarter4() {
-			this.quarter4 = getVolForcastJul() + getVolForcastAug() + getVolForcastSep();
+			this.quarter4 = getVolForecastJul() + getVolForecastAug() + getVolForecastSep();
 			return quarter4;
 		}
 		
