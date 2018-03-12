@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -22,6 +23,7 @@ import com.ansi.scilla.report.datadumps.ClientContact;
 import com.ansi.scilla.report.datadumps.UserListReport;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
 import com.ansi.scilla.report.pac.PacReport;
+import com.ansi.scilla.report.pac.PacSummaryReport;
 import com.ansi.scilla.report.reportBuilder.AnsiReport;
 import com.ansi.scilla.report.reportBuilder.CustomReport;
 import com.ansi.scilla.report.reportBuilder.HTMLBuilder;
@@ -65,20 +67,22 @@ public class TestReportReflection {
 			conn.setAutoCommit(false);
 			
 			this.divisionId = 101;
-			this.month=7;
-			this.year=2017;
-			this.startDate = new Midnight(2017, Calendar.DECEMBER, 6);
-			this.endDate = new Midnight(2017, Calendar.DECEMBER, 7);
+			this.month=Calendar.FEBRUARY;
+			this.year=2018;
+			this.startDate = new Midnight(2018, Calendar.FEBRUARY, 1);
+			this.endDate = new Midnight(2018, Calendar.FEBRUARY, 28);
 			
 //			makeDO(conn);
 //			makeTicketStatus(conn);
 //			make6mrv(conn);
-			makePac(conn);
+//			makePac(conn);
+			makePacSummary(conn);
 //			makeInvoiceRegister(conn);
 //			makeUserList(conn);
 //			makeAddressUsage(conn);
 //			makeClientUsage(conn);
 //			makeCashReceipts(conn);
+//			make6mrvSummary(conn);
 			
 			conn.rollback();
 		} finally {
@@ -118,6 +122,15 @@ public class TestReportReflection {
 		FileUtils.write(new File(outputDirectory + "smrv.html"), html);
 	}
 
+//	private void make6mrvSummary(Connection conn) throws Exception {
+//		logger.info("Starting 6mrv summary");
+//		SixMonthRollingVolumeSummary smrv = SixMonthRollingVolumeSummary.buildReport(conn);
+//		XSSFWorkbook workbook = smrv.makeXLS();
+//		workbook.write(new FileOutputStream(outputDirectory + "smrv.xlsx"));
+////		String html = smrv.makeHTML();
+////		FileUtils.write(new File(outputDirectory + "smrv.html"), html);
+//	}
+
 	private void makePac(Connection conn) throws Exception {
 		logger.info("Starting PAC");
 		XSSFWorkbook workbook = new XSSFWorkbook();
@@ -125,6 +138,13 @@ public class TestReportReflection {
 		pacReport.makeXLS(workbook);
 		workbook.write(new FileOutputStream(outputDirectory + "pacReport.xlsx"));
 		
+	}
+	
+	public void makePacSummary(Connection conn) throws Exception {
+		logger.log(Level.INFO, "starting Pac Summary");
+		PacSummaryReport report = new PacSummaryReport(conn, divisionId, startDate, endDate);
+		String html = HTMLBuilder.build(report);
+		FileUtils.write(new File(outputDirectory + "pacSummary.html"), html);
 	}
 
 	private void makeInvoiceRegister(Connection conn) throws Exception {

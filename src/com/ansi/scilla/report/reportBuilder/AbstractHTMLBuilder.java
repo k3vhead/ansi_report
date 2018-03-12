@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public abstract class AbstractHTMLBuilder extends ReportBuilder {
@@ -37,18 +40,23 @@ public abstract class AbstractHTMLBuilder extends ReportBuilder {
 
 	
 	protected String makeHeader() throws Exception {
+		Logger logger = LogManager.getLogger(this.getClass());
 		StringBuffer buffer = new StringBuffer();
 //		int headerRowCount = makeHeaderRowCount();
 		int headerRowCount = ReportBuilderUtils.makeHeaderRowCount(this.getReport());
+		logger.log(Level.DEBUG, "headerRowCount: " + headerRowCount);
 		
 		buffer.append(makeHeaderRow(0, report.getHeaderLeft(), report.getBanner(), report.getHeaderRight(), HTMLReportFormatter.CSS_BANNER, HTMLReportFormatter.CSS_BANNER_TEXT));
 		if ( headerRowCount > 1 ) {
+			logger.log(Level.DEBUG, "row 1");
 			buffer.append(makeHeaderRow(1, report.getHeaderLeft(), report.getTitle(), report.getHeaderRight(), HTMLReportFormatter.CSS_TITLE, HTMLReportFormatter.CSS_TITLE_TEXT));	
 		}
 		if ( headerRowCount > 2 ) {
+			logger.log(Level.DEBUG, "row 2");
 			buffer.append(makeHeaderRow(2, report.getHeaderLeft(), report.getSubtitle(), report.getHeaderRight(), HTMLReportFormatter.CSS_SUBTITLE, HTMLReportFormatter.CSS_SUBTITLE_TEXT));
 		}
 		if ( headerRowCount > 3 ) {
+			logger.log(Level.DEBUG, "row 3");
 			for ( int i=3;i<headerRowCount;i++) {
 				buffer.append(makeHeaderRow(i, report.getHeaderLeft(), "", report.getHeaderRight(), HTMLReportFormatter.CSS_EMPTY_HEADER, HTMLReportFormatter.CSS_EMPTY_HEADER_TEXT));
 			}
@@ -103,6 +111,17 @@ public abstract class AbstractHTMLBuilder extends ReportBuilder {
 					buffer.append("\n\t<td class=\"" +  cssheader.get("tdData") + "\">");
 					buffer.append("<span class=\"" +  cssheader.get("spanData") + "\">");
 					buffer.append(display);
+					buffer.append("</span>");
+					buffer.append("</td>");
+				} else {
+					buffer.append("\n\t<td class=\"" +  cssheader.get("tdLabel") + "\">");
+					buffer.append("<span class=\"" +  cssheader.get("spanLabel") + "\">");
+					buffer.append("&nbsp;");
+					buffer.append("</span>");
+					buffer.append("</td>");
+					buffer.append("\n\t<td class=\"" +  cssheader.get("tdData") + "\">");
+					buffer.append("<span class=\"" +  cssheader.get("spanData") + "\">");
+					buffer.append("&nbsp");
 					buffer.append("</span>");
 					buffer.append("</td>");
 				}
