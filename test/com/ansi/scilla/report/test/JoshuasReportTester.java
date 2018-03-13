@@ -14,6 +14,7 @@ import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.utils.AppUtils;
 import com.ansi.scilla.report.quarterlyReport.SixMonthRollingVolumeSummary;
 import com.ansi.scilla.report.reportBuilder.HTMLBuilder;
+import com.ansi.scilla.report.reportBuilder.PastDueReport;
 import com.ansi.scilla.report.reportBuilder.XLSBuilder;
 import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;;
 
@@ -43,7 +44,7 @@ public class JoshuasReportTester {
 	}
 	
 	private void makeMyReport() throws Exception {
-		this.logger = Logger.getLogger("com.ansi.scilla.report.quarterlyReport");
+		this.logger = Logger.getLogger("com.ansi.scilla.report.reportBuilder");
 		logger.info("Start");
 		Connection conn = null;
 		
@@ -70,17 +71,17 @@ public class JoshuasReportTester {
 
 
 	private void makeClientUsage(Connection conn) throws Exception {
-		logger.info("SixMonthRollingVolumeSummary");
+		logger.info("PastDueReport");
 		//DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId, endDate);
-		SixMonthRollingVolumeSummary userReport = SixMonthRollingVolumeSummary.buildReport(conn);
+		PastDueReport userReport = PastDueReport.buildReport(conn, startDate, divisionId);
 		XSSFWorkbook workbook = XLSBuilder.build(userReport);
 //		XSSFWorkbook workbook = userReport.makeXLS();
 //		CashReceiptsRegisterDetailReport userReport = CashReceiptsRegisterDetailReport.buildReport(conn, startDate, endDate);
 //		XSSFWorkbook workbook = XLSBuilder.build(userReport);
-		workbook.write(new FileOutputStream(joshuasTestResultDirectory + "6mrvs.xlsx"));
+		workbook.write(new FileOutputStream(joshuasTestResultDirectory + "PastDueDate.xlsx"));
 
 		String html = HTMLBuilder.build(userReport);
-		FileUtils.write(new File(joshuasTestResultDirectory + "6mrvs.html"), html);
+		FileUtils.write(new File(joshuasTestResultDirectory + "PastDueDate.html"), html);
 		
 	}
 

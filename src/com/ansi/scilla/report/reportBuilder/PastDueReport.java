@@ -2,9 +2,9 @@ package com.ansi.scilla.report.reportBuilder;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -26,11 +26,12 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.ApplicationObject;
+import com.ansi.scilla.common.db.Division;
 
 public class PastDueReport extends StandardReport {
 	private static final long serialVersionUID = 1L;
 	
-	private final String sql = "select division_nbr, " +	//division_nbr
+	private final String sql = "select division.division_nbr, division.division_code " +	//division_nbr, division_code
 				"bill_to.name, bill_to.address1, bill_to.address2, bill_to.city, bill_to.state," + //name, address1, address2, city, state
 				"contract_contact.first_name, contract_contact.last_name," + //first_name, last_name
 				"case when contract_contact.preferred_contact = 'business_phone' then contract_contact.business_phone" + //contract_preferred_contact
@@ -48,7 +49,7 @@ public class PastDueReport extends StandardReport {
 				"job.job_id, ticket.ticket_id, ticket_status, ticket_type," + //job_id, ticket_id, ticket_status, ticket_type
 				"ticket.invoice_id, ticket.process_date, ticket.invoice_date, ticket.act_price_per_cleaning," + //invoice_id, process_date, invoice_date, act_price_per_cleaning
 				"isnull(ticket_payment_totals.amount, '0.00') as amount_paid, ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00') as amount_due," + //amount_paid, amount_due
-				"case when ticket.invoice_date < @past_due_date then ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00')" + 
+				"case when ticket.invoice_date < ? then ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00')" + 
 				"else '0.00' " +
 				"end as amount_past_due, " + //amount_past_due
 				"job_site.name," + //job_site.name
@@ -70,27 +71,43 @@ public class PastDueReport extends StandardReport {
 					"join quote on quote.quote_id = job.quote_id" +
 					"where ticket_status = 'I'" +
 					"group by act_division_id, bill_to_address_id) as bt_oldest_invoice on bt_oldest_invoice.bill_to_id = bill_to_address_id and bt_oldest_invoice.div = ticket.act_division_id" +
-				"where oldest_invoice_date < @past_due_date and ticket_status = 'I' and ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00') <> '0.00'" +
-				"and division.division_nbr = 12" +
+				"where oldest_invoice_date < ? and ticket_status = 'I' and ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00') <> '0.00'" +
+				"and ticket.act_division_id = ?" +
 				"order by division_nbr, bill_to.name, invoice_date";
 	
 	public static final String REPORT_TITLE = "Six Month Rolling Volume Summary";
 	
-	private PastDueReport(Connection conn) throws Exception {
+	private Calendar pastDueDate;
+	private Calendar createdDate;
+	private String div;
+	
+	private PastDueReport(Connection conn, Calendar pastDueDate, Integer divisionId) throws Exception {
 		super();
+		this.pastDueDate = pastDueDate;
+		this.div = makeDiv(conn, divisionId);
 		this.setTitle(REPORT_TITLE);
 		super.setReportOrientation(ReportOrientation.LANDSCAPE);
-		makeData(conn);
+		makeData(conn, pastDueDate, divisionId);
 	}
 	
-	private Calendar startDate;
+	private String makeDiv(Connection conn, Integer divisionId) throws Exception{
+		Division d = new Division();
+		d.setDivisionId(divisionId);
+		d.selectOne(conn);
+		return d.getDivisionNbr() + "-" + d.getDivisionCode();
+	}
 	
 	public Calendar getStartDate(){
-		startDate = Calendar.getInstance();
-		return startDate;
+		createdDate = Calendar.getInstance();
+		return createdDate;
 	}
 	
-	private void makeData(Connection conn) throws Exception {
+	public String getDivision(){
+		div = null;
+		return div;
+	}
+	
+	private void makeData(Connection conn, Calendar pastDueDate, Integer divisionId) throws Exception {
 		//super.setSubtitle(makeSubtitle());
 		super.setHeaderRow(new ColumnHeader[] {
 			new ColumnHeader("billToName", "BILL TO NAME", DataFormats.STRING_FORMAT, SummaryType.NONE),//BILL TO NAME
@@ -103,10 +120,16 @@ public class PastDueReport extends StandardReport {
 			new ColumnHeader("jobSiteAddress", "SITE ADDRESS", DataFormats.STRING_FORMAT, SummaryType.NONE),//siteAddress
 		});		
 		
+		java.sql.Date myDate = new java.sql.Date(pastDueDate.getTimeInMillis());
 		
-		Statement psData = conn.createStatement();
+		PreparedStatement psData = conn.prepareStatement(sql);
+		psData.setDate(1, myDate);
+		psData.setDate(2, myDate);
+		psData.setInt(3, divisionId);
 		
-		ResultSet rsData = psData.executeQuery(sql);
+		System.out.println(sql);
+		
+		ResultSet rsData = psData.executeQuery();
 		
 		while ( rsData.next() ) {
 			super.addDataRow(new RowData(rsData));
@@ -122,8 +145,17 @@ public class PastDueReport extends StandardReport {
 		});
 		super.makeHeaderLeft(headerLeft);
 		
+		Method getDivMethod = this.getClass().getMethod("getDivision", (Class<?>[])null);
+		
+		List<ReportHeaderRow> headerRight = Arrays.asList(new ReportHeaderRow[] {
+				new ReportHeaderRow("Division: ", getDivMethod, 0, DataFormats.DATE_TIME_FORMAT),
+//				new ReportHeaderRow("Aging Date: ", getEndDateMethod, 0, DataFormats.DATE_FORMAT),
+//				new ReportHeaderRow("Days Past Due: ", dataSizeMethod, 2, DataFormats.INTEGER_FORMAT)
+		});
+		super.makeHeaderRight(headerRight);
+		
 	}
-	
+		
 	public XSSFWorkbook makeXLS() {
 		String subtitle = makeSubtitle();
 		
@@ -322,14 +354,15 @@ public class PastDueReport extends StandardReport {
 		return StringUtils.join(subtitle, " ");
 	}
 	
-	public static PastDueReport buildReport(Connection conn) throws Exception {
-		return new PastDueReport(conn);
+	public static PastDueReport buildReport(Connection conn, Calendar pastDueDate, Integer divisionId) throws Exception {
+		return new PastDueReport(conn, pastDueDate, divisionId);
 	}
 	
 	public class RowData extends ApplicationObject {
 		private static final long serialVersionUID = 1L;
 
-		private String divNbr;
+		private Integer divNbr;
+		private String divCode;
 		private String billToName;
 		private String address1;
 		private String address2;
@@ -353,7 +386,8 @@ public class PastDueReport extends StandardReport {
 		private String jobSiteAddress;
 		
 		public RowData(ResultSet rs) throws SQLException {
-			this.divNbr = rs.getString("division_nbr");
+			this.divNbr = rs.getInt("division_nbr");
+			this.divCode = rs.getString("division_code");
 			this.billToName = rs.getString("bill_to.name");
 			this.address1 = rs.getString("address1");
 			this.address2 = rs.getString("address2");
@@ -377,10 +411,18 @@ public class PastDueReport extends StandardReport {
 			this.jobSiteAddress = rs.getString("job_site.address_id");
 		}
 
-		public String getDivNbr() {
+		public String getDiv() {
+			return divNbr + "-" + divCode;
+		}
+		
+		public Integer getDivNbr() {
 			return divNbr;
 		}
-
+		
+		public String getDivCode(){
+			return divCode;
+		}
+		
 		public String getBillToName() {
 			return billToName;
 		}
