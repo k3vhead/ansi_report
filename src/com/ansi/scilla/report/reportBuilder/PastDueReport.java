@@ -31,7 +31,7 @@ import com.ansi.scilla.common.db.Division;
 public class PastDueReport extends StandardReport {
 	private static final long serialVersionUID = 1L;
 	
-	private final String sql = "select bill_to.name, bill_to.address1, bill_to.address2, bill_to.city, bill_to.state, \n" +
+	private final String sql = "select bill_to.name as bill_to_name, bill_to.address1, bill_to.address2, bill_to.city, bill_to.state, \n" +
 			"\tcontract_contact.first_name, contract_contact.last_name, \n" +
 		"case \n" +
 			"\twhen contract_contact.preferred_contact = 'business_phone' then contract_contact.business_phone \n" +
@@ -55,7 +55,7 @@ public class PastDueReport extends StandardReport {
 			"\twhen ticket.invoice_date < ? then ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00') \n" +
 		  	"\telse '0.00' \n" +
 		"end as amount_past_due, \n" +
-		"job_site.name, oldest_invoice_date, oldest_ticket \n" +
+		"job_site.name as job_site_name, oldest_invoice_date, oldest_ticket \n" +
 		"from ticket \n" +
 		"join job on ticket.job_id = job.job_id \n" +
 		"join quote on job.quote_id = quote.quote_id \n" +
@@ -113,11 +113,6 @@ public class PastDueReport extends StandardReport {
 		return createdDate;
 	}
 	
-	public String getDivision(){
-		div = null;
-		return div;
-	}
-	
 	private void makeData(Connection conn, Calendar pastDueDate, Integer divisionId) throws Exception {
 		//super.setSubtitle(makeSubtitle());
 		super.setHeaderRow(new ColumnHeader[] {
@@ -156,7 +151,7 @@ public class PastDueReport extends StandardReport {
 		});
 		super.makeHeaderLeft(headerLeft);
 		
-		Method getDivMethod = this.getClass().getMethod("getDivision", (Class<?>[])null);
+		Method getDivMethod = this.getClass().getMethod("makeDiv", (Class<?>[])null);
 		
 		List<ReportHeaderRow> headerRight = Arrays.asList(new ReportHeaderRow[] {
 				new ReportHeaderRow("Division: ", getDivMethod, 0, DataFormats.DATE_TIME_FORMAT),
@@ -516,9 +511,10 @@ public class PastDueReport extends StandardReport {
 		private Integer amountPastDue;
 		private String jobSiteName;
 		private String jobSiteAddress;
+		private Integer totalPPC;
 		
 		public RowData(ResultSet rs) throws SQLException {
-			this.billToName = rs.getString("bill_to.name");
+			this.billToName = rs.getString("bill_to_name");
 			this.address1 = rs.getString("address1");
 			this.address2 = rs.getString("address2");
 			this.city = rs.getString("city");
@@ -537,8 +533,8 @@ public class PastDueReport extends StandardReport {
 			this.amountPaid = rs.getInt("amount_paid");
 			this.amountDue = rs.getInt("amount_due");
 			this.amountPastDue = rs.getInt("amount_past_due");
-			this.jobSiteName = rs.getString("job_site.name");
-			this.jobSiteAddress = rs.getString("job_site.address_id");
+			this.jobSiteName = rs.getString("job_site_name");
+			this.jobSiteAddress = rs.getString("job_site_address_id");
 		}
 		
 		public String getBillToName() {
@@ -624,8 +620,13 @@ public class PastDueReport extends StandardReport {
 		public String getJobSiteAddress(){
 			return jobSiteAddress;
 		}
-
-
+		
+		public Integer getTotalPPC(){
+			totalPPC = getActPPC();
+			return totalPPC;
+		}
+		
+		
 	}
 	
 }
