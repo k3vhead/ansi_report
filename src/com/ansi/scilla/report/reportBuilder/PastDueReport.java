@@ -31,49 +31,60 @@ import com.ansi.scilla.common.db.Division;
 public class PastDueReport extends StandardReport {
 	private static final long serialVersionUID = 1L;
 	
-	private final String sql = "select division.division_nbr, division.division_code " +	//division_nbr, division_code
-				"bill_to.name, bill_to.address1, bill_to.address2, bill_to.city, bill_to.state," + //name, address1, address2, city, state
-				"contract_contact.first_name, contract_contact.last_name," + //first_name, last_name
-				"case when contract_contact.preferred_contact = 'business_phone' then contract_contact.business_phone" + //contract_preferred_contact
-					"when contract_contact.preferred_contact = 'mobile_phone' then contract_contact.mobile_phone" +
-					"when contract_contact.preferred_contact = 'fax' then contract_contact.fax" +
-					"when contract_contact.preferred_contact = 'email' then contract_contact.email" +
-					"else contract_contact.business_phone" +
-					"end as contract_preferred_contact," +
-				"case when billing_contact.preferred_contact = 'business_phone' then billing_contact.business_phone" +
-					"when billing_contact.preferred_contact = 'mobile_phone' then billing_contact.mobile_phone" +
-					"when billing_contact.preferred_contact = 'fax' then billing_contact.fax" +
-					"when billing_contact.preferred_contact = 'email' then billing_contact.email" +
-					"else billing_contact.business_phone" +
-					"end as contract_preferred_contact," +
-				"job.job_id, ticket.ticket_id, ticket_status, ticket_type," + //job_id, ticket_id, ticket_status, ticket_type
-				"ticket.invoice_id, ticket.process_date, ticket.invoice_date, ticket.act_price_per_cleaning," + //invoice_id, process_date, invoice_date, act_price_per_cleaning
-				"isnull(ticket_payment_totals.amount, '0.00') as amount_paid, ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00') as amount_due," + //amount_paid, amount_due
-				"case when ticket.invoice_date < ? then ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00')" + 
-				"else '0.00' " +
-				"end as amount_past_due, " + //amount_past_due
-				"job_site.name," + //job_site.name
-				"oldest_invoice_date, oldest_ticket" +
-				"from ticket" +
-				"join job on ticket.job_id = job.job_id" +
-				"join quote on job.quote_id = quote.quote_id" +
-				"join division on division.division_id = act_division_id" +
-				"join address as bill_to on bill_to.address_id = bill_to_address_id" +
-				"join address as job_site on job_site.address_id = job_site_address_id" + //job_site.address_id
-				"join contact as contract_contact on contract_contact.contact_id = job.contract_contact_id" +
-				"join contact as billing_contact on billing_contact.contact_id = job.contract_contact_id" +
-				"left outer join (select ticket_id, sum(amount) as amount, sum(tax_amt) as tax_amt from ticket_payment group by ticket_id) " +
-					 "as ticket_payment_totals on ticket_payment_totals.ticket_id = ticket.ticket_id" +
-				"left outer join (select ticket.act_division_id as div, bill_to_address_id as bill_to_id, min(invoice_date) as oldest_invoice_date," +
-					"min(ticket_id) as oldest_ticket" +
-					"from ticket" +
-					"join job on job.job_id = ticket.job_id" +
-					"join quote on quote.quote_id = job.quote_id" +
-					"where ticket_status = 'I'" +
-					"group by act_division_id, bill_to_address_id) as bt_oldest_invoice on bt_oldest_invoice.bill_to_id = bill_to_address_id and bt_oldest_invoice.div = ticket.act_division_id" +
-				"where oldest_invoice_date < ? and ticket_status = 'I' and ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00') <> '0.00'" +
-				"and ticket.act_division_id = ?" +
-				"order by division_nbr, bill_to.name, invoice_date";
+	private final String sql = "select bill_to.name, bill_to.address1, bill_to.address2, bill_to.city, bill_to.state, \n" +
+			"\tcontract_contact.first_name, contract_contact.last_name, \n" +
+		"case \n" +
+			"\twhen contract_contact.preferred_contact = 'business_phone' then contract_contact.business_phone \n" +
+		  	"\twhen contract_contact.preferred_contact = 'mobile_phone' then contract_contact.mobile_phone \n" +
+		  	"\twhen contract_contact.preferred_contact = 'fax' then contract_contact.fax \n" +
+		  	"\twhen contract_contact.preferred_contact = 'email' then contract_contact.email \n" +
+		  	"\telse contract_contact.business_phone \n" +
+		"end as contract_preferred_contact, \n" +
+		"case \n" +
+			"\twhen billing_contact.preferred_contact = 'business_phone' then billing_contact.business_phone \n" +
+		  	"\twhen billing_contact.preferred_contact = 'mobile_phone' then billing_contact.mobile_phone \n" +
+		  	"\twhen billing_contact.preferred_contact = 'fax' then billing_contact.fax \n" +
+		  	"\twhen billing_contact.preferred_contact = 'email' then billing_contact.email \n" +
+		  	"\telse billing_contact.business_phone \n" +
+		 "end as contract_preferred_contact, \n" +
+		 "job.job_id, \n" +
+		 "ticket.ticket_id, ticket.ticket_status, ticket_type,ticket.invoice_id, ticket.process_date, ticket.invoice_date, ticket.act_price_per_cleaning, \n" +
+		 "isnull(ticket_payment_totals.amount, '0.00') as amount_paid, \n" +
+		 "ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00') as amount_due, \n" +
+		"case \n" +
+			"\twhen ticket.invoice_date < ? then ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00') \n" +
+		  	"\telse '0.00' \n" +
+		"end as amount_past_due, \n" +
+		"job_site.name, oldest_invoice_date, oldest_ticket \n" +
+		"from ticket \n" +
+		"join job on ticket.job_id = job.job_id \n" +
+		"join quote on job.quote_id = quote.quote_id \n" +
+		"join division on division.division_id = act_division_id \n" +
+		"join address as bill_to on bill_to.address_id = bill_to_address_id \n" +
+		"join address as job_site on job_site.address_id = job_site_address_id \n" +
+		"join contact as contract_contact on contract_contact.contact_id = job.contract_contact_id \n" +
+		"join contact as billing_contact on billing_contact.contact_id = job.contract_contact_id \n" +
+		"left outer join (\n" +
+			"\tselect ticket_id, \n" +
+				"\t\tsum(amount) as amount, \n" +
+				"\t\tsum(tax_amt) as tax_amt \n" +
+				"\t\tfrom ticket_payment group by ticket_id) as ticket_payment_totals \n" +
+			"\ton ticket_payment_totals.ticket_id = ticket.ticket_id \n" +
+		"left outer join (\n" +
+			"\tselect ticket.act_division_id as div, \n" +
+				"\t\tbill_to_address_id as bill_to_id, \n" +
+				"\t\tmin(invoice_date) as oldest_invoice_date, \n" +
+				"\t\tmin(ticket_id) as oldest_ticket \n" +
+				"\t\tfrom ticket \n" +
+				"\t\tjoin job on job.job_id = ticket.job_id \n" +
+				"\t\tjoin quote on quote.quote_id = job.quote_id where ticket_status = 'I' \n" +
+				"\t\tgroup by act_division_id, bill_to_address_id) as bt_oldest_invoice \n" +
+				"\t\ton bt_oldest_invoice.bill_to_id = bill_to_address_id and bt_oldest_invoice.div = ticket.act_division_id \n" +
+			 	"\t\twhere oldest_invoice_date < ? \n" +
+			 	"\t\tand ticket_status = 'I' \n" +
+			 	"\t\tand ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00') <> '0.00' \n" +
+			 	"\t\tand ticket.act_division_id = ? \n" +
+			 "\torder by division.division_nbr, bill_to.name, invoice_date";
 	
 	public static final String REPORT_TITLE = "Six Month Rolling Volume Summary";
 	
@@ -325,13 +336,136 @@ public class PastDueReport extends StandardReport {
 			
 			row = sheet.createRow(rowNum);
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleDateComplete);
+			cell.setCellStyle(cellStyleBuildingName);
 			cell.setCellValue(rowData.getBillToName());
 			colNum++;
 			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleJobId);
+			cell.setCellValue(rowData.getJobId());
+			colNum++;
 			
-
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleHeaderDate);
+			cell.setCellValue(rowData.getInvoiceDate());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleJobId);
+			cell.setCellValue(rowData.getJobId());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleInvoiceAmount);
+			cell.setCellValue(rowData.getActPPC());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleInvoiceAmount);
+			cell.setCellValue(rowData.getAmountPaid());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleInvoiceAmount);
+			cell.setCellValue(rowData.getAmountPastDue());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleBuildingName);
+			cell.setCellValue(rowData.getJobSiteName());
+			colNum++;
+			
 			rowNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleBuildingName);
+			cell.setCellValue(rowData.getAddress1());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleInvoiceId);
+			cell.setCellValue(rowData.getInvoiceId());
+			colNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleHeaderDate);
+			cell.setCellValue(rowData.getInvoiceDate());
+			colNum++;//job id
+			colNum++;//ppc
+			colNum++;//paid amount
+			colNum++;//amount due
+			colNum++;//site address
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleBuildingName);
+			cell.setCellValue(rowData.getJobSiteAddress());
+			colNum++;
+			
+			rowNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleBuildingName);
+			cell.setCellValue(rowData.getAddress2());
+			colNum++;
+			
+			rowNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleBuildingName);
+			cell.setCellValue(rowData.getBillToName());
+			colNum++;
+			
+			rowNum++;
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleBuildingName);
+			cell.setCellValue(rowData.getPreferredContact());
+			colNum++;
+			
+			rowNum++;
+			
+			if(!(rowData.getJobId().equals(null))){
+				colNum++;
+				
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleJobId);
+				cell.setCellValue(rowData.getJobId());
+				colNum++;
+
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleHeaderDate);
+				cell.setCellValue(rowData.getInvoiceDate());
+				colNum++;
+
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleJobId);
+				cell.setCellValue(rowData.getJobId());
+				colNum++;
+
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleInvoiceAmount);
+				cell.setCellValue(rowData.getActPPC());
+				colNum++;
+
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleInvoiceAmount);
+				cell.setCellValue(rowData.getAmountPaid());
+				colNum++;
+
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleInvoiceAmount);
+				cell.setCellValue(rowData.getAmountPastDue());
+				colNum++;
+
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleBuildingName);
+				cell.setCellValue(rowData.getJobSiteName());
+				colNum++;
+				
+				rowNum++;
+			}
+			
+			
 		}
 		
 		return workbook;
@@ -360,9 +494,7 @@ public class PastDueReport extends StandardReport {
 	
 	public class RowData extends ApplicationObject {
 		private static final long serialVersionUID = 1L;
-
-		private Integer divNbr;
-		private String divCode;
+		
 		private String billToName;
 		private String address1;
 		private String address2;
@@ -386,8 +518,6 @@ public class PastDueReport extends StandardReport {
 		private String jobSiteAddress;
 		
 		public RowData(ResultSet rs) throws SQLException {
-			this.divNbr = rs.getInt("division_nbr");
-			this.divCode = rs.getString("division_code");
 			this.billToName = rs.getString("bill_to.name");
 			this.address1 = rs.getString("address1");
 			this.address2 = rs.getString("address2");
@@ -409,18 +539,6 @@ public class PastDueReport extends StandardReport {
 			this.amountPastDue = rs.getInt("amount_past_due");
 			this.jobSiteName = rs.getString("job_site.name");
 			this.jobSiteAddress = rs.getString("job_site.address_id");
-		}
-
-		public String getDiv() {
-			return divNbr + "-" + divCode;
-		}
-		
-		public Integer getDivNbr() {
-			return divNbr;
-		}
-		
-		public String getDivCode(){
-			return divCode;
 		}
 		
 		public String getBillToName() {
