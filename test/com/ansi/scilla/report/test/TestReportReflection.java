@@ -24,6 +24,7 @@ import com.ansi.scilla.report.datadumps.UserListReport;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
 import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.pac.PacSummaryReport;
+import com.ansi.scilla.report.pastDue.PastDueReport;
 import com.ansi.scilla.report.reportBuilder.AnsiReport;
 import com.ansi.scilla.report.reportBuilder.CustomReport;
 import com.ansi.scilla.report.reportBuilder.HTMLBuilder;
@@ -77,10 +78,11 @@ public class TestReportReflection {
 //			make6mrv(conn);
 //			makePac(conn);
 //			makePacSummary(conn);
+			makePastDue(conn);
 //			makeInvoiceRegister(conn);
 //			makeUserList(conn);
 //			makeAddressUsage(conn);
-			makeClientUsage(conn);
+//			makeClientUsage(conn);
 //			makeCashReceipts(conn);
 //			make6mrvSummary(conn);
 			
@@ -146,6 +148,18 @@ public class TestReportReflection {
 		PacSummaryReport report = new PacSummaryReport(conn, divisionId, startDate, endDate);
 		String html = HTMLBuilder.build(report);
 		FileUtils.write(new File(outputDirectory + "pacSummary.html"), html);
+	}
+
+	private void makePastDue(Connection conn) throws Exception {
+		logger.info("Starting Past Due");
+		PastDueReport report = PastDueReport.buildReport(conn, startDate, divisionId);
+		for ( Object dataRow : report.getDataRows() ) {
+			Method getTicket = dataRow.getClass().getMethod("getTicketId", (Class<?>[])null);
+			Integer ticket = (Integer)getTicket.invoke(dataRow, (Object[])null);
+			System.out.println(ticket);
+		}
+		XSSFWorkbook workbook = report.makeXLS();
+		workbook.write(new FileOutputStream(outputDirectory + "pastDueReport.xlsx"));		
 	}
 
 	private void makeInvoiceRegister(Connection conn) throws Exception {

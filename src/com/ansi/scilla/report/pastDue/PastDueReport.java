@@ -1,4 +1,4 @@
-package com.ansi.scilla.report.reportBuilder;
+package com.ansi.scilla.report.pastDue;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -27,11 +27,19 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.db.Division;
+import com.ansi.scilla.report.reportBuilder.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.DataFormats;
+import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.ReportOrientation;
+import com.ansi.scilla.report.reportBuilder.StandardReport;
+import com.ansi.scilla.report.reportBuilder.SummaryType;
 
 public class PastDueReport extends StandardReport {
 	private static final long serialVersionUID = 1L;
 	
-	private final String sql = "select bill_to.name as bill_to_name, bill_to.address1, bill_to.address2, bill_to.city, bill_to.state, \n" +
+	private final String sql = 
+		"select bill_to.name as bill_to_name, " +
+		"bill_to.address1, bill_to.address2, bill_to.city, bill_to.state, \n" +
 			"\tcontract_contact.first_name, contract_contact.last_name, \n" +
 		"case \n" +
 			"\twhen contract_contact.preferred_contact = 'business_phone' then contract_contact.business_phone \n" +
@@ -46,22 +54,23 @@ public class PastDueReport extends StandardReport {
 		  	"\twhen billing_contact.preferred_contact = 'fax' then billing_contact.fax \n" +
 		  	"\twhen billing_contact.preferred_contact = 'email' then billing_contact.email \n" +
 		  	"\telse billing_contact.business_phone \n" +
-		 "end as contract_preferred_contact, \n" +
-		 "job.job_id, \n" +
-		 "ticket.ticket_id, ticket.ticket_status, ticket_type,ticket.invoice_id, ticket.process_date, ticket.invoice_date, ticket.act_price_per_cleaning, \n" +
-		 "isnull(ticket_payment_totals.amount, '0.00') as amount_paid, \n" +
-		 "ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00') as amount_due, \n" +
+		"end as contract_preferred_contact, \n" +
+		"job.job_id, \n" +
+		"ticket.ticket_id, ticket.ticket_status, ticket_type,ticket.invoice_id, ticket.process_date, ticket.invoice_date, ticket.act_price_per_cleaning, \n" +
+		"isnull(ticket_payment_totals.amount, '0.00') as amount_paid, \n" +
+		"ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00') as amount_due, \n" +
 		"case \n" +
 			"\twhen ticket.invoice_date < ? then ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00') \n" +
 		  	"\telse '0.00' \n" +
 		"end as amount_past_due, \n" +
-		"job_site.name as job_site_name, oldest_invoice_date, oldest_ticket \n" +
+		"job_site.name as job_site_name, oldest_invoice_date, oldest_ticket, \n" +
+		"quote.job_site_address_id \n" + 
 		"from ticket \n" +
 		"join job on ticket.job_id = job.job_id \n" +
 		"join quote on job.quote_id = quote.quote_id \n" +
 		"join division on division.division_id = act_division_id \n" +
 		"join address as bill_to on bill_to.address_id = bill_to_address_id \n" +
-		"join address as job_site on job_site.address_id = job_site_address_id \n" +
+		"join address as job_site on job_site.address_id = quote.job_site_address_id \n" +
 		"join contact as contract_contact on contract_contact.contact_id = job.contract_contact_id \n" +
 		"join contact as billing_contact on billing_contact.contact_id = job.contract_contact_id \n" +
 		"left outer join (\n" +
@@ -113,6 +122,10 @@ public class PastDueReport extends StandardReport {
 		return createdDate;
 	}
 	
+	public String getDiv() {
+		return this.div;
+	}
+	
 	private void makeData(Connection conn, Calendar pastDueDate, Integer divisionId) throws Exception {
 		//super.setSubtitle(makeSubtitle());
 		super.setHeaderRow(new ColumnHeader[] {
@@ -151,7 +164,7 @@ public class PastDueReport extends StandardReport {
 		});
 		super.makeHeaderLeft(headerLeft);
 		
-		Method getDivMethod = this.getClass().getMethod("makeDiv", (Class<?>[])null);
+		Method getDivMethod = this.getClass().getMethod("getDiv", (Class<?>[])null);
 		
 		List<ReportHeaderRow> headerRight = Arrays.asList(new ReportHeaderRow[] {
 				new ReportHeaderRow("Division: ", getDivMethod, 0, DataFormats.DATE_TIME_FORMAT),
@@ -499,7 +512,7 @@ public class PastDueReport extends StandardReport {
 		private String lastName;
 		private String preferredContact;
 		private String jobId;
-		private String ticketId;
+		private Integer ticketId;
 		private String ticketStatus;
 		private String ticketType;
 		private String invoiceId;
@@ -523,7 +536,7 @@ public class PastDueReport extends StandardReport {
 			this.lastName = rs.getString("last_name");
 			this.preferredContact = rs.getString("contract_preferred_contact");
 			this.jobId = rs.getString("job_id");
-			this.ticketId = rs.getString("ticket_id");
+			this.ticketId = rs.getInt("ticket_id");
 			this.ticketStatus = rs.getString("ticket_status");
 			this.ticketType = rs.getString("ticket_type");
 			this.invoiceId = rs.getString("invoice_id");
@@ -573,7 +586,7 @@ public class PastDueReport extends StandardReport {
 			return jobId;
 		}
 
-		public String getTicketId() {
+		public Integer getTicketId() {
 			return ticketId;
 		}
 
