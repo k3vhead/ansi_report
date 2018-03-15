@@ -76,11 +76,11 @@ public class TestReportReflection {
 //			makeTicketStatus(conn);
 //			make6mrv(conn);
 //			makePac(conn);
-			makePacSummary(conn);
+//			makePacSummary(conn);
 //			makeInvoiceRegister(conn);
 //			makeUserList(conn);
 //			makeAddressUsage(conn);
-//			makeClientUsage(conn);
+			makeClientUsage(conn);
 //			makeCashReceipts(conn);
 //			make6mrvSummary(conn);
 			
@@ -131,6 +131,7 @@ public class TestReportReflection {
 ////		FileUtils.write(new File(outputDirectory + "smrv.html"), html);
 //	}
 
+	
 	private void makePac(Connection conn) throws Exception {
 		logger.info("Starting PAC");
 		XSSFWorkbook workbook = new XSSFWorkbook();
@@ -180,7 +181,9 @@ public class TestReportReflection {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		ClientContact userReport = ClientContact.buildReport(conn);
 		workbook = userReport.makeXLS();
-		workbook.write(new FileOutputStream(outputDirectory + "clientContact.xlsx"));		
+		workbook.write(new FileOutputStream(outputDirectory + "clientContact.xlsx"));
+		String report = userReport.makeHTML();
+		FileUtils.write(new File(outputDirectory + "clientContact.html"), report);
 	}
 
 	

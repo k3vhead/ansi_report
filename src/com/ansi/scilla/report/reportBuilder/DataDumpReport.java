@@ -328,6 +328,19 @@ public abstract class DataDumpReport extends CustomReport {
 		
 		rowNum++;
 		row = sheet.createRow(rowNum);
+		cell = row.createCell(0);
+		cell.setCellValue("");
+		cell.setCellStyle(HTMLReportFormatter.CSS_TITLE);
+		cell.setCellContentStyle(HTMLReportFormatter.CSS_TITLE_TEXT);
+		cell.setDataFormats(DataFormats.STRING_FORMAT);
+		
+		cell = row.createCell(1);
+		cell.setCellValue("");
+		cell.setCellStyle(HTMLReportFormatter.CSS_TITLE);
+		cell.setCellContentStyle(HTMLReportFormatter.CSS_TITLE_TEXT);
+		cell.setDataFormats(DataFormats.STRING_FORMAT);
+		
+		
 		cell = row.createCell(2);
 		cell.setColspan(bannerWidth);
 		cell.setCellValue(super.getTitle());
