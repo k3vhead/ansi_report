@@ -85,7 +85,7 @@ public class TicketStatusReport extends StandardReport {
 		this.data = makeData(conn, divisionId, startDate, endDate);		
 		String startTitle = dateFormatter.format(startDate.getTime());
 		String endTitle = dateFormatter.format(endDate.getTime());
-		String subtitle = startTitle + " throught " + endTitle;
+		String subtitle = startTitle + " through " + endTitle;
 		makeReport(div, startDate, endDate, data, subtitle);
 		makeBannerTotals(conn, divisionId, startDate, endDate);
 		this.bannerTotals = makeBannerTotals(conn, divisionId, startDate, endDate);
