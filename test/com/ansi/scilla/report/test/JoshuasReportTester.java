@@ -14,7 +14,7 @@ import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.utils.AppUtils;
 import com.ansi.scilla.report.quarterlyReport.SixMonthRollingVolumeSummary;
 import com.ansi.scilla.report.reportBuilder.HTMLBuilder;
-import com.ansi.scilla.report.reportBuilder.PastDueReport;
+import com.ansi.scilla.report.pastDue.PastDueReport;
 import com.ansi.scilla.report.reportBuilder.XLSBuilder;
 import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;;
 
