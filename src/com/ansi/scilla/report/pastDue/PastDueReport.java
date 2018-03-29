@@ -330,8 +330,8 @@ public class PastDueReport extends StandardReport {
 	    int ppcTotal = 0;
 	    int amountPaidTotal = 0;
 	    int amountDueTotal = 0;
-	    String previousClient = null;
-	    Double clientTotal = 0.0D;	    
+	    String previousClient = "Previous";
+	    Double clientTotal = 0.0D;
 	    
 //	    if ( this.data.size() == 0 ) {
 	    if ( super.getDataRows().size() == 0 ) {
@@ -343,6 +343,7 @@ public class PastDueReport extends StandardReport {
 	    }
 		for ( Object rowObject : super.getDataRows() ) {
 			RowData rowData = (RowData)rowObject;
+			
 			colNum = 0;
 			
 			row = sheet.createRow(rowNum);
@@ -443,70 +444,86 @@ public class PastDueReport extends StandardReport {
 			colNum = 0;
 			rowNum++;
 			
-			while(rowData.getBillToName().equals(rowData.getNextBillToName())){
-				colNum++;
-				
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleJobId);
-				cell.setCellValue(rowData.getJobId());
-				colNum++;
+			if(rowData.getBillToName().equals(previousClient)){
+				for ( Object rowO : super.getDataRows() ) {
+					rowData = (RowData)rowO;
+					
+					colNum++;
 
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleHeaderDate);
-				cell.setCellValue(rowData.getInvoiceDate());
-				colNum++;
+					cell = row.createCell(colNum);
+					cell.setCellStyle(cellStyleJobId);
+					cell.setCellValue(rowData.getJobId());
+					colNum++;
 
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleJobId);
-				cell.setCellValue(rowData.getJobId());
-				colNum++;
+					cell = row.createCell(colNum);
+					cell.setCellStyle(cellStyleHeaderDate);
+					cell.setCellValue(rowData.getInvoiceDate());
+					colNum++;
 
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleInvoiceAmount);
-				cell.setCellValue(rowData.getActPPC());
-				ppcTotal += rowData.getActPPC();
-				colNum++;
+					cell = row.createCell(colNum);
+					cell.setCellStyle(cellStyleJobId);
+					cell.setCellValue(rowData.getJobId());
+					colNum++;
 
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleInvoiceAmount);
-				cell.setCellValue(rowData.getAmountPaid());
-				amountPaidTotal += rowData.getAmountPaid();
-				colNum++;
+					cell = row.createCell(colNum);
+					cell.setCellStyle(cellStyleInvoiceAmount);
+					cell.setCellValue(rowData.getActPPC());
+					ppcTotal += rowData.getActPPC();
+					colNum++;
 
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleInvoiceAmount);
-				cell.setCellValue(rowData.getAmountPastDue());
-				amountDueTotal += rowData.getAmountPastDue();
-				colNum++;
+					cell = row.createCell(colNum);
+					cell.setCellStyle(cellStyleInvoiceAmount);
+					cell.setCellValue(rowData.getAmountPaid());
+					amountPaidTotal += rowData.getAmountPaid();
+					colNum++;
 
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleBuildingName);
-				cell.setCellValue(rowData.getJobSiteName());
-				colNum++;
-				
-				colNum = 0;
-				rowNum++;
+					cell = row.createCell(colNum);
+					cell.setCellStyle(cellStyleInvoiceAmount);
+					cell.setCellValue(rowData.getAmountPastDue());
+					amountDueTotal += rowData.getAmountPastDue();
+					colNum++;
+
+					cell = row.createCell(colNum);
+					cell.setCellStyle(cellStyleBuildingName);
+					cell.setCellValue(rowData.getJobSiteName());
+					colNum++;
+
+					colNum = 0;
+					rowNum++;
+
+					previousClient = rowData.getBillToName();
+					
+					if(!rowData.getBillToName().equals(previousClient)){
+						break;
+					}
+					
+//					rowData = (RowData)rowObject;
+				}
 			}
+			if(!rowData.getBillToName().equals(previousClient)){
+				colNum++; //bill to name
+				colNum++; //job id
+				colNum++; // completed date
+				colNum++; // job #
 			
-			colNum++; //bill to name
-			colNum++; //job id
-			colNum++; // completed date
-			colNum++; // job #
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleSummaryAmt);
+				cell.setCellValue(ppcTotal);
+				colNum++;
 			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleSummaryAmt);
-			cell.setCellValue(ppcTotal);
-			colNum++;
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleSummaryAmt);
+				cell.setCellValue(amountPaidTotal);
+				colNum++;
 			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleSummaryAmt);
-			cell.setCellValue(amountPaidTotal);
-			colNum++;
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleSummaryAmt);
+				cell.setCellValue(amountDueTotal);
+				colNum++;
+			}
+			rowNum++;
 			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleSummaryAmt);
-			cell.setCellValue(amountDueTotal);
-			colNum++;
+			previousClient = rowData.getBillToName();
 			
 		}
 		
@@ -538,7 +555,7 @@ public class PastDueReport extends StandardReport {
 		private static final long serialVersionUID = 1L;
 		
 		private String billToName;
-		private String nextBillToName;
+		private String preBillToName;
 		private String address1;
 		private String address2;
 		private String city;
@@ -589,8 +606,8 @@ public class PastDueReport extends StandardReport {
 			return billToName;
 		}
 		
-		public String getNextBillToName(){
-			return nextBillToName;
+		public String getPreBillToName(){
+			return preBillToName;
 		}
 
 		public String getAddress1() {
