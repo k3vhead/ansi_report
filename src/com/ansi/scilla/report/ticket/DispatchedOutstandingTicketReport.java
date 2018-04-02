@@ -49,6 +49,8 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 			+ "\n\tfrom ticket "
 			+ "\n\twhere ticket.job_id = job.job_id "
 			+ "\n\tand ticket.process_date is not null "
+			+ "\n\tand ticket.ticket_status in ('c','p','i') "
+			+ "\n\tand ticket.ticket_type in ('run','job') "
 			+ "\n\torder by ticket.process_date desc "
 			+ "\n\t) as last_run, "
 			+ "\n\tticket.ticket_type, job.invoice_style, GetDate() as ReportCreatedDate "
