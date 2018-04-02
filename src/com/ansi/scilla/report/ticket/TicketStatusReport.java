@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -31,14 +30,16 @@ public class TicketStatusReport extends StandardReport {
 
 	private static final long serialVersionUID = 1L;
 
-	private final String sql = "select ticket.process_date, ticket.ticket_id, ticket.ticket_status, ticket.act_price_per_cleaning, ticket.invoice_date, "
+	private final String sql = "select ticket.process_date, ticket.ticket_id, ticket.ticket_status, "
+			+ "\n\tjob.price_per_cleaning, ticket.act_price_per_cleaning, "
 			+ "\n\tjob.job_id, job.job_nbr, "
 			+ "\n\taddress.name, address.address1 "
 			+ "\nfrom ticket "
 			+ "\ninner join job on job.job_id=ticket.job_id "
 			+ "\ninner join quote on quote.quote_id=job.quote_id "
 			+ "\ninner join address on address.address_id=quote.job_site_address_id "
-			+ "\nwhere ticket.act_division_id=? and ticket.process_date>? and ticket.process_date<? "
+			+ "\nwhere ticket.act_division_id=? and ticket.process_date>=? and ticket.process_date<=? "
+			+ "\nand ticket.ticket_status in ('c','i','p') and ticket.ticket_type in ('run','job') "
 			+ "\norder by ticket.ticket_id asc";
 	
 	public static final  String REPORT_TITLE = "Ticket Status Report";
@@ -48,7 +49,8 @@ public class TicketStatusReport extends StandardReport {
 	private Calendar startDate;
 	private Calendar endDate;
 	private List<RowData> data;
-	private HashMap<TicketStatus, Double> bannerTotals;
+	private Double pricePerCleaningTotal;
+	private Double actPricePerCleaningTotal;
 	
 	private TicketStatusReport() {		
 		super();
@@ -72,7 +74,8 @@ public class TicketStatusReport extends StandardReport {
 		
 		this.data = makeData(conn, divisionId, startDate, endDate);
 		makeReport(div, startDate, endDate, data, "Current Month to Date");
-		this.bannerTotals = makeBannerTotals(conn, divisionId, startDate, endDate);
+		this.pricePerCleaningTotal = makePricePerCleaningTotal(conn, divisionId, startDate, endDate);
+		this.actPricePerCleaningTotal = makeActPricePerCleaningTotal(conn, divisionId, startDate, endDate);
 
 	}
 
@@ -87,8 +90,8 @@ public class TicketStatusReport extends StandardReport {
 		String endTitle = dateFormatter.format(endDate.getTime());
 		String subtitle = startTitle + " through " + endTitle;
 		makeReport(div, startDate, endDate, data, subtitle);
-		makeBannerTotals(conn, divisionId, startDate, endDate);
-		this.bannerTotals = makeBannerTotals(conn, divisionId, startDate, endDate);
+		this.pricePerCleaningTotal = makePricePerCleaningTotal(conn, divisionId, startDate, endDate);
+		this.actPricePerCleaningTotal = makeActPricePerCleaningTotal(conn, divisionId, startDate, endDate);
 	}
 	
 	
@@ -154,47 +157,49 @@ public class TicketStatusReport extends StandardReport {
 		return data;
 	}
 
-	private HashMap<TicketStatus, Double> makeBannerTotals(Connection conn, Integer divisionId, Calendar startDate, Calendar endDate) throws Exception {
-		HashMap<TicketStatus, Double> bannerTotals = new HashMap<TicketStatus, Double>();
-		String sql = "select ticket.ticket_status, sum(ticket.act_price_per_cleaning) as status_total"  
-					+ " from ticket " 
-					+ " where ticket.act_division_id=? and ticket.process_date>? and ticket.process_date<? " 
-					+ " group by ticket_status";
+	private Double makePricePerCleaningTotal(Connection conn, Integer divisionId, Calendar startDate, Calendar endDate) throws Exception {
+		Double ppcTotal = 0.00;
+		String sql = "select isnull(sum(job.price_per_cleaning),'0.00') as price_per_cleaning_total"  
+					+ "\n from ticket "
+					+ "\n join job on job.job_id = ticket.job_id " 
+					+ "\n where ticket.act_division_id=? and ticket.process_date>=? and ticket.process_date<=? " 
+					+ "\n and ticket.ticket_status in ('c','i','p') and ticket.ticket_type in ('run','job') ";
 		PreparedStatement ps = conn.prepareStatement(sql);
 		ps.setInt(1, divisionId);
 		ps.setDate(2, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(3, new java.sql.Date(endDate.getTimeInMillis()));
 		ResultSet rs = ps.executeQuery();
 		while ( rs.next() ) {
-			String statusCode = rs.getString("ticket_status");
-			TicketStatus ticketStatus = TicketStatus.lookup(statusCode);
-			if ( ticketStatus == null ) {
-				throw new Exception("Invalid Ticket Status: " + statusCode);
-			}
-			bannerTotals.put(ticketStatus, rs.getDouble("status_total"));
+			ppcTotal = rs.getDouble("price_per_cleaning_total");
 		}
 		rs.close();
 		
-		return bannerTotals;
+		return ppcTotal;
+	}
+	private Double makeActPricePerCleaningTotal(Connection conn, Integer divisionId, Calendar startDate, Calendar endDate) throws Exception {
+		Double actPpcTotal = 0.00;
+		String sql = "select isnull(sum(act_price_per_cleaning),'0.00') as act_price_per_cleaning_total"  
+					+ "\n from ticket " 
+					+ "\n where ticket.act_division_id=? and ticket.process_date>=? and ticket.process_date<=? " 
+					+ "\n and ticket.ticket_status in ('c','i','p') and ticket.ticket_type in ('run','job') ";
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ps.setInt(1, divisionId);
+		ps.setDate(2, new java.sql.Date(startDate.getTimeInMillis()));
+		ps.setDate(3, new java.sql.Date(endDate.getTimeInMillis()));
+		ResultSet rs = ps.executeQuery();
+		while ( rs.next() ) {
+			actPpcTotal = rs.getDouble("act_price_per_cleaning_total");
+		}
+		rs.close();
+		
+		return actPpcTotal;
 	}
 	public Double getCompletedINV() {
-		Double completedINV = 0D;
-		for ( TicketStatus ticketStatus : new TicketStatus[] {TicketStatus.INVOICED} ) {
-			if ( this.bannerTotals.containsKey(ticketStatus)) {
-				completedINV = completedINV + this.bannerTotals.get(ticketStatus);
-			}
-		}
-		return completedINV;
+		return this.actPricePerCleaningTotal;
 	}
 	
 	public Double getCompletedPPC() {
-		Double completedPPC = 0D;
-		for ( TicketStatus ticketStatus : new TicketStatus[] {TicketStatus.COMPLETED} ) {
-			if ( this.bannerTotals.containsKey(ticketStatus)) {
-				completedPPC = completedPPC + this.bannerTotals.get(ticketStatus);
-			}
-		}
-		return completedPPC;	
+		return this.pricePerCleaningTotal;
 	}
 	
 	
@@ -210,8 +215,8 @@ public class TicketStatusReport extends StandardReport {
 				new ColumnHeader("jobId", "Job Id", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 				new ColumnHeader("ticketId","Ticket #", DataFormats.NUMBER_FORMAT, SummaryType.COUNT),
 				new ColumnHeader("ticketStatus","Status", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("actPricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
-				new ColumnHeader("invoiceDate","Invoiced", DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("PricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
+				new ColumnHeader("actPricePerCleaning","Invoiced", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobNbr","Job #", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
 				new ColumnHeader("name","Site Name", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("address1","Site Address", DataFormats.STRING_FORMAT, SummaryType.NONE),
@@ -262,26 +267,23 @@ public class TicketStatusReport extends StandardReport {
 		public Date processDate;
 		public Integer ticketId;
 		public String ticketStatus;
+		public Double pricePerCleaning;
 		public Double actPricePerCleaning;
 		public Integer jobId;
 		public Integer jobNbr;
 		public String name;
 		public String address1;
-		public Date invoiceDate;
 		
 		public RowData(ResultSet rs) throws SQLException {
 			this.processDate = new Date( rs.getDate("process_date").getTime());
 			this.ticketId = rs.getInt("ticket_id");
 			this.ticketStatus = TicketStatus.lookup(rs.getString("ticket_status")).display();
+			this.pricePerCleaning = rs.getBigDecimal("price_per_cleaning").doubleValue();
 			this.actPricePerCleaning = rs.getBigDecimal("act_price_per_cleaning").doubleValue();
 			this.jobId = rs.getInt("job_id");
 			this.jobNbr = rs.getInt("job_nbr");
 			this.name = rs.getString("name");
 			this.address1 = rs.getString("address1");
-			java.sql.Date invoiceDate = rs.getDate("invoice_date");
-			if ( invoiceDate != null ) {
-				this.invoiceDate = new Date(invoiceDate.getTime());
-			}
 		}
 
 		public Date getProcessDate() {
@@ -292,6 +294,9 @@ public class TicketStatusReport extends StandardReport {
 		}
 		public String getTicketStatus() {
 			return ticketStatus;
+		}
+		public Double getPricePerCleaning() {
+			return actPricePerCleaning;
 		}
 		public Double getActPricePerCleaning() {
 			return actPricePerCleaning;
@@ -307,9 +312,6 @@ public class TicketStatusReport extends StandardReport {
 		}
 		public String getAddress1() {
 			return address1;
-		}
-		public Date getInvoiceDate() {
-			return invoiceDate;
 		}
 
 	}
