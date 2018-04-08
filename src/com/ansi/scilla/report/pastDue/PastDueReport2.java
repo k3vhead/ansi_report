@@ -209,46 +209,392 @@ public class PastDueReport2 extends StandardReport {
 		sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
 		sheet.getPrintSetup().setFitWidth((short)1);
 		
+		Integer fontHeight = 9;
+		XSSFFont fontDefaultFont = workbook.createFont();
+		fontDefaultFont.setFontHeight(fontHeight);
+		CellStyle cellStyleLeft = workbook.createCellStyle();
+	    cellStyleLeft.setAlignment(CellStyle.ALIGN_LEFT);
+	    cellStyleLeft.setFont(fontDefaultFont);
+		
 		for ( List<RowData> billToGroup : this.reportRows ) {
 			Double ppcTotal = 0.0D;
 			Double paidAmt = 0.0D;
 			Double amtDue = 0.0D;
 			Double pastDueTotal = 0.0D;
 			
-			String row0 = billToGroup.get(0).getBillToName() + "\t" + billToGroup.get(0).getJobId();
-			String row1 = billToGroup.get(0).getAddress1() + "\t" + billToGroup.get(0).getInvoiceId();
-			// do subtotal math
-			System.out.println(row0);
-			System.out.println(row1);
+			int colNum = 0;
+			int rowNum = 4;
+			XSSFRow row = null;
+			XSSFCell cell = null;
 			
-			String row2 = billToGroup.get(0).getCity() + "," + billToGroup.get(0).getState();
-			String row3 = billToGroup.get(0).getFirstName() + " " + billToGroup.get(0).getLastName();
+//			String row0 = billToGroup.get(0).getBillToName() + "\t" + billToGroup.get(0).getJobId();
+//			String row1 = billToGroup.get(0).getAddress1() + "\t" + billToGroup.get(0).getInvoiceId();
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getBillToName());
+			colNum++; //col 1
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getJobId());
+			colNum++; //col 2
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getProcessDate());
+			colNum++; //col 3
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getJobId());
+			colNum++; //col 4
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getActPPC());
+			ppcTotal += billToGroup.get(0).getActPPC();
+			colNum++; //col 5
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getAmountPaid());
+			paidAmt += billToGroup.get(0).getAmountPaid();
+			colNum++; //col 6
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getAmountDue());
+			amtDue += billToGroup.get(0).getAmountDue();
+			colNum++; //col 7
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getJobSiteName());
+			colNum++; //col 8
+			
+			rowNum++; //row 5
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getAddress1());
+			colNum++; //col 1
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getInvoiceId());
+			colNum++; //col 2
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getInvoiceDate());
+			colNum++; //col 3
+			
+			colNum++; //col 4
+			
+			colNum++; //col 5
+			
+			colNum++; //col 6
+			
+			colNum++; //col 7
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getJobSiteAddress());
+			colNum++; //col 8
+			
+			
+			rowNum++; //row 6
+			// do subtotal math
+//			System.out.println(row0);
+//			System.out.println(row1);
+			
+//			String row2 = billToGroup.get(0).getCity() + "," + billToGroup.get(0).getState();
+//			String row3 = billToGroup.get(0).getFirstName() + " " + billToGroup.get(0).getLastName();
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getCity() + ", " + billToGroup.get(0).getState());
+			colNum++; //col 1
+			
+			rowNum++;//row 7
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getFirstName() + ", " + billToGroup.get(0).getLastName());
+			colNum++; //col 1
+			
 			if ( billToGroup.size() > 1 ) {
 				//do subtotal math
-				row2 = row2 + "\t" + billToGroup.get(1).getJobId();
-				row3 = row3 + "\t" + billToGroup.get(1).getInvoiceId();
+//				row2 = row2 + "\t" + billToGroup.get(1).getJobId();
+//				row3 = row3 + "\t" + billToGroup.get(1).getInvoiceId();
+				
+				rowNum--;//row 6
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(1).getJobId());
+				colNum++; //col 4
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(1).getActPPC());
+				ppcTotal += billToGroup.get(1).getActPPC();
+				colNum++; //col 5
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(1).getAmountPaid());
+				paidAmt += billToGroup.get(1).getAmountPaid();
+				colNum++; //col 6
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(1).getAmountDue());
+				amtDue += billToGroup.get(1).getAmountDue();
+				colNum++; //col 7
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(1).getJobSiteName());
+				colNum++; //col 8
+				
+				rowNum++;//row 7
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(1).getInvoiceId());
+				colNum++; //col 2
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(1).getInvoiceDate());
+				colNum++; //col 3
+				
+				colNum++; //col 4
+				
+				colNum++; //col 5
+				
+				colNum++; //col 6
+				
+				colNum++; //col 7
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(1).getJobSiteAddress());
+				colNum++; //col 8
+				
 			}
-			System.out.println(row2);
-			System.out.println(row3);
 			
-			String row4 = billToGroup.get(0).getPreferredContact();
-			String row5 = "";
+			rowNum++;//row 8
+			
+//			String row4 = billToGroup.get(0).getPreferredContact();
+//			String row5 = "";
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(billToGroup.get(0).getPreferredContact());
+			colNum++; //col 1
+			
 			if ( billToGroup.size() > 2 ) {
 				//do subtotal math
-				row4 = row4 + "\t" + billToGroup.get(2).getJobId();
-				row5 = row5 + "\t" + billToGroup.get(2).getInvoiceId();
+//				row4 = row4 + "\t" + billToGroup.get(2).getJobId();
+//				row5 = row5 + "\t" + billToGroup.get(2).getInvoiceId();
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(2).getJobId());
+				colNum++; //col 4
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(2).getActPPC());
+				ppcTotal += billToGroup.get(2).getActPPC();
+				colNum++; //col 5
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(2).getAmountPaid());
+				paidAmt += billToGroup.get(2).getAmountPaid();
+				colNum++; //col 6
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(2).getAmountDue());
+				amtDue += billToGroup.get(2).getAmountDue();
+				colNum++; //col 7
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(2).getJobSiteName());
+				colNum++; //col 8
+				
+				rowNum++;//row 9
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(2).getInvoiceId());
+				colNum++; //col 2
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(2).getInvoiceDate());
+				colNum++; //col 3
+				
+				colNum++; //col 4
+				
+				colNum++; //col 5
+				
+				colNum++; //col 6
+				
+				colNum++; //col 7
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(2).getJobSiteAddress());
+				colNum++; //col 8
+				
 			}
-			System.out.println(row4);
-			if ( ! StringUtils.isBlank(row5)) {
-				System.out.println(row5);
-			}
+			
+			rowNum++;//row 10 if with job, 9 otherwise
+			
+//			System.out.println(row4);
+//			if ( ! StringUtils.isBlank(row5)) {
+//				System.out.println(row5);
+//			}
 			
 			for ( int i = 3; i < billToGroup.size(); i++) {
 				//do subtotal math
-				System.out.println("\t" + billToGroup.get(i).getJobId());
-				System.out.println("\t" + billToGroup.get(i).getInvoiceId());
+//				System.out.println("\t" + billToGroup.get(i).getJobId());
+//				System.out.println("\t" + billToGroup.get(i).getInvoiceId());
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(i).getJobId());
+				colNum++; //col 4
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(i).getActPPC());
+				ppcTotal += billToGroup.get(i).getActPPC();
+				colNum++; //col 5
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(i).getAmountPaid());
+				paidAmt += billToGroup.get(i).getAmountPaid();
+				colNum++; //col 6
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(i).getAmountDue());
+				amtDue += billToGroup.get(i).getAmountDue();
+				colNum++; //col 7
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(i).getJobSiteName());
+				colNum++; //col 8
+				
+				rowNum++;
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(i).getInvoiceId());
+				colNum++; //col 2
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(i).getInvoiceDate());
+				colNum++; //col 3
+				
+				colNum++; //col 4
+				
+				colNum++; //col 5
+				
+				colNum++; //col 6
+				
+				colNum++; //col 7
+				
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellStyle(cellStyleLeft);
+				cell.setCellValue(billToGroup.get(i).getJobSiteAddress());
+				colNum++; //col 8
+				
+				rowNum++;
 			}
 			
+			colNum = 4;
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(ppcTotal);
+			colNum++; //col 5
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(paidAmt);
+			colNum++; //col 6
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(amtDue);
+			colNum++; //col 7
+			
+			pastDueTotal = ppcTotal - paidAmt;
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue("Past Due Total: " + pastDueTotal);
+			colNum++; //col 8
+			
+			ppcTotal = 0.0D;
+			paidAmt = 0.0D;
+			amtDue = 0.0D;
+			rowNum++;
 		}
 		
 		return workbook;
