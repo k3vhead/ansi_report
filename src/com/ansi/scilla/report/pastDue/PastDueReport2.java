@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -157,7 +158,7 @@ public class PastDueReport2 extends StandardReport {
 		rsData.close();
 		
 		// JWL: THis is new:
-		this.reportRows = makeReportRows();		
+		this.reportRows = makeReportRows();	
 		// JWL: End of new
 		
 		Method getStartDateMethod = this.getClass().getMethod("getStartDate", (Class<?>[])null);
@@ -183,6 +184,7 @@ public class PastDueReport2 extends StandardReport {
 	
 	
 	
+
 	// JWL: THis is new
 	private List<List<RowData>> makeReportRows() {
 		List<List<RowData>> reportRows = new ArrayList<List<RowData>>();
@@ -209,13 +211,44 @@ public class PastDueReport2 extends StandardReport {
 		sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
 		sheet.getPrintSetup().setFitWidth((short)1);
 		
+		RowData rowData = null;
+		
+		XSSFRow row = null;
+		XSSFCell cell = null;
+		int rowNum = 0;
+		
 		Integer fontHeight = 9;
 		XSSFFont fontDefaultFont = workbook.createFont();
 		fontDefaultFont.setFontHeight(fontHeight);
 		CellStyle cellStyleLeft = workbook.createCellStyle();
 	    cellStyleLeft.setAlignment(CellStyle.ALIGN_LEFT);
 	    cellStyleLeft.setFont(fontDefaultFont);
+	    
+	    HashMap<String, CellStyle> styleMap = new HashMap<String, CellStyle>();
+	    styleMap.put("cellStyleLeft", cellStyleLeft);
+	    
 		
+	    row = sheet.createRow(rowNum);
+	    cell = row.createCell(0);
+	    cell.setCellValue("This is the banner row with created date and ANSI");
+	    rowNum++;
+	    
+	    row = sheet.createRow(rowNum);
+	    cell = row.createCell(0);
+	    cell.setCellValue("This is the title row with the aging date and Past Due Report");	    
+	    rowNum++;
+	    
+	    row = sheet.createRow(rowNum);
+	    cell = row.createCell(0);
+	    cell.setCellValue("THis is the 3rd row with the days past due parm");
+	    rowNum++;
+	    
+	    row = sheet.createRow(rowNum);
+	    cell = row.createCell(0);
+	    cell.setCellValue("This is the column header row");
+	    rowNum++;
+	    
+	    
 		for ( List<RowData> billToGroup : this.reportRows ) {
 			Double ppcTotal = 0.0D;
 			Double paidAmt = 0.0D;
@@ -223,343 +256,53 @@ public class PastDueReport2 extends StandardReport {
 			Double pastDueTotal = 0.0D;
 			
 			int colNum = 0;
-			int rowNum = 4;
-			XSSFRow row = null;
-			XSSFCell cell = null;
 			
-//			String row0 = billToGroup.get(0).getBillToName() + "\t" + billToGroup.get(0).getJobId();
-//			String row1 = billToGroup.get(0).getAddress1() + "\t" + billToGroup.get(0).getInvoiceId();
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getBillToName());
-			colNum++; //col 1
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getJobId());
-			colNum++; //col 2
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getProcessDate());
-			colNum++; //col 3
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getJobId());
-			colNum++; //col 4
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getActPPC());
-			ppcTotal += billToGroup.get(0).getActPPC();
-			colNum++; //col 5
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getAmountPaid());
-			paidAmt += billToGroup.get(0).getAmountPaid();
-			colNum++; //col 6
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getAmountDue());
-			amtDue += billToGroup.get(0).getAmountDue();
-			colNum++; //col 7
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getJobSiteName());
-			colNum++; //col 8
-			
-			rowNum++; //row 5
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getAddress1());
-			colNum++; //col 1
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getInvoiceId());
-			colNum++; //col 2
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getInvoiceDate());
-			colNum++; //col 3
-			
-			colNum++; //col 4
-			
-			colNum++; //col 5
-			
-			colNum++; //col 6
-			
-			colNum++; //col 7
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getJobSiteAddress());
-			colNum++; //col 8
-			
-			
-			rowNum++; //row 6
-			// do subtotal math
-//			System.out.println(row0);
-//			System.out.println(row1);
-			
-//			String row2 = billToGroup.get(0).getCity() + "," + billToGroup.get(0).getState();
-//			String row3 = billToGroup.get(0).getFirstName() + " " + billToGroup.get(0).getLastName();
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getCity() + ", " + billToGroup.get(0).getState());
-			colNum++; //col 1
-			
-			rowNum++;//row 7
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getFirstName() + ", " + billToGroup.get(0).getLastName());
-			colNum++; //col 1
+			rowData = billToGroup.get(0);
+			ppcTotal += rowData.getActPPC();	
+			paidAmt += rowData.getAmountPaid();
+			amtDue += rowData.getAmountDue();
+			makeRow0(sheet, rowNum, billToGroup.get(0).getBillToName(), billToGroup.get(0).getJobSiteName(), rowData, styleMap);
+			rowNum++;
+			makeRow1(sheet, rowNum, billToGroup.get(0).getAddress1(), billToGroup.get(0).getJobSiteAddress(), rowData, styleMap);
+			rowNum++;
+
 			
 			if ( billToGroup.size() > 1 ) {
-				//do subtotal math
-//				row2 = row2 + "\t" + billToGroup.get(1).getJobId();
-//				row3 = row3 + "\t" + billToGroup.get(1).getInvoiceId();
-				
-				rowNum--;//row 6
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(1).getJobId());
-				colNum++; //col 4
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(1).getActPPC());
-				ppcTotal += billToGroup.get(1).getActPPC();
-				colNum++; //col 5
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(1).getAmountPaid());
-				paidAmt += billToGroup.get(1).getAmountPaid();
-				colNum++; //col 6
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(1).getAmountDue());
-				amtDue += billToGroup.get(1).getAmountDue();
-				colNum++; //col 7
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(1).getJobSiteName());
-				colNum++; //col 8
-				
-				rowNum++;//row 7
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(1).getInvoiceId());
-				colNum++; //col 2
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(1).getInvoiceDate());
-				colNum++; //col 3
-				
-				colNum++; //col 4
-				
-				colNum++; //col 5
-				
-				colNum++; //col 6
-				
-				colNum++; //col 7
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(1).getJobSiteAddress());
-				colNum++; //col 8
-				
+				rowData = billToGroup.get(1);
+				ppcTotal += rowData.getActPPC();	
+				paidAmt += rowData.getAmountPaid();
+				amtDue += rowData.getAmountDue();
+			} else {
+				rowData = null;
 			}
+			makeRow0(sheet, rowNum, billToGroup.get(0).getCity() + ", " + billToGroup.get(0).getState(), "", rowData, styleMap);
+			rowNum++;
+			makeRow1(sheet, rowNum, billToGroup.get(0).getFirstName() + ", " + billToGroup.get(0).getLastName(), "", rowData, styleMap);
+			rowNum++;
 			
-			rowNum++;//row 8
-			
-//			String row4 = billToGroup.get(0).getPreferredContact();
-//			String row5 = "";
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(billToGroup.get(0).getPreferredContact());
-			colNum++; //col 1
 			
 			if ( billToGroup.size() > 2 ) {
-				//do subtotal math
-//				row4 = row4 + "\t" + billToGroup.get(2).getJobId();
-//				row5 = row5 + "\t" + billToGroup.get(2).getInvoiceId();
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(2).getJobId());
-				colNum++; //col 4
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(2).getActPPC());
-				ppcTotal += billToGroup.get(2).getActPPC();
-				colNum++; //col 5
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(2).getAmountPaid());
-				paidAmt += billToGroup.get(2).getAmountPaid();
-				colNum++; //col 6
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(2).getAmountDue());
-				amtDue += billToGroup.get(2).getAmountDue();
-				colNum++; //col 7
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(2).getJobSiteName());
-				colNum++; //col 8
-				
-				rowNum++;//row 9
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(2).getInvoiceId());
-				colNum++; //col 2
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(2).getInvoiceDate());
-				colNum++; //col 3
-				
-				colNum++; //col 4
-				
-				colNum++; //col 5
-				
-				colNum++; //col 6
-				
-				colNum++; //col 7
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(2).getJobSiteAddress());
-				colNum++; //col 8
-				
+				rowData = billToGroup.get(2);
+				ppcTotal += rowData.getActPPC();	
+				paidAmt += rowData.getAmountPaid();
+				amtDue += rowData.getAmountDue();
+			} else {
+				rowData = null;
 			}
-			
-			rowNum++;//row 10 if with job, 9 otherwise
-			
-//			System.out.println(row4);
-//			if ( ! StringUtils.isBlank(row5)) {
-//				System.out.println(row5);
-//			}
+			makeRow0(sheet, rowNum, "some name from billToGet(0)", "", rowData, styleMap);
+			rowNum++;
+			makeRow1(sheet, rowNum, "", "", rowData, styleMap);
+			rowNum++;
 			
 			for ( int i = 3; i < billToGroup.size(); i++) {
-				//do subtotal math
-//				System.out.println("\t" + billToGroup.get(i).getJobId());
-//				System.out.println("\t" + billToGroup.get(i).getInvoiceId());
+				rowData = billToGroup.get(2);
+				ppcTotal += rowData.getActPPC();	
+				paidAmt += rowData.getAmountPaid();
+				amtDue += rowData.getAmountDue();
 				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(i).getJobId());
-				colNum++; //col 4
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(i).getActPPC());
-				ppcTotal += billToGroup.get(i).getActPPC();
-				colNum++; //col 5
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(i).getAmountPaid());
-				paidAmt += billToGroup.get(i).getAmountPaid();
-				colNum++; //col 6
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(i).getAmountDue());
-				amtDue += billToGroup.get(i).getAmountDue();
-				colNum++; //col 7
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(i).getJobSiteName());
-				colNum++; //col 8
-				
+				makeRow0(sheet, rowNum, "", "", billToGroup.get(i), styleMap);
 				rowNum++;
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(i).getInvoiceId());
-				colNum++; //col 2
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(i).getInvoiceDate());
-				colNum++; //col 3
-				
-				colNum++; //col 4
-				
-				colNum++; //col 5
-				
-				colNum++; //col 6
-				
-				colNum++; //col 7
-				
-				row = sheet.createRow(rowNum);
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleLeft);
-				cell.setCellValue(billToGroup.get(i).getJobSiteAddress());
-				colNum++; //col 8
-				
+				makeRow1(sheet, rowNum, "", "", billToGroup.get(i), styleMap);
 				rowNum++;
 			}
 			
@@ -596,9 +339,101 @@ public class PastDueReport2 extends StandardReport {
 			amtDue = 0.0D;
 			rowNum++;
 		}
-		
 		return workbook;
 	}
+		
+		
+	private void makeRow0(XSSFSheet sheet, int rowNum, String column0, String column7, RowData rowData, HashMap<String,CellStyle> styleMap) {
+		XSSFRow row = sheet.createRow(rowNum);
+		XSSFCell cell = null;		
+		int colNum = 0;
+		CellStyle cellStyleLeft = styleMap.get("cellStyleLeft");
+		
+		cell = row.createCell(colNum);
+		cell.setCellStyle(cellStyleLeft);
+		cell.setCellValue(column0);
+		colNum++; //col 1
+		
+		if ( rowData != null ) {
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(rowData.getJobId());
+			colNum++; //col 2
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(rowData.getProcessDate());
+			colNum++; //col 3
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(rowData.getJobId());
+			colNum++; //col 4
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(rowData.getActPPC());		
+			colNum++; //col 5
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(rowData.getAmountPaid());
+			colNum++; //col 6
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(rowData.getAmountDue());
+			colNum++; //col 7
+		}
+		
+		cell = row.createCell(colNum);
+		cell.setCellStyle(cellStyleLeft);
+		cell.setCellValue(column7);
+		colNum++; //col 8		
+	}
+
+	
+	private void makeRow1(XSSFSheet sheet, int rowNum, String column0, String column7, RowData rowData, HashMap<String,CellStyle> styleMap) {
+		XSSFRow row = sheet.createRow(rowNum);
+		XSSFCell cell = null;		
+		int colNum = 0;
+		CellStyle cellStyleLeft = styleMap.get("cellStyleLeft");
+		
+		cell = row.createCell(colNum);
+		cell.setCellStyle(cellStyleLeft);
+		cell.setCellValue(column0);
+		colNum++; //col 1
+		
+		if ( rowData != null ) {
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(rowData.getInvoiceId());
+			colNum++; //col 2
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleLeft);
+			cell.setCellValue(rowData.getInvoiceDate());
+			colNum++; //col 3
+			
+			colNum++; //col 4
+			
+			colNum++; //col 5
+			
+			colNum++; //col 6
+			
+			colNum++; //col 7
+		}
+		
+		cell = row.createCell(colNum);
+		cell.setCellStyle(cellStyleLeft);
+		cell.setCellValue(column7);
+		colNum++; //col 8
+		
+			
+	}
+
+	
+
 	// JWL: ENd of new
 
 	
@@ -607,6 +442,56 @@ public class PastDueReport2 extends StandardReport {
 	
 	
 	
+	private void makeRow3(XSSFSheet sheet, int rowNum, RowData rowData, HashMap<String, CellStyle> styleMap) {
+		XSSFRow row = sheet.createRow(rowNum);
+		XSSFCell cell = null;		
+		int colNum = 0;
+		CellStyle cellStyleLeft = styleMap.get("cellStyleLeft");	
+		
+		cell = row.createCell(colNum);
+		cell.setCellStyle(cellStyleLeft);
+		cell.setCellValue(rowData.getFirstName() + ", " + rowData.getLastName());
+		colNum++; //col 1
+		
+		cell = row.createCell(colNum);
+		cell.setCellStyle(cellStyleLeft);
+		cell.setCellValue(rowData.getInvoiceId());
+		colNum++; //col 2
+		
+		cell = row.createCell(colNum);
+		cell.setCellStyle(cellStyleLeft);
+		cell.setCellValue(rowData.getInvoiceDate());
+		colNum++; //col 3
+		
+		colNum++; //col 4
+		
+		colNum++; //col 5
+		
+		colNum++; //col 6
+		
+		colNum++; //col 7
+		
+		cell = row.createCell(colNum);
+		cell.setCellStyle(cellStyleLeft);
+		cell.setCellValue(rowData.getJobSiteAddress());
+		colNum++; //col 8
+		
+		cell = row.createCell(colNum);
+		cell.setCellStyle(cellStyleLeft);
+		cell.setCellValue(rowData.getAddress1());
+		colNum++; //col 1
+		
+		cell = row.createCell(colNum);
+		cell.setCellStyle(cellStyleLeft);
+		cell.setCellValue(rowData.getInvoiceId());
+		colNum++; //col 2
+		
+		cell = row.createCell(colNum);
+		cell.setCellStyle(cellStyleLeft);
+		cell.setCellValue(rowData.getInvoiceDate());
+		colNum++; //col 3
+	}
+
 	public XSSFWorkbook makeXLS_jwl() {
 		String subtitle = makeSubtitle();
 		
