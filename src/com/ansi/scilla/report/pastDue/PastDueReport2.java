@@ -224,9 +224,28 @@ public class PastDueReport2 extends StandardReport {
 	    cellStyleLeft.setAlignment(CellStyle.ALIGN_LEFT);
 	    cellStyleLeft.setFont(fontDefaultFont);
 	    
+	    CreationHelper createHelper = workbook.getCreationHelper();
+	    short dataFormatDate = createHelper.createDataFormat().getFormat("mm/dd/yyyy");
+	    CellStyle cellStyleDate = workbook.createCellStyle();
+	    cellStyleDate.setDataFormat(dataFormatDate);
+	    cellStyleDate.setAlignment(CellStyle.ALIGN_LEFT);
+	    
+	    short dataFormatDecimal = createHelper.createDataFormat().getFormat("#,##0.00");
+	    CellStyle cellStyleDecimal = workbook.createCellStyle();
+	    cellStyleDecimal.setAlignment(CellStyle.ALIGN_RIGHT);
+	    cellStyleDecimal.setDataFormat(dataFormatDecimal);
+	    cellStyleDecimal.setFont(fontDefaultFont);
+	    
+	    short dataFormatDateTime = createHelper.createDataFormat().getFormat("mm/dd/yyyy hh:mm:ss");
+	    CellStyle cellStyleDateTime = workbook.createCellStyle();
+	    cellStyleDateTime.setDataFormat(dataFormatDateTime);
+	    cellStyleDateTime.setAlignment(CellStyle.ALIGN_LEFT);
+	    cellStyleDateTime.setFont(fontDefaultFont);
+	    
 	    HashMap<String, CellStyle> styleMap = new HashMap<String, CellStyle>();
 	    styleMap.put("cellStyleLeft", cellStyleLeft);
-	    
+	    styleMap.put("cellStyleDate", cellStyleDate);
+	    styleMap.put("cellStyleDecimal", cellStyleDecimal);
 		
 	    row = sheet.createRow(rowNum);
 	    cell = row.createCell(0);
@@ -289,7 +308,7 @@ public class PastDueReport2 extends StandardReport {
 			} else {
 				rowData = null;
 			}
-			makeRow0(sheet, rowNum, "some name from billToGet(0)", "", rowData, styleMap);
+			makeRow0(sheet, rowNum, billToGroup.get(0).getPreferredContact(), "", rowData, styleMap);
 			rowNum++;
 			makeRow1(sheet, rowNum, "", "", rowData, styleMap);
 			rowNum++;
@@ -348,6 +367,9 @@ public class PastDueReport2 extends StandardReport {
 		XSSFCell cell = null;		
 		int colNum = 0;
 		CellStyle cellStyleLeft = styleMap.get("cellStyleLeft");
+		CellStyle cellStyleDate = styleMap.get("cellStyleDate");
+		CellStyle cellStyleDecimal = styleMap.get("cellStyleDecimal");
+		
 		
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
@@ -361,7 +383,7 @@ public class PastDueReport2 extends StandardReport {
 			colNum++; //col 2
 			
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
+			cell.setCellStyle(cellStyleDate);
 			cell.setCellValue(rowData.getProcessDate());
 			colNum++; //col 3
 			
@@ -371,17 +393,17 @@ public class PastDueReport2 extends StandardReport {
 			colNum++; //col 4
 			
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
+			cell.setCellStyle(cellStyleDecimal);
 			cell.setCellValue(rowData.getActPPC());		
 			colNum++; //col 5
 			
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
+			cell.setCellStyle(cellStyleDecimal);
 			cell.setCellValue(rowData.getAmountPaid());
 			colNum++; //col 6
 			
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
+			cell.setCellStyle(cellStyleDecimal);
 			cell.setCellValue(rowData.getAmountDue());
 			colNum++; //col 7
 		}
@@ -398,6 +420,8 @@ public class PastDueReport2 extends StandardReport {
 		XSSFCell cell = null;		
 		int colNum = 0;
 		CellStyle cellStyleLeft = styleMap.get("cellStyleLeft");
+		CellStyle cellStyleDate = styleMap.get("cellStyleDate");
+		CellStyle cellStyleDecimal = styleMap.get("cellStyleDecimal");
 		
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
@@ -411,7 +435,7 @@ public class PastDueReport2 extends StandardReport {
 			colNum++; //col 2
 			
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
+			cell.setCellStyle(cellStyleDate);
 			cell.setCellValue(rowData.getInvoiceDate());
 			colNum++; //col 3
 			
@@ -447,6 +471,8 @@ public class PastDueReport2 extends StandardReport {
 		XSSFCell cell = null;		
 		int colNum = 0;
 		CellStyle cellStyleLeft = styleMap.get("cellStyleLeft");	
+		CellStyle cellStyleDate = styleMap.get("cellStyleDate");
+		CellStyle cellStyleDecimal = styleMap.get("cellStyleDecimal");
 		
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
@@ -459,7 +485,7 @@ public class PastDueReport2 extends StandardReport {
 		colNum++; //col 2
 		
 		cell = row.createCell(colNum);
-		cell.setCellStyle(cellStyleLeft);
+		cell.setCellStyle(cellStyleDate);
 		cell.setCellValue(rowData.getInvoiceDate());
 		colNum++; //col 3
 		
@@ -487,7 +513,7 @@ public class PastDueReport2 extends StandardReport {
 		colNum++; //col 2
 		
 		cell = row.createCell(colNum);
-		cell.setCellStyle(cellStyleLeft);
+		cell.setCellStyle(cellStyleDate);
 		cell.setCellValue(rowData.getInvoiceDate());
 		colNum++; //col 3
 	}
