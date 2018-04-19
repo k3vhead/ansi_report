@@ -100,6 +100,7 @@ public class PastDueReport2 extends StandardReport {
 	
 	private Calendar pastDueDate;
 	private Calendar createdDate;
+	private Integer daysPastDue;
 	private String div;
 	private List<List<RowData>> reportRows;
 	
@@ -122,6 +123,16 @@ public class PastDueReport2 extends StandardReport {
 	public Calendar getStartDate(){
 		createdDate = Calendar.getInstance();
 		return createdDate;
+	}
+	
+	public Calendar getAgingDate(){
+		createdDate = Calendar.getInstance();
+		return createdDate;
+	}
+	
+	public Integer getDaysPastDue(){
+		daysPastDue = 0;
+		return daysPastDue;
 	}
 	
 	public String getDiv() {
@@ -162,20 +173,20 @@ public class PastDueReport2 extends StandardReport {
 		// JWL: End of new
 		
 		Method getStartDateMethod = this.getClass().getMethod("getStartDate", (Class<?>[])null);
+		Method getAgingDateMethod = this.getClass().getMethod("getAgingDate", (Class<?>[])null);
+		Method daysPastDueMethod = this.getClass().getMethod("getDaysPastDue", (Class<?>[])null);
 		
 		List<ReportHeaderRow> headerLeft = Arrays.asList(new ReportHeaderRow[] {
 				new ReportHeaderRow("Created: ", getStartDateMethod, 0, DataFormats.DATE_TIME_FORMAT),
-//				new ReportHeaderRow("Aging Date: ", getEndDateMethod, 0, DataFormats.DATE_FORMAT),
-//				new ReportHeaderRow("Days Past Due: ", dataSizeMethod, 2, DataFormats.INTEGER_FORMAT)
+				new ReportHeaderRow("Aging Date: ", getAgingDateMethod, 0, DataFormats.DATE_FORMAT),
+				new ReportHeaderRow("Days Past Due: ", daysPastDueMethod, 2, DataFormats.INTEGER_FORMAT)
 		});
 		super.makeHeaderLeft(headerLeft);
 		
 		Method getDivMethod = this.getClass().getMethod("getDiv", (Class<?>[])null);
 		
 		List<ReportHeaderRow> headerRight = Arrays.asList(new ReportHeaderRow[] {
-				new ReportHeaderRow("Division: ", getDivMethod, 0, DataFormats.DATE_TIME_FORMAT),
-//				new ReportHeaderRow("Aging Date: ", getEndDateMethod, 0, DataFormats.DATE_FORMAT),
-//				new ReportHeaderRow("Days Past Due: ", dataSizeMethod, 2, DataFormats.INTEGER_FORMAT)
+				new ReportHeaderRow("Division: ", getDivMethod, 0, DataFormats.STRING_FORMAT)
 		});
 		super.makeHeaderRight(headerRight);
 		
