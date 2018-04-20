@@ -5,12 +5,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -129,12 +131,14 @@ public class PastDueReport2 extends StandardReport {
 	}
 	
 	public Calendar getAgingDate(){
-		createdDate = Calendar.getInstance();
-		return createdDate;
+		//pastDueDate = Calendar.getInstance();
+		return pastDueDate;
 	}
 	
 	public Integer getDaysPastDue(){
-		daysPastDue = 0;
+		long end = createdDate.getTimeInMillis();
+		long start = pastDueDate.getTimeInMillis();
+		daysPastDue = (int) TimeUnit.MILLISECONDS.toDays(Math.abs(end-start));
 		return daysPastDue;
 	}
 	
