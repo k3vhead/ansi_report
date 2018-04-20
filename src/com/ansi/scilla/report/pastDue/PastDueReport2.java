@@ -256,7 +256,7 @@ public class PastDueReport2 extends StandardReport {
 	    cellStyleDecimal.setFont(fontDefaultFont);
 	    
 	    CellStyle cellStyleSummary = sheet.getWorkbook().createCellStyle();
-		cellStyleSummary.cloneStyleFrom(rf.cellStyleNumberCenter);
+		cellStyleSummary.cloneStyleFrom(rf.cellStyleStandardCurrency);
 		cellStyleSummary.setDataFormat(dataFormatDecimal);
 		cellStyleSummary.setBorderBottom(CellStyle.BORDER_THICK);
 		cellStyleSummary.setBorderTop(CellStyle.BORDER_THIN);
