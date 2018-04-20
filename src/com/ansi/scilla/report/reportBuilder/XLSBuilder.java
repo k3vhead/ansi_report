@@ -111,9 +111,13 @@ public class XLSBuilder extends AbstractXLSBuilder {
 	
 
 
+	private void makeColumnHeader(XSSFSheet sheet) {
+		XLSReportBuilderUtils.makeColumnHeader((StandardReport)this.report, this.reportStartLoc, sheet, this.rf);
+	}
 
 
-
+	/*
+	This method moved to XLSReportBuilderUtils
 	private void makeColumnHeader(XSSFSheet sheet) {
 		StandardReport report = (StandardReport)this.report;
 		XSSFRow row = null;
@@ -140,6 +144,7 @@ public class XLSBuilder extends AbstractXLSBuilder {
 			columnIndex++;
 		}
 	}
+	*/
 
 	private void makeDetails(XSSFSheet sheet) throws Exception {
 		XSSFRow row = null;

@@ -32,8 +32,11 @@ import com.ansi.scilla.report.reportBuilder.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.ReportOrientation;
+import com.ansi.scilla.report.reportBuilder.ReportStartLoc;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.XLSReportBuilderUtils;
+import com.ansi.scilla.report.reportBuilder.XLSReportFormatter;
 
 public class PastDueReport2 extends StandardReport {
 	private static final long serialVersionUID = 1L;
@@ -215,18 +218,18 @@ public class PastDueReport2 extends StandardReport {
 	
 	
 	
-	public XSSFWorkbook makeXLS() {
+	public XSSFWorkbook makeXLS() throws Exception {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet();
 		sheet.getPrintSetup().setLandscape(true);
 		sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
 		sheet.getPrintSetup().setFitWidth((short)1);
-		
+		XLSReportFormatter rf = new XLSReportFormatter(workbook);
 		RowData rowData = null;
 		
 		XSSFRow row = null;
 		XSSFCell cell = null;
-		int rowNum = 0;
+		int rowNum = XLSReportBuilderUtils.makeHeaderRowCount(this) + 2;
 		
 		Integer fontHeight = 9;
 		XSSFFont fontDefaultFont = workbook.createFont();
@@ -258,26 +261,10 @@ public class PastDueReport2 extends StandardReport {
 	    styleMap.put("cellStyleDate", cellStyleDate);
 	    styleMap.put("cellStyleDecimal", cellStyleDecimal);
 		
-	    row = sheet.createRow(rowNum);
-	    cell = row.createCell(0);
-	    cell.setCellValue("This is the banner row with created date and ANSI");
-	    rowNum++;
 	    
-	    row = sheet.createRow(rowNum);
-	    cell = row.createCell(0);
-	    cell.setCellValue("This is the title row with the aging date and Past Due Report");	    
-	    rowNum++;
-	    
-	    row = sheet.createRow(rowNum);
-	    cell = row.createCell(0);
-	    cell.setCellValue("THis is the 3rd row with the days past due parm");
-	    rowNum++;
-	    
-	    row = sheet.createRow(rowNum);
-	    cell = row.createCell(0);
-	    cell.setCellValue("This is the column header row");
-	    rowNum++;
-	    
+	    ReportStartLoc reportStartLoc = new ReportStartLoc(0,0);
+	    XLSReportBuilderUtils.makeStandardHeader(this, reportStartLoc, sheet);
+	    XLSReportBuilderUtils.makeColumnHeader(this, reportStartLoc, sheet, rf);
 	    
 		for ( List<RowData> billToGroup : this.reportRows ) {
 			Double ppcTotal = 0.0D;

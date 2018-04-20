@@ -217,4 +217,39 @@ public class XLSReportBuilderUtils extends ReportBuilderUtils {
 	public static XSSFRow makeRow(XSSFSheet sheet, Integer rowNum) {		
 		return sheet.getRow(rowNum) == null ? sheet.createRow(rowNum) : sheet.getRow(rowNum);
 	}
+	
+	
+	/**
+	 * Add column headers to a standard report
+	 * @param report
+	 * @param reportStartLoc
+	 * @param sheet
+	 * @param rf
+	 */
+	public static void makeColumnHeader(StandardReport report, ReportStartLoc reportStartLoc, XSSFSheet sheet, XLSReportFormatter rf) {
+//		StandardReport report = (StandardReport)report;
+		XSSFRow row = null;
+		XSSFCell cell = null;
+		
+		int rowNum = reportStartLoc.rowIndex + XLSReportBuilderUtils.makeHeaderRowCount(report) + 1;
+		int columnIndex = reportStartLoc.columnIndex;
+		int startingColumn = reportStartLoc.columnIndex;
+		row = XLSReportBuilderUtils.makeRow(sheet, rowNum);  //sheet.createRow(rowNum);
+
+//		row.setHeight(rf.standardHeaderHeight);
+		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
+			ColumnHeader columnHeader = report.getHeaderRow()[i];
+			if ( i == 1 ) {
+				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn, startingColumn + 1));
+				columnIndex++;
+			}
+			if ( i == report.getHeaderRow().length - 1 ) {
+				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn + report.getHeaderRow().length, startingColumn + report.getHeaderRow().length+1));
+			}
+			cell = row.createCell(columnIndex);
+			cell.setCellValue(columnHeader.getLabel());
+			cell.setCellStyle(rf.cellStyleColHdrLeft);
+			columnIndex++;
+		}
+	}
 }
