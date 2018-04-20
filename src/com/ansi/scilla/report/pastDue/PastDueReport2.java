@@ -229,6 +229,7 @@ public class PastDueReport2 extends StandardReport {
 		sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
 		sheet.getPrintSetup().setFitWidth((short)1);
 		XLSReportFormatter rf = new XLSReportFormatter(workbook);
+		//this.populateXlsSheet(sheet, rf);
 		RowData rowData = null;
 		
 		XSSFRow row = null;
@@ -253,6 +254,12 @@ public class PastDueReport2 extends StandardReport {
 	    cellStyleDecimal.setAlignment(CellStyle.ALIGN_RIGHT);
 	    cellStyleDecimal.setDataFormat(dataFormatDecimal);
 	    cellStyleDecimal.setFont(fontDefaultFont);
+	    
+	    CellStyle cellStyleSummary = sheet.getWorkbook().createCellStyle();
+		cellStyleSummary.cloneStyleFrom(rf.cellStyleNumberCenter);
+		cellStyleSummary.setDataFormat(dataFormatDecimal);
+		cellStyleSummary.setBorderBottom(CellStyle.BORDER_THICK);
+		cellStyleSummary.setBorderTop(CellStyle.BORDER_THIN);
 	    
 	    short dataFormatDateTime = createHelper.createDataFormat().getFormat("mm/dd/yyyy hh:mm:ss");
 	    CellStyle cellStyleDateTime = workbook.createCellStyle();
@@ -331,19 +338,19 @@ public class PastDueReport2 extends StandardReport {
 			
 			row = sheet.createRow(rowNum);
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
+			cell.setCellStyle(cellStyleSummary);
 			cell.setCellValue(ppcTotal);
 			colNum++; //col 5
 			
 			row = sheet.createRow(rowNum);
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
+			cell.setCellStyle(cellStyleSummary);
 			cell.setCellValue(paidAmt);
 			colNum++; //col 6
 			
 			row = sheet.createRow(rowNum);
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
+			cell.setCellStyle(cellStyleSummary);
 			cell.setCellValue(amtDue);
 			colNum++; //col 7
 			
@@ -351,7 +358,7 @@ public class PastDueReport2 extends StandardReport {
 			
 			row = sheet.createRow(rowNum);
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleLeft);
+			cell.setCellStyle(cellStyleSummary);
 			cell.setCellValue("Past Due Total: " + pastDueTotal);
 			colNum++; //col 8
 			
