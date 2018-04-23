@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.temporal.ChronoUnit;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -153,9 +153,9 @@ public class PastDueReport2 extends StandardReport {
 			new ColumnHeader("jobId","JOB #", DataFormats.STRING_FORMAT, SummaryType.NONE),//JOB#
 			new ColumnHeader("invoiceDate", "Contracts", DataFormats.DATE_FORMAT, SummaryType.NONE),//completed invoiced dates
 			new ColumnHeader("jobId", "JOB", DataFormats.STRING_CENTERED, SummaryType.NONE),//job number
-			new ColumnHeader("actPPC", "PPC", DataFormats.NUMBER_CENTERED, SummaryType.NONE),//actPPC
-			new ColumnHeader("amountPaid", "PAID AMOUNT", DataFormats.NUMBER_FORMAT, SummaryType.NONE),//Paid Amount
-			new ColumnHeader("amountDue", "AMOUNT DUE", DataFormats.NUMBER_FORMAT, SummaryType.NONE),//amountDue
+			new ColumnHeader("actPPC", "PPC", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//actPPC
+			new ColumnHeader("amountPaid", "PAID AMOUNT", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//Paid Amount
+			new ColumnHeader("amountDue", "AMOUNT DUE", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
 			new ColumnHeader("jobSiteAddress", "SITE ADDRESS", DataFormats.STRING_FORMAT, SummaryType.NONE),//siteAddress
 		});		
 		
@@ -239,21 +239,22 @@ public class PastDueReport2 extends StandardReport {
 		Integer fontHeight = 9;
 		XSSFFont fontDefaultFont = workbook.createFont();
 		fontDefaultFont.setFontHeight(fontHeight);
+		
 		CellStyle cellStyleLeft = workbook.createCellStyle();
+		cellStyleLeft.cloneStyleFrom(rf.cellStyleStandardLeft);
 	    cellStyleLeft.setAlignment(CellStyle.ALIGN_LEFT);
-	    cellStyleLeft.setFont(fontDefaultFont);
 	    
 	    CreationHelper createHelper = workbook.getCreationHelper();
 	    short dataFormatDate = createHelper.createDataFormat().getFormat("mm/dd/yyyy");
 	    CellStyle cellStyleDate = workbook.createCellStyle();
+	    cellStyleDate.cloneStyleFrom(rf.cellStyleDateLeft);
 	    cellStyleDate.setDataFormat(dataFormatDate);
-	    cellStyleDate.setAlignment(CellStyle.ALIGN_LEFT);
 	    
 	    short dataFormatDecimal = createHelper.createDataFormat().getFormat("#,##0.00");
 	    CellStyle cellStyleDecimal = workbook.createCellStyle();
+	    cellStyleDecimal.cloneStyleFrom(rf.cellStyleStandardCurrency);
 	    cellStyleDecimal.setAlignment(CellStyle.ALIGN_RIGHT);
 	    cellStyleDecimal.setDataFormat(dataFormatDecimal);
-	    cellStyleDecimal.setFont(fontDefaultFont);
 	    
 	    CellStyle cellStyleSummary = sheet.getWorkbook().createCellStyle();
 		cellStyleSummary.cloneStyleFrom(rf.cellStyleStandardCurrency);
@@ -263,9 +264,8 @@ public class PastDueReport2 extends StandardReport {
 	    
 	    short dataFormatDateTime = createHelper.createDataFormat().getFormat("mm/dd/yyyy hh:mm:ss");
 	    CellStyle cellStyleDateTime = workbook.createCellStyle();
+	    cellStyleDateTime.cloneStyleFrom(rf.cellStyleDateTimeLeft);
 	    cellStyleDateTime.setDataFormat(dataFormatDateTime);
-	    cellStyleDateTime.setAlignment(CellStyle.ALIGN_LEFT);
-	    cellStyleDateTime.setFont(fontDefaultFont);
 	    
 	    HashMap<String, CellStyle> styleMap = new HashMap<String, CellStyle>();
 	    styleMap.put("cellStyleLeft", cellStyleLeft);
