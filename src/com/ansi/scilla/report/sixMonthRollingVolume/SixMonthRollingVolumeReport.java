@@ -69,7 +69,7 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 			+ "\n\t, job.job_id "
 			+ "\n\t, job.job_nbr "
 			+ "\n\t, job.job_frequency "
-			+ "\n\t, max(t.start_date) as last_run "
+			+ "\n\t, max(t.process_date) as last_run "
 			+ "\n\t, ppcm01.price_per_cleaning as ppcm01	 "
 			+ "\n\t, ppcm02.price_per_cleaning as ppcm02 "
 			+ "\n\t, ppcm03.price_per_cleaning as ppcm03 "
@@ -106,7 +106,7 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 			+ "\n\t, ppcm04.price_per_cleaning "
 			+ "\n\t, ppcm05.price_per_cleaning "
 			+ "\n\t, ppcm06.price_per_cleaning "
-			+ "\norder by job_site_name, job_nbr";	
+			+ "\norder by job_site_name, job_site.address1, job_nbr";	
 	public static final  String REPORT_TITLE = "Six Month Rolling Volume";
 //	private final String REPORT_NOTES = "notes go here";
 	private final String[] colHeaders = new String[] {"Building Name", "Zipcode", "Street 1", "Job #", "Last Run", "Job ID", "Freq"};
