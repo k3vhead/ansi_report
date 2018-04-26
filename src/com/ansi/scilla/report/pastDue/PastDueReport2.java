@@ -159,11 +159,11 @@ public class PastDueReport2 extends StandardReport {
 			new ColumnHeader("jobSiteAddress", "SITE ADDRESS", DataFormats.STRING_FORMAT, SummaryType.NONE),//siteAddress
 		});		
 		
-		java.sql.Date myDate = new java.sql.Date(pastDueDate.getTimeInMillis());
+		java.util.Date myDate = new java.util.Date(pastDueDate.getTimeInMillis());
 		
 		PreparedStatement psData = conn.prepareStatement(sql);
-		psData.setDate(1, myDate);
-		psData.setDate(2, myDate);
+		psData.setDate(1, (java.sql.Date) myDate);
+		psData.setDate(2, (java.sql.Date) myDate);
 		psData.setInt(3, divisionId);
 		
 		System.out.println(sql);
