@@ -244,34 +244,25 @@ public class PastDueReport2 extends StandardReport {
 		cellStyleLeft.cloneStyleFrom(rf.cellStyleStandardLeft);
 	    cellStyleLeft.setAlignment(CellStyle.ALIGN_LEFT);
 	    
-	    CreationHelper createHelper = workbook.getCreationHelper();
-	    short dataFormatDate = createHelper.createDataFormat().getFormat("mm/dd/yyyy");
 	    CellStyle cellStyleDate = workbook.createCellStyle();
 	    cellStyleDate.cloneStyleFrom(rf.cellStyleDateLeft);
-	    cellStyleDate.setDataFormat(dataFormatDate);
 	    
-	    short dataFormatDecimal = createHelper.createDataFormat().getFormat("#,##0.00");
 	    CellStyle cellStyleDecimal = workbook.createCellStyle();
 	    cellStyleDecimal.cloneStyleFrom(rf.cellStyleStandardCurrency);
 	    cellStyleDecimal.setAlignment(CellStyle.ALIGN_RIGHT);
-	    cellStyleDecimal.setDataFormat(dataFormatDecimal);
 	    
 	    CellStyle cellStyleSummary = sheet.getWorkbook().createCellStyle();
 		cellStyleSummary.cloneStyleFrom(rf.cellStyleStandardCurrency);
-		cellStyleSummary.setDataFormat(dataFormatDecimal);
 		cellStyleSummary.setBorderBottom(CellStyle.BORDER_THICK);
 		cellStyleSummary.setBorderTop(CellStyle.BORDER_THIN);
 	    
-	    short dataFormatDateTime = createHelper.createDataFormat().getFormat("mm/dd/yyyy hh:mm:ss");
 	    CellStyle cellStyleDateTime = workbook.createCellStyle();
 	    cellStyleDateTime.cloneStyleFrom(rf.cellStyleDateTimeLeft);
-	    cellStyleDateTime.setDataFormat(dataFormatDateTime);
 	    
 	    HashMap<String, CellStyle> styleMap = new HashMap<String, CellStyle>();
 	    styleMap.put("cellStyleLeft", cellStyleLeft);
 	    styleMap.put("cellStyleDate", cellStyleDate);
 	    styleMap.put("cellStyleDecimal", cellStyleDecimal);
-		
 	    
 	    ReportStartLoc reportStartLoc = new ReportStartLoc(0,0);
 	    XLSReportBuilderUtils.makeStandardHeader(this, reportStartLoc, sheet);
@@ -379,48 +370,48 @@ public class PastDueReport2 extends StandardReport {
 		CellStyle cellStyleDate = styleMap.get("cellStyleDate");
 		CellStyle cellStyleDecimal = styleMap.get("cellStyleDecimal");
 		
-		
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
 		cell.setCellValue(column0);
-		colNum++; //col 1
+		colNum = 2; //col 2
 		
 		if ( rowData != null ) {
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleLeft);
 			cell.setCellValue(rowData.getJobId());
-			colNum++; //col 2
+			colNum++; //col 3
 			
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleDate);
 			cell.setCellValue(rowData.getProcessDate());
-			colNum++; //col 3
+			colNum++; //col 4
 			
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleLeft);
 			cell.setCellValue(rowData.getJobId());
-			colNum++; //col 4
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleDecimal);
-			cell.setCellValue(rowData.getActPPC());		
 			colNum++; //col 5
 			
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleDecimal);
-			cell.setCellValue(rowData.getAmountPaid());
+			cell.setCellValue(rowData.getActPPC());		
 			colNum++; //col 6
 			
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleDecimal);
-			cell.setCellValue(rowData.getAmountDue());
+			cell.setCellValue(rowData.getAmountPaid());
 			colNum++; //col 7
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleDecimal);
+			cell.setCellValue(rowData.getAmountDue());
+			colNum++; //col 8
 		}
-		
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 8, 9));
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
 		cell.setCellValue(column7);
-		colNum++; //col 8		
+		colNum++; //col 9
 	}
 
 	
@@ -432,22 +423,21 @@ public class PastDueReport2 extends StandardReport {
 		CellStyle cellStyleDate = styleMap.get("cellStyleDate");
 		CellStyle cellStyleDecimal = styleMap.get("cellStyleDecimal");
 		
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
 		cell.setCellValue(column0);
-		colNum++; //col 1
+		colNum = 2; //col 2
 		
 		if ( rowData != null ) {
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleLeft);
 			cell.setCellValue(rowData.getInvoiceId());
-			colNum++; //col 2
+			colNum++; //col 3
 			
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleDate);
 			cell.setCellValue(rowData.getInvoiceDate());
-			colNum++; //col 3
-			
 			colNum++; //col 4
 			
 			colNum++; //col 5
@@ -455,12 +445,15 @@ public class PastDueReport2 extends StandardReport {
 			colNum++; //col 6
 			
 			colNum++; //col 7
+			
+			colNum++; //col 8
 		}
 		
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 8, 9));
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
 		cell.setCellValue(column7);
-		colNum++; //col 8
+		colNum++; //col 9
 		
 			
 	}
