@@ -3,6 +3,7 @@ package com.ansi.scilla.report.reportBuilder;
 import java.text.SimpleDateFormat;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.logging.log4j.Level;
 import org.apache.poi.ss.usermodel.Footer;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -15,7 +16,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
 public class XLSBuilder extends AbstractXLSBuilder {
-
 
 	
 	private static final long serialVersionUID = 1L;
@@ -176,9 +176,9 @@ public class XLSBuilder extends AbstractXLSBuilder {
 			}
 			rowNum++;
 		}
-		for ( int i = 0; i < report.getHeaderRow().length+4; i++ ) {
-			sheet.autoSizeColumn(i);
-		}
+//		for ( int i = 0; i < report.getHeaderRow().length+4; i++ ) { // removed for performance issues 13 mins/column in CRR Detail
+//			sheet.autoSizeColumn(i);
+//		}
 	}
 
 
