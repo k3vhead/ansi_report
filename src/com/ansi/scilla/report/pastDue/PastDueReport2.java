@@ -345,7 +345,7 @@ public class PastDueReport2 extends StandardReport {
 			cell.setCellValue(amtDue);
 			colNum++; //col 7
 			
-			pastDueTotal = ppcTotal - paidAmt;
+			pastDueTotal = amtDue - paidAmt;
 			
 			row = sheet.createRow(rowNum);
 			cell = row.createCell(colNum);
@@ -909,6 +909,7 @@ public class PastDueReport2 extends StandardReport {
 		private String lastName;
 		private String preferredContact;
 		private String jobId;
+		private String jobNbr;
 		private Integer ticketId;
 		private String ticketStatus;
 		private String ticketType;
@@ -985,6 +986,10 @@ public class PastDueReport2 extends StandardReport {
 
 		public String getJobId() {
 			return jobId;
+		}
+		
+		public String getJobNbr(){
+			return jobNbr;
 		}
 
 		public Integer getTicketId() {
