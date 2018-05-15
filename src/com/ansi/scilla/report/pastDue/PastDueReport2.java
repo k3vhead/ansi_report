@@ -468,57 +468,57 @@ public class PastDueReport2 extends StandardReport {
 	
 	
 	
-	private void makeRow3(XSSFSheet sheet, int rowNum, RowData rowData, HashMap<String, CellStyle> styleMap) {
-		XSSFRow row = sheet.createRow(rowNum);
-		XSSFCell cell = null;		
-		int colNum = 0;
-		CellStyle cellStyleLeft = styleMap.get("cellStyleLeft");	
-		CellStyle cellStyleDate = styleMap.get("cellStyleDate");
-		CellStyle cellStyleDecimal = styleMap.get("cellStyleDecimal");
-		
-		cell = row.createCell(colNum);
-		cell.setCellStyle(cellStyleLeft);
-		cell.setCellValue(rowData.getFirstName() + ", " + rowData.getLastName());
-		colNum++; //col 1
-		
-		cell = row.createCell(colNum);
-		cell.setCellStyle(cellStyleLeft);
-		cell.setCellValue(rowData.getInvoiceId());
-		colNum++; //col 2
-		
-		cell = row.createCell(colNum);
-		cell.setCellStyle(cellStyleDate);
-		cell.setCellValue(rowData.getInvoiceDate());
-		colNum++; //col 3
-		
-		colNum++; //col 4
-		
-		colNum++; //col 5
-		
-		colNum++; //col 6
-		
-		colNum++; //col 7
-		
-		cell = row.createCell(colNum);
-		cell.setCellStyle(cellStyleLeft);
-		cell.setCellValue(rowData.getJobSiteAddress());
-		colNum++; //col 8
-		
-		cell = row.createCell(colNum);
-		cell.setCellStyle(cellStyleLeft);
-		cell.setCellValue(rowData.getAddress1());
-		colNum++; //col 1
-		
-		cell = row.createCell(colNum);
-		cell.setCellStyle(cellStyleLeft);
-		cell.setCellValue(rowData.getInvoiceId());
-		colNum++; //col 2
-		
-		cell = row.createCell(colNum);
-		cell.setCellStyle(cellStyleDate);
-		cell.setCellValue(rowData.getInvoiceDate());
-		colNum++; //col 3
-	}
+//	private void makeRow3(XSSFSheet sheet, int rowNum, RowData rowData, HashMap<String, CellStyle> styleMap) {
+//		XSSFRow row = sheet.createRow(rowNum);
+//		XSSFCell cell = null;		
+//		int colNum = 0;
+//		CellStyle cellStyleLeft = styleMap.get("cellStyleLeft");	
+//		CellStyle cellStyleDate = styleMap.get("cellStyleDate");
+//		CellStyle cellStyleDecimal = styleMap.get("cellStyleDecimal");
+//		
+//		cell = row.createCell(colNum);
+//		cell.setCellStyle(cellStyleLeft);
+//		cell.setCellValue(rowData.getFirstName() + ", " + rowData.getLastName());
+//		colNum++; //col 1
+//		
+//		cell = row.createCell(colNum);
+//		cell.setCellStyle(cellStyleLeft);
+//		cell.setCellValue(rowData.getInvoiceId());
+//		colNum++; //col 2
+//		
+//		cell = row.createCell(colNum);
+//		cell.setCellStyle(cellStyleDate);
+//		cell.setCellValue(rowData.getInvoiceDate());
+//		colNum++; //col 3
+//		
+//		colNum++; //col 4
+//		
+//		colNum++; //col 5
+//		
+//		colNum++; //col 6
+//		
+//		colNum++; //col 7
+//		
+//		cell = row.createCell(colNum);
+//		cell.setCellStyle(cellStyleLeft);
+//		cell.setCellValue(rowData.getJobSiteAddress());
+//		colNum++; //col 8
+//		
+//		cell = row.createCell(colNum);
+//		cell.setCellStyle(cellStyleLeft);
+//		cell.setCellValue(rowData.getAddress1());
+//		colNum++; //col 1
+//		
+//		cell = row.createCell(colNum);
+//		cell.setCellStyle(cellStyleLeft);
+//		cell.setCellValue(rowData.getInvoiceId());
+//		colNum++; //col 2
+//		
+//		cell = row.createCell(colNum);
+//		cell.setCellStyle(cellStyleDate);
+//		cell.setCellValue(rowData.getInvoiceDate());
+//		colNum++; //col 3
+//	}
 
 	public XSSFWorkbook makeXLS_jwl() {
 		String subtitle = makeSubtitle();
