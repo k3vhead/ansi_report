@@ -71,6 +71,7 @@ public class JoshuasReportTester {
 	private void makeClientUsage(Connection conn) throws Exception {
 		logger.info("PastDueReport");
 		//DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId, endDate);
+		//java.util.Date sDate;
 		PastDueReport2 userReport = PastDueReport2.buildReport(conn, startDate, divisionId);
 		XSSFWorkbook workbook = XLSBuilder.build(userReport);
 //		XSSFWorkbook workbook = userReport.makeXLS();

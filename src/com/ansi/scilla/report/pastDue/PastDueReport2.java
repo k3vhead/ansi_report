@@ -150,7 +150,7 @@ public class PastDueReport2 extends StandardReport {
 		//super.setSubtitle(makeSubtitle());
 		super.setHeaderRow(new ColumnHeader[] {
 			new ColumnHeader("billToName", "BILL TO NAME", DataFormats.STRING_FORMAT, SummaryType.NONE),//BILL TO NAME
-			new ColumnHeader("jobId","TICKET #", DataFormats.STRING_FORMAT, SummaryType.NONE),//TICKET#
+			new ColumnHeader("jobId","JOB #", DataFormats.STRING_FORMAT, SummaryType.NONE),//JOB#
 			new ColumnHeader("invoiceDate", "Contracts", DataFormats.DATE_FORMAT, SummaryType.NONE),//completed invoiced dates
 			new ColumnHeader("jobId", "JOB", DataFormats.STRING_CENTERED, SummaryType.NONE),//job number
 			new ColumnHeader("actPPC", "PPC", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//actPPC
