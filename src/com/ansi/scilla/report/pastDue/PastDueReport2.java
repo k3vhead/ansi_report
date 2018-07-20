@@ -160,7 +160,7 @@ public class PastDueReport2 extends StandardReport {
 		});		
 		
 		java.sql.Date myDate = new java.sql.Date(pastDueDate.getTimeInMillis());
-		
+		//java.util.Date myDate = new java.util.Date(pastDueDate.getTimeInMillis());
 		PreparedStatement psData = conn.prepareStatement(sql);
 		psData.setDate(1, myDate);
 		psData.setDate(2, myDate);
@@ -185,7 +185,7 @@ public class PastDueReport2 extends StandardReport {
 		
 		List<ReportHeaderRow> headerLeft = Arrays.asList(new ReportHeaderRow[] {
 				new ReportHeaderRow("Created: ", getStartDateMethod, 0, DataFormats.DATE_TIME_FORMAT),
-				new ReportHeaderRow("Aging Date: ", getAgingDateMethod, 0, DataFormats.DATE_FORMAT),
+				new ReportHeaderRow("Aging Date: ", getAgingDateMethod, 1, DataFormats.DATE_FORMAT),
 				new ReportHeaderRow("Days Past Due: ", daysPastDueMethod, 2, DataFormats.INTEGER_FORMAT)
 		});
 		super.makeHeaderLeft(headerLeft);
