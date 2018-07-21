@@ -938,8 +938,10 @@ public class PastDueReport2 extends StandardReport {
 			this.ticketStatus = rs.getString("ticket_status");
 			this.ticketType = rs.getString("ticket_type");
 			this.invoiceId = rs.getString("invoice_id");
-			this.processDate = rs.getDate("process_date");
-			this.invoiceDate = rs.getDate("invoice_date");
+			java.sql.Date processDate = rs.getDate("process_date");
+			this.processDate = new Date(processDate.getTime());
+			java.sql.Date invoiceDate = rs.getDate("invoice_date");
+			this.invoiceDate = new Date(invoiceDate.getTime());
 			this.actPPC = rs.getInt("act_price_per_cleaning");
 			this.amountPaid = rs.getInt("amount_paid");
 			this.amountDue = rs.getInt("amount_due");
