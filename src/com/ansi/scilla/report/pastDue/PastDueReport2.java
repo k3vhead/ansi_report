@@ -101,7 +101,7 @@ public class PastDueReport2 extends StandardReport {
 			 	"\t\tand ticket.act_division_id = ? \n" +
 			 "\torder by division.division_nbr, bill_to.name, invoice_date";
 	
-	public static final String REPORT_TITLE = "Six Month Rolling Volume Summary";
+	public static final String REPORT_TITLE = "Past Due Report";
 	
 	private Calendar pastDueDate;
 	private Calendar createdDate;
