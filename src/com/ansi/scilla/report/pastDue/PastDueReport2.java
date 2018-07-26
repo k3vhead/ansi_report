@@ -108,6 +108,7 @@ public class PastDueReport2 extends StandardReport {
 	private Integer daysPastDue;
 	private String div;
 	private List<List<RowData>> reportRows;
+	private XSSFWorkbook xls;
 	
 	private PastDueReport2(Connection conn, Calendar pastDueDate, Integer divisionId) throws Exception {
 		super();
@@ -166,8 +167,6 @@ public class PastDueReport2 extends StandardReport {
 		psData.setDate(2, myDate);
 		psData.setInt(3, divisionId);
 		
-		System.out.println(sql);
-		
 		ResultSet rsData = psData.executeQuery();
 		
 		while ( rsData.next() ) {
@@ -177,6 +176,8 @@ public class PastDueReport2 extends StandardReport {
 		
 		// JWL: THis is new:
 		this.reportRows = makeReportRows();	
+		this.xls = makeXLS();
+		
 		// JWL: End of new
 		
 		Method getStartDateMethod = this.getClass().getMethod("getStartDate", (Class<?>[])null);
@@ -370,7 +371,7 @@ public class PastDueReport2 extends StandardReport {
 		CellStyle cellStyleDate = styleMap.get("cellStyleDate");
 		CellStyle cellStyleDecimal = styleMap.get("cellStyleDecimal");
 		
-		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+//		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
 		cell.setCellValue(column0);
@@ -407,7 +408,7 @@ public class PastDueReport2 extends StandardReport {
 			cell.setCellValue(rowData.getAmountDue());
 			colNum++; //col 8
 		}
-		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 8, 9));
+//		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 8, 9));
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
 		cell.setCellValue(column7);
@@ -423,7 +424,7 @@ public class PastDueReport2 extends StandardReport {
 		CellStyle cellStyleDate = styleMap.get("cellStyleDate");
 		CellStyle cellStyleDecimal = styleMap.get("cellStyleDecimal");
 		
-		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+//		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
 		cell.setCellValue(column0);
@@ -449,7 +450,7 @@ public class PastDueReport2 extends StandardReport {
 			colNum++; //col 8
 		}
 		
-		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 8, 9));
+//		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 8, 9));
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
 		cell.setCellValue(column7);
@@ -520,377 +521,377 @@ public class PastDueReport2 extends StandardReport {
 //		colNum++; //col 3
 //	}
 
-	public XSSFWorkbook makeXLS_jwl() {
-		String subtitle = makeSubtitle();
-		
-		XSSFWorkbook workbook = new XSSFWorkbook();
-		XSSFSheet sheet = workbook.createSheet();
-		sheet.getPrintSetup().setLandscape(true);
-		sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
-		sheet.getPrintSetup().setFitWidth((short)1);
-		
-		CreationHelper createHelper = workbook.getCreationHelper();
-		//Date today = new Date();
-		int rowNum = 0;
-		int colNum = 0;
-		XSSFRow row = null;
-		XSSFCell cell = null;
-		
-	    //Bold and Underline
-		Integer fontHeight = 9;
-		XSSFFont fontDefaultFont = workbook.createFont();
-		fontDefaultFont.setFontHeight(fontHeight);
-	    XSSFFont fontStyleBold = workbook.createFont();
-	    fontStyleBold.setBold(true);
-	    fontStyleBold.setFontHeight(fontHeight);
-		XSSFFont fontWhite = workbook.createFont();
-		fontWhite.setColor(HSSFColor.WHITE.index);
-		fontWhite.setFontHeight(fontHeight);
-
-		
-	    short dataFormatDate = createHelper.createDataFormat().getFormat("mm/dd/yyyy");
-	    short dataFormatDateTime = createHelper.createDataFormat().getFormat("mm/dd/yyyy hh:mm:ss");
-	    short dataFormatDecimal = createHelper.createDataFormat().getFormat("#,##0.00");
-	    short dataFormatInteger = createHelper.createDataFormat().getFormat("#,##0");
-	    
-	    XSSFCellStyle cellStyleAnsi = workbook.createCellStyle();
-	    cellStyleAnsi.setAlignment(CellStyle.ALIGN_CENTER);
-	    XSSFFont fontAnsi = workbook.createFont();
-	    fontAnsi.setBold(true);
-	    fontAnsi.setFontHeight(16);
-	    cellStyleAnsi.setFont(fontAnsi);
-	    
-
-	    XSSFCellStyle cellStyleReportTitle = workbook.createCellStyle();
-	    cellStyleReportTitle.setAlignment(CellStyle.ALIGN_CENTER);
-	    XSSFFont fontReportTitle = workbook.createFont();
-	    fontReportTitle.setBold(true);
-	    fontReportTitle.setFontHeight(12);
-	    cellStyleReportTitle.setFont(fontAnsi);
-	    
-	    XSSFCellStyle cellStyleSubtitle = workbook.createCellStyle();
-	    cellStyleSubtitle.setAlignment(CellStyle.ALIGN_CENTER);
-	    cellStyleSubtitle.setFont(fontStyleBold);
-	    
-	    
-	    CellStyle cellStyleHeaderLabel = workbook.createCellStyle();
-	    cellStyleHeaderLabel.setFont(fontStyleBold);
-	    cellStyleHeaderLabel.setAlignment(CellStyle.ALIGN_LEFT);
-	    
-	    
-	    CellStyle cellStyleCreatedLabel = workbook.createCellStyle();
-	    XSSFFont fontCreated = workbook.createFont();
-	    fontCreated.setBold(true);
-	    fontCreated.setFontHeight(fontHeight);
-	    cellStyleCreatedLabel.setFont(fontCreated);
-	    cellStyleCreatedLabel.setAlignment(CellStyle.ALIGN_LEFT);
-
-	    CellStyle cellStyleRunDate = workbook.createCellStyle();
-	    cellStyleRunDate.setDataFormat(dataFormatDateTime);
-	    cellStyleRunDate.setAlignment(CellStyle.ALIGN_LEFT);
-	    cellStyleRunDate.setFont(fontDefaultFont);
-	    
-	    CellStyle cellStyleHeaderDate = workbook.createCellStyle();
-	    cellStyleHeaderDate.setDataFormat(dataFormatDate);
-	    cellStyleHeaderDate.setAlignment(CellStyle.ALIGN_LEFT);
-
-	    CellStyle cellStyleHeaderDecimal = workbook.createCellStyle();
-	    cellStyleHeaderDecimal.setAlignment(CellStyle.ALIGN_RIGHT);
-	    cellStyleHeaderDecimal.setDataFormat(dataFormatDecimal);
-	    cellStyleHeaderDecimal.setFont(fontDefaultFont);
-	    
-	    CellStyle cellStyleHeaderInteger = workbook.createCellStyle();
-	    cellStyleHeaderInteger.setAlignment(CellStyle.ALIGN_RIGHT);
-	    cellStyleHeaderInteger.setDataFormat(dataFormatInteger);
-	    cellStyleHeaderInteger.setFont(fontDefaultFont);
-	    
-	    CellStyle cellStyleHeaderDivision = workbook.createCellStyle();
-	    cellStyleHeaderDivision.setAlignment(CellStyle.ALIGN_RIGHT);
-	    cellStyleHeaderDivision.setDataFormat(dataFormatInteger);
-	    cellStyleHeaderDivision.setFont(fontDefaultFont);
-	    
-		CellStyle cellStyleColHdr = workbook.createCellStyle();
-		cellStyleColHdr.setFillBackgroundColor(IndexedColors.BLACK.getIndex());
-	    cellStyleColHdr.setFillPattern(CellStyle.ALIGN_FILL);
-	    cellStyleColHdr.setAlignment(CellStyle.ALIGN_LEFT);
-	    cellStyleColHdr.setFont(fontWhite);
-	    //cellStyleColHdr.setIndention((short)2);
-
-	    XSSFFont fontSummary = workbook.createFont();
-	    fontSummary.setBold(true);
-	    fontSummary.setFontHeight(fontHeight);
-	    CellStyle cellStyleSummaryRowName = workbook.createCellStyle();	    
-	    cellStyleSummaryRowName.setAlignment(CellStyle.ALIGN_LEFT);
-	    cellStyleSummaryRowName.setFont(fontSummary);
-	    
-	    CellStyle cellStyleSummaryAmt = workbook.createCellStyle();
-	    cellStyleSummaryAmt.setDataFormat(dataFormatDecimal);
-	    cellStyleSummaryAmt.setAlignment(CellStyle.ALIGN_RIGHT);
-	    cellStyleSummaryAmt.setFont(fontStyleBold);
-	    
-	    CellStyle cellStyleClientName = workbook.createCellStyle();
-	    cellStyleClientName.setAlignment(CellStyle.ALIGN_LEFT);
-	    cellStyleClientName.setFont(fontDefaultFont);
-	    
-	    CellStyle cellStyleJobId = workbook.createCellStyle();
-	    cellStyleJobId.setAlignment(CellStyle.ALIGN_LEFT);
-	    cellStyleJobId.setFont(fontDefaultFont);
-	    
-	    CellStyle cellStyleTicketId = workbook.createCellStyle();
-	    cellStyleTicketId.setAlignment(CellStyle.ALIGN_LEFT);
-	    cellStyleTicketId.setFont(fontDefaultFont);
-	    
-	    CellStyle cellStyleTicketType = workbook.createCellStyle();
-	    cellStyleTicketType.setAlignment(CellStyle.ALIGN_CENTER);
-	    cellStyleTicketType.setFont(fontDefaultFont);
-	    
-	    CellStyle cellStyleDateComplete = workbook.createCellStyle();
-	    cellStyleDateComplete.setDataFormat(dataFormatDate);
-	    cellStyleDateComplete.setFont(fontDefaultFont);
-	    cellStyleDateComplete.setAlignment(CellStyle.ALIGN_LEFT);
-	    
-	    CellStyle cellStyleInvoiceId = workbook.createCellStyle();
-	    cellStyleInvoiceId.setAlignment(CellStyle.ALIGN_LEFT);
-	    cellStyleInvoiceId.setFont(fontDefaultFont);
-	    
-	    CellStyle cellStyleInvoiceDate = workbook.createCellStyle();
-	    cellStyleInvoiceDate.setDataFormat(dataFormatDate);
-	    cellStyleInvoiceDate.setAlignment(CellStyle.ALIGN_LEFT);
-	    cellStyleInvoiceDate.setFont(fontDefaultFont);
-	    
-	    CellStyle cellStyleInvoiceAmount = workbook.createCellStyle();
-	    cellStyleInvoiceAmount.setDataFormat(dataFormatDecimal);
-	    cellStyleInvoiceAmount.setAlignment(CellStyle.ALIGN_RIGHT);
-	    cellStyleInvoiceAmount.setFont(fontDefaultFont);
-	    
-	    XSSFFont fontBuildingName = workbook.createFont();
-	    fontBuildingName.setFontHeight(fontHeight);
-	    CellStyle cellStyleBuildingName = workbook.createCellStyle();	    
-	    cellStyleBuildingName.setAlignment(CellStyle.ALIGN_LEFT);
-//	    cellStyleBuildingName.setIndention((short)20);
-	    cellStyleBuildingName.setFont(fontBuildingName);
-	    
-	    rowNum = 0;
-	    colNum = 0;
-	    int ppcTotal = 0;
-	    int amountPaidTotal = 0;
-	    int amountDueTotal = 0;
-	    String previousClient = "Previous";
-	    Double clientTotal = 0.0D;
-	    
-//	    if ( this.data.size() == 0 ) {
-	    if ( super.getDataRows().size() == 0 ) {
-	    	sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,0,10));
-	    	row = sheet.createRow(rowNum);
-	    	cell = row.createCell(0);
-	    	cell.setCellValue("No Data for this report");
-	    	rowNum++;
-	    }
-		for ( Object rowObject : super.getDataRows() ) {
-			RowData rowData = (RowData)rowObject;
-			
-			colNum = 0;
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleBuildingName);
-			cell.setCellValue(rowData.getBillToName());
-			colNum++;
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleJobId);
-			cell.setCellValue(rowData.getJobId());
-			colNum++;
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleHeaderDate);
-			cell.setCellValue(rowData.getInvoiceDate());
-			colNum++;
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleJobId);
-			cell.setCellValue(rowData.getJobId());
-			colNum++;
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleInvoiceAmount);
-			cell.setCellValue(rowData.getActPPC());
-			ppcTotal += rowData.getActPPC();
-			colNum++;
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleInvoiceAmount);
-			cell.setCellValue(rowData.getAmountPaid());
-			amountPaidTotal += rowData.getAmountPaid();
-			colNum++;
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleInvoiceAmount);
-			cell.setCellValue(rowData.getAmountPastDue());
-			amountDueTotal += rowData.getAmountPastDue();
-			colNum++;
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleBuildingName);
-			cell.setCellValue(rowData.getJobSiteName());
-			colNum++;
-			
-			colNum = 0;
-			rowNum++;
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleBuildingName);
-			cell.setCellValue(rowData.getAddress1());
-			colNum++;
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleInvoiceId);
-			cell.setCellValue(rowData.getInvoiceId());
-			colNum++;
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleHeaderDate);
-			cell.setCellValue(rowData.getInvoiceDate());
-			colNum++;//job id
-			colNum++;//ppc
-			colNum++;//paid amount
-			colNum++;//amount due
-			colNum++;//site address
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleBuildingName);
-			cell.setCellValue(rowData.getJobSiteAddress());
-			colNum++;
-			
-			colNum = 0;
-			rowNum++;
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleBuildingName);
-			cell.setCellValue(rowData.getAddress2());
-			colNum++;
-			
-			colNum = 0;
-			rowNum++;
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleBuildingName);
-			cell.setCellValue(rowData.getBillToName());
-			colNum++;
-			
-			colNum = 0;
-			rowNum++;
-			
-			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleBuildingName);
-			cell.setCellValue(rowData.getPreferredContact());
-			colNum++;
-			
-			colNum = 0;
-			rowNum++;
-			
-			if(rowData.getBillToName().equals(previousClient)){
-				for ( Object rowO : super.getDataRows() ) {
-					rowData = (RowData)rowO;
-					
-					colNum++;
-
-					cell = row.createCell(colNum);
-					cell.setCellStyle(cellStyleJobId);
-					cell.setCellValue(rowData.getJobId());
-					colNum++;
-
-					cell = row.createCell(colNum);
-					cell.setCellStyle(cellStyleHeaderDate);
-					cell.setCellValue(rowData.getInvoiceDate());
-					colNum++;
-
-					cell = row.createCell(colNum);
-					cell.setCellStyle(cellStyleJobId);
-					cell.setCellValue(rowData.getJobId());
-					colNum++;
-
-					cell = row.createCell(colNum);
-					cell.setCellStyle(cellStyleInvoiceAmount);
-					cell.setCellValue(rowData.getActPPC());
-					ppcTotal += rowData.getActPPC();
-					colNum++;
-
-					cell = row.createCell(colNum);
-					cell.setCellStyle(cellStyleInvoiceAmount);
-					cell.setCellValue(rowData.getAmountPaid());
-					amountPaidTotal += rowData.getAmountPaid();
-					colNum++;
-
-					cell = row.createCell(colNum);
-					cell.setCellStyle(cellStyleInvoiceAmount);
-					cell.setCellValue(rowData.getAmountPastDue());
-					amountDueTotal += rowData.getAmountPastDue();
-					colNum++;
-
-					cell = row.createCell(colNum);
-					cell.setCellStyle(cellStyleBuildingName);
-					cell.setCellValue(rowData.getJobSiteName());
-					colNum++;
-
-					colNum = 0;
-					rowNum++;
-
-					previousClient = rowData.getBillToName();
-					
-					if(!rowData.getBillToName().equals(previousClient)){
-						break;
-					}
-					
-//					rowData = (RowData)rowObject;
-				}
-			}
-			if(!rowData.getBillToName().equals(previousClient)){
-				colNum++; //bill to name
-				colNum++; //job id
-				colNum++; // completed date
-				colNum++; // job #
-			
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleSummaryAmt);
-				cell.setCellValue(ppcTotal);
-				colNum++;
-			
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleSummaryAmt);
-				cell.setCellValue(amountPaidTotal);
-				colNum++;
-			
-				cell = row.createCell(colNum);
-				cell.setCellStyle(cellStyleSummaryAmt);
-				cell.setCellValue(amountDueTotal);
-				colNum++;
-			}
-			rowNum++;
-			
-			previousClient = rowData.getBillToName();
-			
-		}
-		
-		return workbook;
-	}
+//	public XSSFWorkbook makeXLS_jwl() {
+//		String subtitle = makeSubtitle();
+//		
+//		XSSFWorkbook workbook = new XSSFWorkbook();
+//		XSSFSheet sheet = workbook.createSheet();
+//		sheet.getPrintSetup().setLandscape(true);
+//		sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
+//		sheet.getPrintSetup().setFitWidth((short)1);
+//		
+//		CreationHelper createHelper = workbook.getCreationHelper();
+//		//Date today = new Date();
+//		int rowNum = 0;
+//		int colNum = 0;
+//		XSSFRow row = null;
+//		XSSFCell cell = null;
+//		
+//	    //Bold and Underline
+//		Integer fontHeight = 9;
+//		XSSFFont fontDefaultFont = workbook.createFont();
+//		fontDefaultFont.setFontHeight(fontHeight);
+//	    XSSFFont fontStyleBold = workbook.createFont();
+//	    fontStyleBold.setBold(true);
+//	    fontStyleBold.setFontHeight(fontHeight);
+//		XSSFFont fontWhite = workbook.createFont();
+//		fontWhite.setColor(HSSFColor.WHITE.index);
+//		fontWhite.setFontHeight(fontHeight);
+//
+//		
+//	    short dataFormatDate = createHelper.createDataFormat().getFormat("mm/dd/yyyy");
+//	    short dataFormatDateTime = createHelper.createDataFormat().getFormat("mm/dd/yyyy hh:mm:ss");
+//	    short dataFormatDecimal = createHelper.createDataFormat().getFormat("#,##0.00");
+//	    short dataFormatInteger = createHelper.createDataFormat().getFormat("#,##0");
+//	    
+//	    XSSFCellStyle cellStyleAnsi = workbook.createCellStyle();
+//	    cellStyleAnsi.setAlignment(CellStyle.ALIGN_CENTER);
+//	    XSSFFont fontAnsi = workbook.createFont();
+//	    fontAnsi.setBold(true);
+//	    fontAnsi.setFontHeight(16);
+//	    cellStyleAnsi.setFont(fontAnsi);
+//	    
+//
+//	    XSSFCellStyle cellStyleReportTitle = workbook.createCellStyle();
+//	    cellStyleReportTitle.setAlignment(CellStyle.ALIGN_CENTER);
+//	    XSSFFont fontReportTitle = workbook.createFont();
+//	    fontReportTitle.setBold(true);
+//	    fontReportTitle.setFontHeight(12);
+//	    cellStyleReportTitle.setFont(fontAnsi);
+//	    
+//	    XSSFCellStyle cellStyleSubtitle = workbook.createCellStyle();
+//	    cellStyleSubtitle.setAlignment(CellStyle.ALIGN_CENTER);
+//	    cellStyleSubtitle.setFont(fontStyleBold);
+//	    
+//	    
+//	    CellStyle cellStyleHeaderLabel = workbook.createCellStyle();
+//	    cellStyleHeaderLabel.setFont(fontStyleBold);
+//	    cellStyleHeaderLabel.setAlignment(CellStyle.ALIGN_LEFT);
+//	    
+//	    
+//	    CellStyle cellStyleCreatedLabel = workbook.createCellStyle();
+//	    XSSFFont fontCreated = workbook.createFont();
+//	    fontCreated.setBold(true);
+//	    fontCreated.setFontHeight(fontHeight);
+//	    cellStyleCreatedLabel.setFont(fontCreated);
+//	    cellStyleCreatedLabel.setAlignment(CellStyle.ALIGN_LEFT);
+//
+//	    CellStyle cellStyleRunDate = workbook.createCellStyle();
+//	    cellStyleRunDate.setDataFormat(dataFormatDateTime);
+//	    cellStyleRunDate.setAlignment(CellStyle.ALIGN_LEFT);
+//	    cellStyleRunDate.setFont(fontDefaultFont);
+//	    
+//	    CellStyle cellStyleHeaderDate = workbook.createCellStyle();
+//	    cellStyleHeaderDate.setDataFormat(dataFormatDate);
+//	    cellStyleHeaderDate.setAlignment(CellStyle.ALIGN_LEFT);
+//
+//	    CellStyle cellStyleHeaderDecimal = workbook.createCellStyle();
+//	    cellStyleHeaderDecimal.setAlignment(CellStyle.ALIGN_RIGHT);
+//	    cellStyleHeaderDecimal.setDataFormat(dataFormatDecimal);
+//	    cellStyleHeaderDecimal.setFont(fontDefaultFont);
+//	    
+//	    CellStyle cellStyleHeaderInteger = workbook.createCellStyle();
+//	    cellStyleHeaderInteger.setAlignment(CellStyle.ALIGN_RIGHT);
+//	    cellStyleHeaderInteger.setDataFormat(dataFormatInteger);
+//	    cellStyleHeaderInteger.setFont(fontDefaultFont);
+//	    
+//	    CellStyle cellStyleHeaderDivision = workbook.createCellStyle();
+//	    cellStyleHeaderDivision.setAlignment(CellStyle.ALIGN_RIGHT);
+//	    cellStyleHeaderDivision.setDataFormat(dataFormatInteger);
+//	    cellStyleHeaderDivision.setFont(fontDefaultFont);
+//	    
+//		CellStyle cellStyleColHdr = workbook.createCellStyle();
+//		cellStyleColHdr.setFillBackgroundColor(IndexedColors.BLACK.getIndex());
+//	    cellStyleColHdr.setFillPattern(CellStyle.ALIGN_FILL);
+//	    cellStyleColHdr.setAlignment(CellStyle.ALIGN_LEFT);
+//	    cellStyleColHdr.setFont(fontWhite);
+//	    //cellStyleColHdr.setIndention((short)2);
+//
+//	    XSSFFont fontSummary = workbook.createFont();
+//	    fontSummary.setBold(true);
+//	    fontSummary.setFontHeight(fontHeight);
+//	    CellStyle cellStyleSummaryRowName = workbook.createCellStyle();	    
+//	    cellStyleSummaryRowName.setAlignment(CellStyle.ALIGN_LEFT);
+//	    cellStyleSummaryRowName.setFont(fontSummary);
+//	    
+//	    CellStyle cellStyleSummaryAmt = workbook.createCellStyle();
+//	    cellStyleSummaryAmt.setDataFormat(dataFormatDecimal);
+//	    cellStyleSummaryAmt.setAlignment(CellStyle.ALIGN_RIGHT);
+//	    cellStyleSummaryAmt.setFont(fontStyleBold);
+//	    
+//	    CellStyle cellStyleClientName = workbook.createCellStyle();
+//	    cellStyleClientName.setAlignment(CellStyle.ALIGN_LEFT);
+//	    cellStyleClientName.setFont(fontDefaultFont);
+//	    
+//	    CellStyle cellStyleJobId = workbook.createCellStyle();
+//	    cellStyleJobId.setAlignment(CellStyle.ALIGN_LEFT);
+//	    cellStyleJobId.setFont(fontDefaultFont);
+//	    
+//	    CellStyle cellStyleTicketId = workbook.createCellStyle();
+//	    cellStyleTicketId.setAlignment(CellStyle.ALIGN_LEFT);
+//	    cellStyleTicketId.setFont(fontDefaultFont);
+//	    
+//	    CellStyle cellStyleTicketType = workbook.createCellStyle();
+//	    cellStyleTicketType.setAlignment(CellStyle.ALIGN_CENTER);
+//	    cellStyleTicketType.setFont(fontDefaultFont);
+//	    
+//	    CellStyle cellStyleDateComplete = workbook.createCellStyle();
+//	    cellStyleDateComplete.setDataFormat(dataFormatDate);
+//	    cellStyleDateComplete.setFont(fontDefaultFont);
+//	    cellStyleDateComplete.setAlignment(CellStyle.ALIGN_LEFT);
+//	    
+//	    CellStyle cellStyleInvoiceId = workbook.createCellStyle();
+//	    cellStyleInvoiceId.setAlignment(CellStyle.ALIGN_LEFT);
+//	    cellStyleInvoiceId.setFont(fontDefaultFont);
+//	    
+//	    CellStyle cellStyleInvoiceDate = workbook.createCellStyle();
+//	    cellStyleInvoiceDate.setDataFormat(dataFormatDate);
+//	    cellStyleInvoiceDate.setAlignment(CellStyle.ALIGN_LEFT);
+//	    cellStyleInvoiceDate.setFont(fontDefaultFont);
+//	    
+//	    CellStyle cellStyleInvoiceAmount = workbook.createCellStyle();
+//	    cellStyleInvoiceAmount.setDataFormat(dataFormatDecimal);
+//	    cellStyleInvoiceAmount.setAlignment(CellStyle.ALIGN_RIGHT);
+//	    cellStyleInvoiceAmount.setFont(fontDefaultFont);
+//	    
+//	    XSSFFont fontBuildingName = workbook.createFont();
+//	    fontBuildingName.setFontHeight(fontHeight);
+//	    CellStyle cellStyleBuildingName = workbook.createCellStyle();	    
+//	    cellStyleBuildingName.setAlignment(CellStyle.ALIGN_LEFT);
+////	    cellStyleBuildingName.setIndention((short)20);
+//	    cellStyleBuildingName.setFont(fontBuildingName);
+//	    
+//	    rowNum = 0;
+//	    colNum = 0;
+//	    int ppcTotal = 0;
+//	    int amountPaidTotal = 0;
+//	    int amountDueTotal = 0;
+//	    String previousClient = "Previous";
+//	    Double clientTotal = 0.0D;
+//	    
+////	    if ( this.data.size() == 0 ) {
+//	    if ( super.getDataRows().size() == 0 ) {
+//	    	sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,0,10));
+//	    	row = sheet.createRow(rowNum);
+//	    	cell = row.createCell(0);
+//	    	cell.setCellValue("No Data for this report");
+//	    	rowNum++;
+//	    }
+//		for ( Object rowObject : super.getDataRows() ) {
+//			RowData rowData = (RowData)rowObject;
+//			
+//			colNum = 0;
+//			
+//			row = sheet.createRow(rowNum);
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleBuildingName);
+//			cell.setCellValue(rowData.getBillToName());
+//			colNum++;
+//			
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleJobId);
+//			cell.setCellValue(rowData.getJobId());
+//			colNum++;
+//			
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleHeaderDate);
+//			cell.setCellValue(rowData.getInvoiceDate());
+//			colNum++;
+//			
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleJobId);
+//			cell.setCellValue(rowData.getJobId());
+//			colNum++;
+//			
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleInvoiceAmount);
+//			cell.setCellValue(rowData.getActPPC());
+//			ppcTotal += rowData.getActPPC();
+//			colNum++;
+//			
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleInvoiceAmount);
+//			cell.setCellValue(rowData.getAmountPaid());
+//			amountPaidTotal += rowData.getAmountPaid();
+//			colNum++;
+//			
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleInvoiceAmount);
+//			cell.setCellValue(rowData.getAmountPastDue());
+//			amountDueTotal += rowData.getAmountPastDue();
+//			colNum++;
+//			
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleBuildingName);
+//			cell.setCellValue(rowData.getJobSiteName());
+//			colNum++;
+//			
+//			colNum = 0;
+//			rowNum++;
+//			
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleBuildingName);
+//			cell.setCellValue(rowData.getAddress1());
+//			colNum++;
+//			
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleInvoiceId);
+//			cell.setCellValue(rowData.getInvoiceId());
+//			colNum++;
+//			
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleHeaderDate);
+//			cell.setCellValue(rowData.getInvoiceDate());
+//			colNum++;//job id
+//			colNum++;//ppc
+//			colNum++;//paid amount
+//			colNum++;//amount due
+//			colNum++;//site address
+//			
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleBuildingName);
+//			cell.setCellValue(rowData.getJobSiteAddress());
+//			colNum++;
+//			
+//			colNum = 0;
+//			rowNum++;
+//			
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleBuildingName);
+//			cell.setCellValue(rowData.getAddress2());
+//			colNum++;
+//			
+//			colNum = 0;
+//			rowNum++;
+//			
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleBuildingName);
+//			cell.setCellValue(rowData.getBillToName());
+//			colNum++;
+//			
+//			colNum = 0;
+//			rowNum++;
+//			
+//			cell = row.createCell(colNum);
+//			cell.setCellStyle(cellStyleBuildingName);
+//			cell.setCellValue(rowData.getPreferredContact());
+//			colNum++;
+//			
+//			colNum = 0;
+//			rowNum++;
+//			
+//			if(rowData.getBillToName().equals(previousClient)){
+//				for ( Object rowO : super.getDataRows() ) {
+//					rowData = (RowData)rowO;
+//					
+//					colNum++;
+//
+//					cell = row.createCell(colNum);
+//					cell.setCellStyle(cellStyleJobId);
+//					cell.setCellValue(rowData.getJobId());
+//					colNum++;
+//
+//					cell = row.createCell(colNum);
+//					cell.setCellStyle(cellStyleHeaderDate);
+//					cell.setCellValue(rowData.getInvoiceDate());
+//					colNum++;
+//
+//					cell = row.createCell(colNum);
+//					cell.setCellStyle(cellStyleJobId);
+//					cell.setCellValue(rowData.getJobId());
+//					colNum++;
+//
+//					cell = row.createCell(colNum);
+//					cell.setCellStyle(cellStyleInvoiceAmount);
+//					cell.setCellValue(rowData.getActPPC());
+//					ppcTotal += rowData.getActPPC();
+//					colNum++;
+//
+//					cell = row.createCell(colNum);
+//					cell.setCellStyle(cellStyleInvoiceAmount);
+//					cell.setCellValue(rowData.getAmountPaid());
+//					amountPaidTotal += rowData.getAmountPaid();
+//					colNum++;
+//
+//					cell = row.createCell(colNum);
+//					cell.setCellStyle(cellStyleInvoiceAmount);
+//					cell.setCellValue(rowData.getAmountPastDue());
+//					amountDueTotal += rowData.getAmountPastDue();
+//					colNum++;
+//
+//					cell = row.createCell(colNum);
+//					cell.setCellStyle(cellStyleBuildingName);
+//					cell.setCellValue(rowData.getJobSiteName());
+//					colNum++;
+//
+//					colNum = 0;
+//					rowNum++;
+//
+//					previousClient = rowData.getBillToName();
+//					
+//					if(!rowData.getBillToName().equals(previousClient)){
+//						break;
+//					}
+//					
+////					rowData = (RowData)rowObject;
+//				}
+//			}
+//			if(!rowData.getBillToName().equals(previousClient)){
+//				colNum++; //bill to name
+//				colNum++; //job id
+//				colNum++; // completed date
+//				colNum++; // job #
+//			
+//				cell = row.createCell(colNum);
+//				cell.setCellStyle(cellStyleSummaryAmt);
+//				cell.setCellValue(ppcTotal);
+//				colNum++;
+//			
+//				cell = row.createCell(colNum);
+//				cell.setCellStyle(cellStyleSummaryAmt);
+//				cell.setCellValue(amountPaidTotal);
+//				colNum++;
+//			
+//				cell = row.createCell(colNum);
+//				cell.setCellStyle(cellStyleSummaryAmt);
+//				cell.setCellValue(amountDueTotal);
+//				colNum++;
+//			}
+//			rowNum++;
+//			
+//			previousClient = rowData.getBillToName();
+//			
+//		}
+//		
+//		return workbook;
+//	}
 	
-	private String makeSubtitle() {
+//	private String makeSubtitle() {
 //		SimpleDateFormat yyyyMM = new SimpleDateFormat("yyyy-MM");
 //		SimpleDateFormat yyyyMMdd = new SimpleDateFormat("yyyy-MM-dd");
 //		
-		List<String> subtitle = new ArrayList<String>();
+//		List<String> subtitle = new ArrayList<String>();
 //		subtitle.add("IR for Division");
 //		//subtitle.add(this.div);
 //		subtitle.add("for");
 //		//subtitle.add(yyyyMM.format(this.startDate.getTime()));
 //		subtitle.add("as of");
 //		subtitle.add(yyyyMMdd.format(getRunDate().getTime()));
-		
-		subtitle.add("Past Due Report");
-		
-		return StringUtils.join(subtitle, " ");
-	}
+//		
+//		subtitle.add("Past Due Report");
+//		
+//		return StringUtils.join(subtitle, " ");
+//	}
 	
 	public static PastDueReport2 buildReport(Connection conn, Calendar pastDueDate, Integer divisionId) throws Exception {
 		return new PastDueReport2(conn, pastDueDate, divisionId);
