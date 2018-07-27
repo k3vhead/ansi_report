@@ -53,7 +53,7 @@ public class JoshuasReportTester {
 			this.divisionId = 101;
 			this.month=07;
 			this.year=2018;
-			this.startDate = new Midnight(2017, Calendar.DECEMBER, 31);
+			this.startDate = new Midnight(2018, Calendar.JULY, 20);
 			this.endDate = new Midnight(2017, Calendar.DECEMBER, 31);
 			
 			makeClientUsage(conn);
