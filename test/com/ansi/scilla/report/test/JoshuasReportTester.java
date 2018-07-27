@@ -51,8 +51,8 @@ public class JoshuasReportTester {
 			conn.setAutoCommit(false);
 			
 			this.divisionId = 101;
-			this.month=12;
-			this.year=2017;
+			this.month=07;
+			this.year=2018;
 			this.startDate = new Midnight(2017, Calendar.DECEMBER, 31);
 			this.endDate = new Midnight(2017, Calendar.DECEMBER, 31);
 			

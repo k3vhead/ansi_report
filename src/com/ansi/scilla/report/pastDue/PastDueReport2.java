@@ -151,7 +151,7 @@ public class PastDueReport2 extends StandardReport {
 		//super.setSubtitle(makeSubtitle());
 		super.setHeaderRow(new ColumnHeader[] {
 			new ColumnHeader("billToName", "BILL TO NAME", DataFormats.STRING_FORMAT, SummaryType.NONE),//BILL TO NAME
-			new ColumnHeader("jobId","JOB #", DataFormats.STRING_FORMAT, SummaryType.NONE),//JOB#
+			new ColumnHeader("ticketId","Ticket ID", DataFormats.STRING_CENTERED, SummaryType.NONE),//JOB#
 			new ColumnHeader("invoiceDate", "Contracts", DataFormats.DATE_FORMAT, SummaryType.NONE),//completed invoiced dates
 			new ColumnHeader("jobId", "JOB", DataFormats.STRING_CENTERED, SummaryType.NONE),//job number
 			new ColumnHeader("actPPC", "PPC", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//actPPC
@@ -368,6 +368,7 @@ public class PastDueReport2 extends StandardReport {
 		XSSFCell cell = null;		
 		int colNum = 0;
 		CellStyle cellStyleLeft = styleMap.get("cellStyleLeft");
+		CellStyle cellStyleCenter = styleMap.get("cellStyleCenter");
 		CellStyle cellStyleDate = styleMap.get("cellStyleDate");
 		CellStyle cellStyleDecimal = styleMap.get("cellStyleDecimal");
 		
@@ -380,7 +381,7 @@ public class PastDueReport2 extends StandardReport {
 		if ( rowData != null ) {
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleLeft);
-			cell.setCellValue(rowData.getJobId());
+			cell.setCellValue(rowData.getTicketId());
 			colNum++; //col 3
 			
 			cell = row.createCell(colNum);
@@ -911,7 +912,7 @@ public class PastDueReport2 extends StandardReport {
 		private String preferredContact;
 		private String jobId;
 		private String jobNbr;
-		private Integer ticketId;
+		private String ticketId;
 		private String ticketStatus;
 		private String ticketType;
 		private String invoiceId;
@@ -935,7 +936,7 @@ public class PastDueReport2 extends StandardReport {
 			this.lastName = rs.getString("last_name");
 			this.preferredContact = rs.getString("contract_preferred_contact");
 			this.jobId = rs.getString("job_id");
-			this.ticketId = rs.getInt("ticket_id");
+			this.ticketId = rs.getString("ticket_id");
 			this.ticketStatus = rs.getString("ticket_status");
 			this.ticketType = rs.getString("ticket_type");
 			this.invoiceId = rs.getString("invoice_id");
@@ -995,7 +996,7 @@ public class PastDueReport2 extends StandardReport {
 			return jobNbr;
 		}
 
-		public Integer getTicketId() {
+		public String getTicketId() {
 			return ticketId;
 		}
 
