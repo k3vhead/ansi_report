@@ -46,7 +46,7 @@ public class PastDueReport2 extends StandardReport {
 	private final String sql = 
 		"select bill_to.name as bill_to_name, " +
 		"bill_to.address1, bill_to.address2, bill_to.city, bill_to.state, \n" +
-			"\tcontract_contact.first_name, contract_contact.last_name, \n" +
+			"\tcontract_contact.first_name as contract_first_name, contract_contact.last_name as contract_last_name, \n" +
 		"case \n" +
 			"\twhen contract_contact.preferred_contact = 'business_phone' then contract_contact.business_phone \n" +
 		  	"\twhen contract_contact.preferred_contact = 'mobile_phone' then contract_contact.mobile_phone \n" +
@@ -54,13 +54,14 @@ public class PastDueReport2 extends StandardReport {
 		  	"\twhen contract_contact.preferred_contact = 'email' then contract_contact.email \n" +
 		  	"\telse contract_contact.business_phone \n" +
 		"end as contract_preferred_contact, \n" +
+		"\tbilling_contact.first_name as billing_first_name, billing_contact.last_name as billing_last_name, \n" +
 		"case \n" +
 			"\twhen billing_contact.preferred_contact = 'business_phone' then billing_contact.business_phone \n" +
 		  	"\twhen billing_contact.preferred_contact = 'mobile_phone' then billing_contact.mobile_phone \n" +
 		  	"\twhen billing_contact.preferred_contact = 'fax' then billing_contact.fax \n" +
 		  	"\twhen billing_contact.preferred_contact = 'email' then billing_contact.email \n" +
 		  	"\telse billing_contact.business_phone \n" +
-		"end as contract_preferred_contact, \n" +
+		"end as billing_preferred_contact, \n" +
 		"job.job_id, \n" +
 		"ticket.ticket_id, ticket.ticket_status, ticket_type,ticket.invoice_id, ticket.process_date, ticket.invoice_date, ticket.act_price_per_cleaning, \n" +
 		"isnull(ticket_payment_totals.amount, '0.00') as amount_paid, \n" +
@@ -69,7 +70,8 @@ public class PastDueReport2 extends StandardReport {
 			"\twhen ticket.invoice_date < ? then ticket.act_price_per_cleaning - isnull(ticket_payment_totals.amount,'0.00') \n" +
 		  	"\telse '0.00' \n" +
 		"end as amount_past_due, \n" +
-		"job_site.name as job_site_name, oldest_invoice_date, oldest_ticket, \n" +
+		"job_site.name as job_site_name, job_site.address1 as job_site_address1, \n" +
+		"oldest_invoice_date, oldest_ticket, \n" +
 		"quote.job_site_address_id \n" + 
 		"from ticket \n" +
 		"join job on ticket.job_id = job.job_id \n" +
@@ -151,12 +153,13 @@ public class PastDueReport2 extends StandardReport {
 		//super.setSubtitle(makeSubtitle());
 		super.setHeaderRow(new ColumnHeader[] {
 			new ColumnHeader("billToName", "BILL TO NAME", DataFormats.STRING_FORMAT, SummaryType.NONE),//BILL TO NAME
-			new ColumnHeader("ticketId","Ticket ID", DataFormats.STRING_CENTERED, SummaryType.NONE),//JOB#
-			new ColumnHeader("invoiceDate", "Contracts", DataFormats.DATE_FORMAT, SummaryType.NONE),//completed invoiced dates
+			new ColumnHeader("ticketId","Ticket\nInvoice", DataFormats.STRING_CENTERED, SummaryType.NONE),//JOB#
+			new ColumnHeader("invoiceDate", "Completed\nInvoiced", DataFormats.DATE_FORMAT, SummaryType.NONE),//completed invoiced dates
 			new ColumnHeader("jobId", "JOB", DataFormats.STRING_CENTERED, SummaryType.NONE),//job number
 			new ColumnHeader("actPPC", "PPC", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//actPPC
-			new ColumnHeader("amountPaid", "PAID AMOUNT", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//Paid Amount
-			new ColumnHeader("amountDue", "AMOUNT DUE", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
+			new ColumnHeader("amountPaid", "PAID", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//Paid Amount
+			new ColumnHeader("amountDue", "DUE", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
+//			new ColumnHeader("amountPastDue", "PAST DUE", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
 			new ColumnHeader("jobSiteAddress", "SITE ADDRESS", DataFormats.STRING_FORMAT, SummaryType.NONE),//siteAddress
 		});		
 		
@@ -273,6 +276,7 @@ public class PastDueReport2 extends StandardReport {
 			Double ppcTotal = 0.0D;
 			Double paidAmt = 0.0D;
 			Double amtDue = 0.0D;
+			Double amtPastDue = 0.0D;
 			Double pastDueTotal = 0.0D;
 			
 			int colNum = 0;
@@ -281,6 +285,7 @@ public class PastDueReport2 extends StandardReport {
 			ppcTotal += rowData.getActPPC();	
 			paidAmt += rowData.getAmountPaid();
 			amtDue += rowData.getAmountDue();
+			amtPastDue += rowData.getAmountPastDue();
 			makeRow0(sheet, rowNum, billToGroup.get(0).getBillToName(), billToGroup.get(0).getJobSiteName(), rowData, styleMap);
 			rowNum++;
 			makeRow1(sheet, rowNum, billToGroup.get(0).getAddress1(), billToGroup.get(0).getJobSiteAddress(), rowData, styleMap);
@@ -292,12 +297,14 @@ public class PastDueReport2 extends StandardReport {
 				ppcTotal += rowData.getActPPC();	
 				paidAmt += rowData.getAmountPaid();
 				amtDue += rowData.getAmountDue();
+				amtPastDue += rowData.getAmountPastDue();
 			} else {
 				rowData = null;
 			}
 			makeRow0(sheet, rowNum, billToGroup.get(0).getCity() + ", " + billToGroup.get(0).getState(), "", rowData, styleMap);
 			rowNum++;
-			makeRow1(sheet, rowNum, billToGroup.get(0).getFirstName() + ", " + billToGroup.get(0).getLastName(), "", rowData, styleMap);
+			makeRow1(sheet, rowNum, billToGroup.get(0).getContractFirstName() + " " + billToGroup.get(0).getContractLastName()
+					+ ", " + billToGroup.get(0).getContractPreferredContact(), "", rowData, styleMap);
 			rowNum++;
 			
 			
@@ -306,10 +313,12 @@ public class PastDueReport2 extends StandardReport {
 				ppcTotal += rowData.getActPPC();	
 				paidAmt += rowData.getAmountPaid();
 				amtDue += rowData.getAmountDue();
+				amtPastDue += rowData.getAmountPastDue();
 			} else {
 				rowData = null;
 			}
-			makeRow0(sheet, rowNum, billToGroup.get(0).getPreferredContact(), "", rowData, styleMap);
+			makeRow0(sheet, rowNum, billToGroup.get(0).getBillingFirstName() + " " + billToGroup.get(0).getBillingLastName()
+					+ ", " + billToGroup.get(0).getBillingPreferredContact(), "", rowData, styleMap);
 			rowNum++;
 			makeRow1(sheet, rowNum, "", "", rowData, styleMap);
 			rowNum++;
@@ -319,6 +328,7 @@ public class PastDueReport2 extends StandardReport {
 				ppcTotal += rowData.getActPPC();	
 				paidAmt += rowData.getAmountPaid();
 				amtDue += rowData.getAmountDue();
+				amtPastDue += rowData.getAmountPastDue();
 				
 				makeRow0(sheet, rowNum, "", "", billToGroup.get(i), styleMap);
 				rowNum++;
@@ -331,22 +341,23 @@ public class PastDueReport2 extends StandardReport {
 			row = sheet.createRow(rowNum);
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleSummary);
-			cell.setCellValue(ppcTotal);
+			cell.setCellValue("PPC: " + ppcTotal);
 			colNum++; //col 5
 			
 			row = sheet.createRow(rowNum);
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleSummary);
-			cell.setCellValue(paidAmt);
+			cell.setCellValue("Paid: " + paidAmt);
 			colNum++; //col 6
 			
 			row = sheet.createRow(rowNum);
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleSummary);
-			cell.setCellValue(amtDue);
+			cell.setCellValue("Total Due: " + amtDue);
+			colNum++; //col 7
 			colNum++; //col 7
 			
-			pastDueTotal = amtDue - paidAmt;
+			pastDueTotal = amtPastDue;
 			
 			row = sheet.createRow(rowNum);
 			cell = row.createCell(colNum);
@@ -357,6 +368,7 @@ public class PastDueReport2 extends StandardReport {
 			ppcTotal = 0.0D;
 			paidAmt = 0.0D;
 			amtDue = 0.0D;
+			amtPastDue = 0.0D;
 			rowNum++;
 		}
 		return workbook;
@@ -907,9 +919,12 @@ public class PastDueReport2 extends StandardReport {
 		private String address2;
 		private String city;
 		private String state;
-		private String firstName;
-		private String lastName;
-		private String preferredContact;
+		private String contractFirstName;
+		private String contractLastName;
+		private String contractPreferredContact;
+		private String billingFirstName;
+		private String billingLastName;
+		private String billingPreferredContact;
 		private String jobId;
 		private String jobNbr;
 		private String ticketId;
@@ -932,9 +947,12 @@ public class PastDueReport2 extends StandardReport {
 			this.address2 = rs.getString("address2");
 			this.city = rs.getString("city");
 			this.state = rs.getString("state");
-			this.firstName = rs.getString("first_name");
-			this.lastName = rs.getString("last_name");
-			this.preferredContact = rs.getString("contract_preferred_contact");
+			this.contractFirstName = rs.getString("contract_first_name");
+			this.contractLastName = rs.getString("contract_last_name");
+			this.contractPreferredContact = rs.getString("contract_preferred_contact");
+			this.billingFirstName = rs.getString("billing_first_name");
+			this.billingLastName = rs.getString("billing_last_name");
+			this.billingPreferredContact = rs.getString("billing_preferred_contact");
 			this.jobId = rs.getString("job_id");
 			this.ticketId = rs.getString("ticket_id");
 			this.ticketStatus = rs.getString("ticket_status");
@@ -949,7 +967,7 @@ public class PastDueReport2 extends StandardReport {
 			this.amountDue = rs.getInt("amount_due");
 			this.amountPastDue = rs.getInt("amount_past_due");
 			this.jobSiteName = rs.getString("job_site_name");
-			this.jobSiteAddress = rs.getString("job_site_address_id");
+			this.jobSiteAddress = rs.getString("job_site_address1");
 		}
 		
 		public String getBillToName() {
@@ -976,16 +994,28 @@ public class PastDueReport2 extends StandardReport {
 			return state;
 		}
 
-		public String getFirstName() {
-			return firstName;
+		public String getContractFirstName() {
+			return contractFirstName;
 		}
 
-		public String getLastName() {
-			return lastName;
+		public String getContractLastName() {
+			return contractLastName;
 		}
 
-		public String getPreferredContact() {
-			return preferredContact;
+		public String getContractPreferredContact() {
+			return contractPreferredContact;
+		}
+
+		public String getBillingFirstName() {
+			return billingFirstName;
+		}
+
+		public String getBillingLastName() {
+			return billingLastName;
+		}
+
+		public String getBillingPreferredContact() {
+			return billingPreferredContact;
 		}
 
 		public String getJobId() {
