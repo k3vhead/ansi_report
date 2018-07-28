@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -14,14 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFPrintSetup;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -398,7 +391,9 @@ public class PastDueReport2 extends StandardReport {
 			
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleDate);
-			cell.setCellValue(rowData.getProcessDate());
+			if ( rowData.getProcessDate() != null ) {
+				cell.setCellValue(rowData.getProcessDate());
+			}
 			colNum++; //col 4
 			
 			cell = row.createCell(colNum);
@@ -959,7 +954,9 @@ public class PastDueReport2 extends StandardReport {
 			this.ticketType = rs.getString("ticket_type");
 			this.invoiceId = rs.getString("invoice_id");
 			java.sql.Date processDate = rs.getDate("process_date");
-			this.processDate = new Date(processDate.getTime());
+			if ( processDate != null ) {
+				this.processDate = new Date(processDate.getTime());
+			}
 			java.sql.Date invoiceDate = rs.getDate("invoice_date");
 			this.invoiceDate = new Date(invoiceDate.getTime());
 			this.actPPC = rs.getInt("act_price_per_cleaning");
