@@ -330,32 +330,32 @@ public class PastDueReport2 extends StandardReport {
 				amtDue += rowData.getAmountDue();
 				amtPastDue += rowData.getAmountPastDue();
 				
-				makeRow0(sheet, rowNum, "", "", billToGroup.get(i), styleMap);
+				makeRow0(sheet, rowNum, "", billToGroup.get(i).getJobSiteName(), billToGroup.get(i), styleMap);
 				rowNum++;
-				makeRow1(sheet, rowNum, "", "", billToGroup.get(i), styleMap);
+				makeRow1(sheet, rowNum, "", billToGroup.get(i).getJobSiteAddress(), billToGroup.get(i), styleMap);
 				rowNum++;
 			}
 			
-			colNum = 4;
+			colNum = 5;
 			
 			row = sheet.createRow(rowNum);
 			cell = row.createCell(colNum);
-			cell.setCellStyle(cellStyleSummary);
 			cell.setCellValue("PPC: " + ppcTotal);
-			colNum++; //col 5
-			
-			row = sheet.createRow(rowNum);
-			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleSummary);
-			cell.setCellValue("Paid: " + paidAmt);
 			colNum++; //col 6
 			
 			row = sheet.createRow(rowNum);
 			cell = row.createCell(colNum);
+			cell.setCellValue("Paid: " + paidAmt);
 			cell.setCellStyle(cellStyleSummary);
+			colNum++; //col 7
+			
+			row = sheet.createRow(rowNum);
+			cell = row.createCell(colNum);
 			cell.setCellValue("Total Due: " + amtDue);
-			colNum++; //col 7
-			colNum++; //col 7
+			cell.setCellStyle(cellStyleSummary);
+			colNum++; //col 8
+//			colNum++; //col 8
 			
 			pastDueTotal = amtPastDue;
 			
@@ -363,7 +363,7 @@ public class PastDueReport2 extends StandardReport {
 			cell = row.createCell(colNum);
 			cell.setCellStyle(cellStyleSummary);
 			cell.setCellValue("Past Due Total: " + pastDueTotal);
-			colNum++; //col 8
+			colNum++; //col 9
 			
 			ppcTotal = 0.0D;
 			paidAmt = 0.0D;
