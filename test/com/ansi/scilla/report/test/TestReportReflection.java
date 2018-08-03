@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -22,6 +24,7 @@ import com.ansi.scilla.report.datadumps.AddressUsage;
 import com.ansi.scilla.report.datadumps.ClientContact;
 import com.ansi.scilla.report.datadumps.UserListReport;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
+import com.ansi.scilla.report.jobSchedule.JobScheduleReport;
 import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.pac.PacSummaryReport;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
@@ -67,24 +70,25 @@ public class TestReportReflection {
 			conn = AppUtils.getProdConn();
 			conn.setAutoCommit(false);
 			
-			this.divisionId = 101;
+			this.divisionId = 102;
 			this.month=Calendar.FEBRUARY;
 			this.year=2018;
-			this.startDate = new Midnight(2018, Calendar.FEBRUARY, 1);
-			this.endDate = new Midnight(2018, Calendar.FEBRUARY, 28);
+			this.startDate = new Midnight(2018, Calendar.JULY, 1);
+			this.endDate = new Midnight(2018, Calendar.JULY, 28);
 			
 //			makeDO(conn);
 //			makeTicketStatus(conn);
 //			make6mrv(conn);
 //			makePac(conn);
 //			makePacSummary(conn);
-			makePastDue(conn);
+//			makePastDue(conn);
 //			makeInvoiceRegister(conn);
 //			makeUserList(conn);
 //			makeAddressUsage(conn);
 //			makeClientUsage(conn);
 //			makeCashReceipts(conn);
 //			make6mrvSummary(conn);
+			makeJobSchedule(conn);
 			
 			conn.rollback();
 		} finally {
@@ -93,6 +97,13 @@ public class TestReportReflection {
 			}
 		}
 		logger.info("Done");		
+	}
+
+	private void makeJobSchedule(Connection conn) throws Exception {
+		logger.info("Job Schedule");
+		JobScheduleReport report = JobScheduleReport.buildReport(conn, startDate, endDate);
+		XSSFWorkbook workbook = report.makeXLS();
+		workbook.write(new FileOutputStream(outputDirectory + "jobSchedule.xlsx"));
 	}
 
 	private void makeDO(Connection conn) throws Exception {
@@ -152,14 +163,25 @@ public class TestReportReflection {
 
 	private void makePastDue(Connection conn) throws Exception {
 		logger.info("Starting Past Due");
-		PastDueReport2 report = PastDueReport2.buildReport(conn, startDate, divisionId);		
-//		for ( Object dataRow : report.getDataRows() ) {
-//			Method getTicket = dataRow.getClass().getMethod("getTicketId", (Class<?>[])null);
-//			Integer ticket = (Integer)getTicket.invoke(dataRow, (Object[])null);
-//			System.out.println(ticket);
+//		Statement s = conn.createStatement();
+//		ResultSet rs = s.executeQuery("select division_id from division where division_id > 100");
+//		while ( rs.next() ) {
+//			Integer div = rs.getInt("division_id");
+//			System.out.println("Division " + div);
+//			try {
+//				PastDueReport2 report = PastDueReport2.buildReport(conn, startDate, divisionId);
+//				XSSFWorkbook workbook = report.makeXLS();
+//				workbook.write(new FileOutputStream(outputDirectory + "pastDue/pastDueReport" + div + ".xlsx"));
+//			} catch ( NullPointerException e ) {
+//				System.out.println("\tNull pointer: " + div);
+//			}
+//			System.out.println("*******************************");
 //		}
+//		rs.close();
+		Integer div = 105;
+		PastDueReport2 report = PastDueReport2.buildReport(conn, startDate, div);		
 		XSSFWorkbook workbook = report.makeXLS();
-		workbook.write(new FileOutputStream(outputDirectory + "pastDueReport.xlsx"));		
+		workbook.write(new FileOutputStream(outputDirectory + "pastDue/pastDueReport"+div+".xlsx"));		
 	}
 
 	private void makeInvoiceRegister(Connection conn) throws Exception {

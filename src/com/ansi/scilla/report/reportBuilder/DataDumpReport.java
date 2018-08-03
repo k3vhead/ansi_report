@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Footer;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -144,9 +144,19 @@ public abstract class DataDumpReport extends CustomReport {
 		
 	}
 
+	@Deprecated
+	/**
+	 * Use makeReport(ResultSet) instead
+	 * @param conn
+	 * @throws SQLException
+	 */
 	protected void makeReport(Connection conn) throws SQLException {
 		Statement statement = conn.createStatement();
 		ResultSet rs = statement.executeQuery(sql);
+		makeReport(rs);
+	}
+	
+	protected void makeReport(ResultSet rs) throws SQLException {
 		ResultSetMetaData rsmd = rs.getMetaData();
 		makeHeaders(rsmd);
 		makeData(rs, rsmd);
