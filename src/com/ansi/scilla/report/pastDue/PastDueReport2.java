@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFFont;
@@ -152,7 +153,7 @@ public class PastDueReport2 extends StandardReport {
 			new ColumnHeader("actPPC", "PPC", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//actPPC
 			new ColumnHeader("amountPaid", "PAID", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//Paid Amount
 			new ColumnHeader("amountDue", "DUE", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
-//			new ColumnHeader("amountPastDue", "PAST DUE", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
+			new ColumnHeader("amountPastDue", "PAST DUE", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
 			new ColumnHeader("jobSiteAddress", "SITE ADDRESS", DataFormats.STRING_FORMAT, SummaryType.NONE),//siteAddress
 		});		
 		
@@ -377,7 +378,7 @@ public class PastDueReport2 extends StandardReport {
 		CellStyle cellStyleDate = styleMap.get("cellStyleDate");
 		CellStyle cellStyleDecimal = styleMap.get("cellStyleDecimal");
 		
-//		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
 		cell.setCellValue(column0);
@@ -415,12 +416,17 @@ public class PastDueReport2 extends StandardReport {
 			cell.setCellStyle(cellStyleDecimal);
 			cell.setCellValue(rowData.getAmountDue());
 			colNum++; //col 8
+			
+			cell = row.createCell(colNum);
+			cell.setCellStyle(cellStyleDecimal);
+			cell.setCellValue(0.00);
+			colNum++; //col 9
 		}
-//		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 8, 9));
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 8, 9));
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
 		cell.setCellValue(column7);
-		colNum++; //col 9
+		colNum++; //col 10
 	}
 
 	
@@ -432,7 +438,7 @@ public class PastDueReport2 extends StandardReport {
 		CellStyle cellStyleDate = styleMap.get("cellStyleDate");
 		CellStyle cellStyleDecimal = styleMap.get("cellStyleDecimal");
 		
-//		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
 		cell.setCellValue(column0);
@@ -458,7 +464,7 @@ public class PastDueReport2 extends StandardReport {
 			colNum++; //col 8
 		}
 		
-//		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 8, 9));
+		sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 8, 9));
 		cell = row.createCell(colNum);
 		cell.setCellStyle(cellStyleLeft);
 		cell.setCellValue(column7);
