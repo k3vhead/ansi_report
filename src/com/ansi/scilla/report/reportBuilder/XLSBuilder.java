@@ -3,8 +3,6 @@ package com.ansi.scilla.report.reportBuilder;
 import java.text.SimpleDateFormat;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.logging.log4j.Level;
 import org.apache.poi.ss.usermodel.Footer;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;

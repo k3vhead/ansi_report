@@ -334,11 +334,11 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 				subtotalValues[i] = super.makeSubtotalData(columnHeader);
 			}
 		}
-		
+
 		if ( addASub ) {
 			//subtract 1 because getReportHeight includes this row that we're getting ready to add
 			//subtract another 1 because the rownumbers are zero-based
-			int rowNum = this.reportStartLoc.rowIndex + report.getReportHeight() - 2;  
+			int rowNum = sheet.getLastRowNum() + 1; //this.reportStartLoc.rowIndex + report.getReportHeight() - 2;  
 			XSSFRow reportRow = XLSReportBuilderUtils.makeRow(sheet, rowNum); 
 
 			int columnIndex = 0;
@@ -367,7 +367,7 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 		XSSFRow row = null;
 		XSSFCell cell = null;
 
-		int rowNum = this.getReportStartLoc().rowIndex + report.getReportHeight() - 1;
+		int rowNum = sheet.getLastRowNum() + 1; //this.getReportStartLoc().rowIndex + report.getReportHeight() - 1;
 		row = sheet.createRow(rowNum);
 
 		int columnIndex = this.reportStartLoc.columnIndex;

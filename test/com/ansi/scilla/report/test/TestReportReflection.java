@@ -82,13 +82,13 @@ public class TestReportReflection {
 //			makePac(conn);
 //			makePacSummary(conn);
 //			makePastDue(conn);
-//			makeInvoiceRegister(conn);
+			makeInvoiceRegister(conn);
 //			makeUserList(conn);
 //			makeAddressUsage(conn);
 //			makeClientUsage(conn);
 //			makeCashReceipts(conn);
 //			make6mrvSummary(conn);
-			makeJobSchedule(conn);
+//			makeJobSchedule(conn);
 			
 			conn.rollback();
 		} finally {
@@ -186,9 +186,12 @@ public class TestReportReflection {
 
 	private void makeInvoiceRegister(Connection conn) throws Exception {
 		logger.info("Starting Invoice REgister");
+		divisionId=104;
+		month=8;
+		year=2018;
 		InvoiceRegisterReport irr = InvoiceRegisterReport.buildReport(conn, divisionId, month, year);
 		XSSFWorkbook workbook = XLSBuilder.build(irr);
-		workbook.write(new FileOutputStream(outputDirectory + "invoiceRegisterReport.xlsx"));
+		workbook.write(new FileOutputStream(outputDirectory + "invoiceRegisterReport_" + divisionId + "_" + month + "_" + year + ".xlsx"));
 				
 	}
 
