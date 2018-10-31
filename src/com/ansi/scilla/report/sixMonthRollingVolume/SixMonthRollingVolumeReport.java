@@ -32,6 +32,7 @@ import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.jobticket.JobFrequency;
 import com.ansi.scilla.common.jobticket.JobStatus;
+import com.ansi.scilla.common.jobticket.TicketDateGenerator;
 import com.ansi.scilla.common.jobticket.TicketStatus;
 import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.report.htmlTable.HTMLCell;
@@ -69,6 +70,8 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 			+ "\n\t, job.job_id "
 			+ "\n\t, job.job_nbr "
 			+ "\n\t, job.job_frequency "
+			+ "\n\t, job.price_per_cleaning "
+			+ "\n\t, job.start_date "
 			+ "\n\t, max(t.process_date) as last_run "
 			+ "\n\t, ppcm01.price_per_cleaning as ppcm01	 "
 			+ "\n\t, ppcm02.price_per_cleaning as ppcm02 "
@@ -100,6 +103,8 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 			+ "\n\t, job.job_id "
 			+ "\n\t, job.job_nbr "
 			+ "\n\t, job.job_frequency "
+			+ "\n\t, job.price_per_cleaning "
+			+ "\n\t, job.start_date "
 			+ "\n\t, ppcm01.price_per_cleaning "
 			+ "\n\t, ppcm02.price_per_cleaning "
 			+ "\n\t, ppcm03.price_per_cleaning "
@@ -180,6 +185,14 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 	private void makeData(PreparedStatement ps, Integer divisionId, Calendar startDate) throws Exception {
 		Integer queryMonth = startDate.get(Calendar.MONTH) + 1; // add 1 because January is 0;
 		Integer queryYear = startDate.get(Calendar.YEAR);
+		Double[] jobMonthlyTotal = new Double[] {0.0D,0.0D,0.0D,0.0D,0.0D,0.0D};
+		Integer[] jobQueryMonth = new Integer[] {0,0,0,0,0,0};
+		Integer[] jobQueryYear = new Integer[] {0,0,0,0,0,0};
+		Calendar jobStartDate = Calendar.getInstance(new AnsiTime());
+		Calendar endDate = Calendar.getInstance(new AnsiTime());
+		endDate.setTime(startDate.getTime());
+		endDate.add(Calendar.MONTH, 6);
+		logger.log(Level.DEBUG, "\t" + "startDate:" + startDate.getTime() + "\t" + "endDate:" + endDate.getTime());
 		
 		int n = 1;		
 		ps.setString(n, TicketStatus.COMPLETED.code());
@@ -199,6 +212,9 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 			n++;
 			ps.setInt(n, queryMonth);
 			n++;
+			jobQueryMonth[i] = queryMonth;
+			jobQueryYear[i] = queryYear;
+			logger.log(Level.DEBUG, "\t"+ i + "\t" + "jobQueryYear:" + jobQueryYear[i] + "\t" + "jobQueryMonth:" + jobQueryMonth[i]);
 			queryMonth++;
 			if ( queryMonth > 12 ) {
 				queryMonth = 1;
@@ -216,18 +232,49 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		while ( rs.next() ) {
 			DataRow dataRow = new DataRow(rs);
 			addDataRow(dataRow);
+			logger.log(Level.DEBUG, "\t" + "jobId:" + dataRow.jobId + "\t" + "jobFrequency:" + dataRow.jobFrequency);
 			this.jobCount++;
 			if (! jobSiteNameList.contains(dataRow.jobSiteName)) {
 				jobSiteNameList.add(dataRow.jobSiteName);
 			}
+			jobStartDate.setTime(dataRow.jobStartDate);
 			
-			this.monthlyTotal[0] = dataRow.ppcm01 == null ? this.monthlyTotal[0] : this.monthlyTotal[0] + dataRow.ppcm01.doubleValue();
-			this.monthlyTotal[1] = dataRow.ppcm02 == null ? this.monthlyTotal[1] : this.monthlyTotal[1] + dataRow.ppcm02.doubleValue();
-			this.monthlyTotal[2] = dataRow.ppcm03 == null ? this.monthlyTotal[2] : this.monthlyTotal[2] + dataRow.ppcm03.doubleValue();
-			this.monthlyTotal[3] = dataRow.ppcm04 == null ? this.monthlyTotal[3] : this.monthlyTotal[3] + dataRow.ppcm04.doubleValue();
-			this.monthlyTotal[4] = dataRow.ppcm05 == null ? this.monthlyTotal[4] : this.monthlyTotal[4] + dataRow.ppcm05.doubleValue();
-			this.monthlyTotal[5] = dataRow.ppcm06 == null ? this.monthlyTotal[5] : this.monthlyTotal[5] + dataRow.ppcm06.doubleValue();
-			
+			List<Calendar> ticketDates = TicketDateGenerator.generateTicketDates(dataRow.jobFrequency, jobStartDate, endDate);
+			Integer ticketMonth = 0; 
+			Integer ticketYear = 0;
+			for ( Calendar ticketDate : ticketDates ) {
+				logger.log(Level.DEBUG, "\tticketDate:"+ ticketDate.getTime());
+				ticketMonth = ticketDate.get(Calendar.MONTH) + 1; // add 1 because January is 0;
+				ticketYear = ticketDate.get(Calendar.YEAR);
+				logger.log(Level.DEBUG, "\t" + "\t" + "ticketYear:" + ticketYear + "\t" + "ticketMonth:" + ticketMonth);
+				logger.log(Level.DEBUG, "\t" + "\t" + "PPC:" + dataRow.jobPpc );
+				for ( int i = 0; i < 6; i++ ) {
+					logger.log(Level.DEBUG, "\t"+ i + "\t" + "jobQueryYear:" + jobQueryYear[i] + "\t" + "jobQueryMonth:" + jobQueryMonth[i]);
+					if ( ticketMonth.equals(jobQueryMonth[i]) && ticketYear.equals(jobQueryYear[i]) ) {
+						this.monthlyTotal[i] = dataRow.jobPpc == null ? this.monthlyTotal[i] : this.monthlyTotal[i] + dataRow.jobPpc.doubleValue();
+						dataRow.jobMonthlyTotal[i] = dataRow.jobPpc == null ? dataRow.jobMonthlyTotal[i] : dataRow.jobMonthlyTotal[i] + dataRow.jobPpc.doubleValue();
+						logger.log(Level.DEBUG, "\tmonthlyTotal[i]:"+ this.monthlyTotal[i]);
+					}
+				}
+				dataRow.ppcm01 = new BigDecimal( dataRow.jobMonthlyTotal[0]);
+				dataRow.ppcm02 = new BigDecimal( dataRow.jobMonthlyTotal[1]);
+				dataRow.ppcm03 = new BigDecimal( dataRow.jobMonthlyTotal[2]);
+				dataRow.ppcq01 = BigDecimal.ZERO;
+				dataRow.ppcq01.add(dataRow.ppcm01);
+				dataRow.ppcq01.add(dataRow.ppcm02);
+				dataRow.ppcq01.add(dataRow.ppcm03);
+				dataRow.ppcm04 = new BigDecimal( dataRow.jobMonthlyTotal[3]);
+				dataRow.ppcm05 = new BigDecimal( dataRow.jobMonthlyTotal[4]);
+				dataRow.ppcm06 = new BigDecimal( dataRow.jobMonthlyTotal[5]);
+				dataRow.ppcq02 = BigDecimal.ZERO;
+				dataRow.ppcq02.add(dataRow.ppcm04);
+				dataRow.ppcq02.add(dataRow.ppcm05);
+				dataRow.ppcq02.add(dataRow.ppcm06);
+				dataRow.ppch01 = BigDecimal.ZERO;
+				dataRow.ppch01.add(dataRow.ppcq01);
+				dataRow.ppch01.add(dataRow.ppcq02);
+
+			}
 		}
 		this.contractCount = jobSiteNameList.size();
 		rs.close();
@@ -967,6 +1014,8 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		private Integer jobId;
 		private Integer jobNbr;
 		private JobFrequency jobFrequency;
+		private BigDecimal jobPpc;
+		private Date jobStartDate;
 		private Date lastRun;
 		private BigDecimal ppcm01;
 		private BigDecimal ppcm02;
@@ -977,6 +1026,8 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		private BigDecimal ppcm06;
 		private BigDecimal ppcq02;
 		private BigDecimal ppch01;
+		private Double[] jobMonthlyTotal = new Double[] {0.0D,0.0D,0.0D,0.0D,0.0D,0.0D};
+
 		
 		
 		public DataRow(ResultSet rs) throws SQLException {
@@ -986,9 +1037,14 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 			this.jobId = rs.getInt("job_id");
 			this.jobNbr = rs.getInt("job_nbr");
 			this.jobFrequency = JobFrequency.get(rs.getString("job_frequency"));
+			this.jobPpc = rs.getBigDecimal("price_per_cleaning");
 			java.sql.Date lastRunDate = rs.getDate("last_run");
 			if ( lastRunDate != null ) {
 				this.lastRun = new Date(lastRunDate.getTime());
+			}
+			java.sql.Date jobStartDate = rs.getDate("start_date");
+			if ( jobStartDate != null ) {
+				this.jobStartDate = new Date(jobStartDate.getTime());
 			}
 			this.ppcm01 = rs.getBigDecimal("ppcm01");
 			this.ppcm02 = rs.getBigDecimal("ppcm02");
@@ -1021,6 +1077,12 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 
 		public JobFrequency getJobFrequency() {
 			return jobFrequency;
+		}
+		public BigDecimal getJobPpc() {
+			return jobPpc;
+		}
+		public Date getJobStartDate() {
+			return jobStartDate;
 		}
 
 
