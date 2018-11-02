@@ -73,26 +73,26 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 			+ "\n\t, job.price_per_cleaning "
 			+ "\n\t, job.start_date "
 			+ "\n\t, max(t.process_date) as last_run "
-			+ "\n\t, ppcm01.price_per_cleaning as ppcm01	 "
-			+ "\n\t, ppcm02.price_per_cleaning as ppcm02 "
-			+ "\n\t, ppcm03.price_per_cleaning as ppcm03 "
-			+ "\n\t, (isnull(ppcm01.price_per_cleaning,0) + isnull(ppcm02.price_per_cleaning,0) + isnull(ppcm03.price_per_cleaning,0)) as ppcq01 "
-			+ "\n\t, ppcm04.price_per_cleaning as ppcm04 "
-			+ "\n\t, ppcm05.price_per_cleaning as ppcm05 "
-			+ "\n\t, ppcm06.price_per_cleaning as ppcm06 "
-			+ "\n\t, (isnull(ppcm04.price_per_cleaning,0) + isnull(ppcm05.price_per_cleaning,0) + isnull(ppcm06.price_per_cleaning,0)) as ppcq02 "
-			+ "\n\t, (isnull(ppcm01.price_per_cleaning,0) + isnull(ppcm02.price_per_cleaning,0) + isnull(ppcm03.price_per_cleaning,0) + isnull(ppcm04.price_per_cleaning,0) + isnull(ppcm05.price_per_cleaning,0) + isnull(ppcm06.price_per_cleaning,0)) as ppch01 "
+//			+ "\n\t, ppcm01.price_per_cleaning as ppcm01	 "
+//			+ "\n\t, ppcm02.price_per_cleaning as ppcm02 "
+//			+ "\n\t, ppcm03.price_per_cleaning as ppcm03 "
+//			+ "\n\t, (isnull(ppcm01.price_per_cleaning,0) + isnull(ppcm02.price_per_cleaning,0) + isnull(ppcm03.price_per_cleaning,0)) as ppcq01 "
+//			+ "\n\t, ppcm04.price_per_cleaning as ppcm04 "
+//			+ "\n\t, ppcm05.price_per_cleaning as ppcm05 "
+//			+ "\n\t, ppcm06.price_per_cleaning as ppcm06 "
+//			+ "\n\t, (isnull(ppcm04.price_per_cleaning,0) + isnull(ppcm05.price_per_cleaning,0) + isnull(ppcm06.price_per_cleaning,0)) as ppcq02 "
+//			+ "\n\t, (isnull(ppcm01.price_per_cleaning,0) + isnull(ppcm02.price_per_cleaning,0) + isnull(ppcm03.price_per_cleaning,0) + isnull(ppcm04.price_per_cleaning,0) + isnull(ppcm05.price_per_cleaning,0) + isnull(ppcm06.price_per_cleaning,0)) as ppch01 "
 			+ "\nfrom job "
 			+ "\ninner join quote on quote.quote_id = job.quote_id "
 			+ "\ninner join address as job_site on job_site.address_id = quote.job_site_address_id "
 			+ "\ninner join division on division.division_id = job.division_id "
 			+ "\nleft outer join ticket t on ticket_status in (?,?,?) and ticket_type in (?,?) and t.job_id = job.job_id "
-			+ "\nleft outer join view_monthly_volume ppcm01 on ppcm01.job_id=job.job_id and ppcm01.job_site_address_id=quote.job_site_address_id and ppcm01.ppc_year=? and ppcm01.ppc_month=?  "
-			+ "\nleft outer join view_monthly_volume ppcm02 on ppcm02.job_id=job.job_id and ppcm02.job_site_address_id=quote.job_site_address_id and ppcm02.ppc_year=? and ppcm02.ppc_month=?  "
-			+ "\nleft outer join view_monthly_volume ppcm03 on ppcm03.job_id=job.job_id and ppcm03.job_site_address_id=quote.job_site_address_id and ppcm03.ppc_year=? and ppcm03.ppc_month=?  "
-			+ "\nleft outer join view_monthly_volume ppcm04 on ppcm04.job_id=job.job_id and ppcm04.job_site_address_id=quote.job_site_address_id and ppcm04.ppc_year=? and ppcm04.ppc_month=?  "
-			+ "\nleft outer join view_monthly_volume ppcm05 on ppcm05.job_id=job.job_id and ppcm05.job_site_address_id=quote.job_site_address_id and ppcm05.ppc_year=? and ppcm05.ppc_month=?  "
-			+ "\nleft outer join view_monthly_volume ppcm06 on ppcm06.job_id=job.job_id and ppcm06.job_site_address_id=quote.job_site_address_id and ppcm06.ppc_year=? and ppcm06.ppc_month=?  "
+//			+ "\nleft outer join view_monthly_volume ppcm01 on ppcm01.job_id=job.job_id and ppcm01.job_site_address_id=quote.job_site_address_id and ppcm01.ppc_year=? and ppcm01.ppc_month=?  "
+//			+ "\nleft outer join view_monthly_volume ppcm02 on ppcm02.job_id=job.job_id and ppcm02.job_site_address_id=quote.job_site_address_id and ppcm02.ppc_year=? and ppcm02.ppc_month=?  "
+//			+ "\nleft outer join view_monthly_volume ppcm03 on ppcm03.job_id=job.job_id and ppcm03.job_site_address_id=quote.job_site_address_id and ppcm03.ppc_year=? and ppcm03.ppc_month=?  "
+//			+ "\nleft outer join view_monthly_volume ppcm04 on ppcm04.job_id=job.job_id and ppcm04.job_site_address_id=quote.job_site_address_id and ppcm04.ppc_year=? and ppcm04.ppc_month=?  "
+//			+ "\nleft outer join view_monthly_volume ppcm05 on ppcm05.job_id=job.job_id and ppcm05.job_site_address_id=quote.job_site_address_id and ppcm05.ppc_year=? and ppcm05.ppc_month=?  "
+//			+ "\nleft outer join view_monthly_volume ppcm06 on ppcm06.job_id=job.job_id and ppcm06.job_site_address_id=quote.job_site_address_id and ppcm06.ppc_year=? and ppcm06.ppc_month=?  "
 			+ "\nwhere division.division_id = ? "
 			+ "\n\tand job.job_status = ?	 "
 //			+ "\n\tand (  ppcm01.price_per_cleaning is not null or ppcm02.price_per_cleaning is not null or ppcm03.price_per_cleaning is not null "
@@ -105,12 +105,12 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 			+ "\n\t, job.job_frequency "
 			+ "\n\t, job.price_per_cleaning "
 			+ "\n\t, job.start_date "
-			+ "\n\t, ppcm01.price_per_cleaning "
-			+ "\n\t, ppcm02.price_per_cleaning "
-			+ "\n\t, ppcm03.price_per_cleaning "
-			+ "\n\t, ppcm04.price_per_cleaning "
-			+ "\n\t, ppcm05.price_per_cleaning "
-			+ "\n\t, ppcm06.price_per_cleaning "
+//			+ "\n\t, ppcm01.price_per_cleaning "
+//			+ "\n\t, ppcm02.price_per_cleaning "
+//			+ "\n\t, ppcm03.price_per_cleaning "
+//			+ "\n\t, ppcm04.price_per_cleaning "
+//			+ "\n\t, ppcm05.price_per_cleaning "
+//			+ "\n\t, ppcm06.price_per_cleaning "
 			+ "\norder by job_site_name, job_site.address1, job_nbr";	
 	public static final  String REPORT_TITLE = "Six Month Rolling Volume";
 //	private final String REPORT_NOTES = "notes go here";
@@ -192,7 +192,7 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		Calendar endDate = Calendar.getInstance(new AnsiTime());
 		endDate.setTime(startDate.getTime());
 		endDate.add(Calendar.MONTH, 6);
-		logger.log(Level.DEBUG, "\t" + "startDate:" + startDate.getTime() + "\t" + "endDate:" + endDate.getTime());
+//		logger.log(Level.DEBUG, "\t" + "startDate:" + startDate.getTime() + "\t" + "endDate:" + endDate.getTime());
 		
 		int n = 1;		
 		ps.setString(n, TicketStatus.COMPLETED.code());
@@ -208,13 +208,13 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		n++;
 		
 		for ( int i = 0; i < 6; i++ ) {
-			ps.setInt(n, queryYear);
-			n++;
-			ps.setInt(n, queryMonth);
-			n++;
+//			ps.setInt(n, queryYear);
+//			n++;
+//			ps.setInt(n, queryMonth);
+//			n++;
 			jobQueryMonth[i] = queryMonth;
 			jobQueryYear[i] = queryYear;
-			logger.log(Level.DEBUG, "\t"+ i + "\t" + "jobQueryYear:" + jobQueryYear[i] + "\t" + "jobQueryMonth:" + jobQueryMonth[i]);
+//			logger.log(Level.DEBUG, "\t"+ i + "\t" + "jobQueryYear:" + jobQueryYear[i] + "\t" + "jobQueryMonth:" + jobQueryMonth[i]);
 			queryMonth++;
 			if ( queryMonth > 12 ) {
 				queryMonth = 1;
@@ -232,7 +232,7 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		while ( rs.next() ) {
 			DataRow dataRow = new DataRow(rs);
 			addDataRow(dataRow);
-			logger.log(Level.DEBUG, "\t" + "jobId:" + dataRow.jobId + "\t" + "jobFrequency:" + dataRow.jobFrequency);
+//			logger.log(Level.DEBUG, "\t" + "jobId:" + dataRow.jobId + "\t" + "jobFrequency:" + dataRow.jobFrequency);
 			this.jobCount++;
 			if (! jobSiteNameList.contains(dataRow.jobSiteName)) {
 				jobSiteNameList.add(dataRow.jobSiteName);
@@ -243,17 +243,17 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 			Integer ticketMonth = 0; 
 			Integer ticketYear = 0;
 			for ( Calendar ticketDate : ticketDates ) {
-				logger.log(Level.DEBUG, "\tticketDate:"+ ticketDate.getTime());
+//				logger.log(Level.DEBUG, "\tticketDate:"+ ticketDate.getTime());
 				ticketMonth = ticketDate.get(Calendar.MONTH) + 1; // add 1 because January is 0;
 				ticketYear = ticketDate.get(Calendar.YEAR);
-				logger.log(Level.DEBUG, "\t" + "\t" + "ticketYear:" + ticketYear + "\t" + "ticketMonth:" + ticketMonth);
-				logger.log(Level.DEBUG, "\t" + "\t" + "PPC:" + dataRow.jobPpc );
+//				logger.log(Level.DEBUG, "\t" + "\t" + "ticketYear:" + ticketYear + "\t" + "ticketMonth:" + ticketMonth);
+//				logger.log(Level.DEBUG, "\t" + "\t" + "PPC:" + dataRow.jobPpc );
 				for ( int i = 0; i < 6; i++ ) {
-					logger.log(Level.DEBUG, "\t"+ i + "\t" + "jobQueryYear:" + jobQueryYear[i] + "\t" + "jobQueryMonth:" + jobQueryMonth[i]);
+//					logger.log(Level.DEBUG, "\t"+ i + "\t" + "jobQueryYear:" + jobQueryYear[i] + "\t" + "jobQueryMonth:" + jobQueryMonth[i]);
 					if ( ticketMonth.equals(jobQueryMonth[i]) && ticketYear.equals(jobQueryYear[i]) ) {
 						this.monthlyTotal[i] = dataRow.jobPpc == null ? this.monthlyTotal[i] : this.monthlyTotal[i] + dataRow.jobPpc.doubleValue();
 						dataRow.jobMonthlyTotal[i] = dataRow.jobPpc == null ? dataRow.jobMonthlyTotal[i] : dataRow.jobMonthlyTotal[i] + dataRow.jobPpc.doubleValue();
-						logger.log(Level.DEBUG, "\tmonthlyTotal[i]:"+ this.monthlyTotal[i]);
+//						logger.log(Level.DEBUG, "\tmonthlyTotal[i]:"+ this.monthlyTotal[i]);
 					}
 				}
 				dataRow.ppcm01 = new BigDecimal( dataRow.jobMonthlyTotal[0]);
@@ -1046,15 +1046,15 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 			if ( jobStartDate != null ) {
 				this.jobStartDate = new Date(jobStartDate.getTime());
 			}
-			this.ppcm01 = rs.getBigDecimal("ppcm01");
-			this.ppcm02 = rs.getBigDecimal("ppcm02");
-			this.ppcm03 = rs.getBigDecimal("ppcm03");
-			this.ppcq01 = rs.getBigDecimal("ppcq01");
-			this.ppcm04 = rs.getBigDecimal("ppcm04");
-			this.ppcm05 = rs.getBigDecimal("ppcm05");
-			this.ppcm06 = rs.getBigDecimal("ppcm06");
-			this.ppcq02 = rs.getBigDecimal("ppcq02");
-			this.ppch01 = rs.getBigDecimal("ppch01");
+//			this.ppcm01 = rs.getBigDecimal("ppcm01");
+//			this.ppcm02 = rs.getBigDecimal("ppcm02");
+//			this.ppcm03 = rs.getBigDecimal("ppcm03");
+//			this.ppcq01 = rs.getBigDecimal("ppcq01");
+//			this.ppcm04 = rs.getBigDecimal("ppcm04");
+//			this.ppcm05 = rs.getBigDecimal("ppcm05");
+//			this.ppcm06 = rs.getBigDecimal("ppcm06");
+//			this.ppcq02 = rs.getBigDecimal("ppcq02");
+//			this.ppch01 = rs.getBigDecimal("ppch01");
 		}
 
 
