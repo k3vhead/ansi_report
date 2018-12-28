@@ -84,6 +84,7 @@ public class XLSSummaryBuilder extends AbstractXLSBuilder {
 	 * @return Number of header Rows
 	 * @throws Exception Something bad happened
 	 */
+	@Deprecated
 	protected Integer makeHeader(XSSFSheet sheet) throws Exception {
 		StandardSummaryReport report = (StandardSummaryReport)this.report; 
 		int headerRowCount = makeHeaderRowCount();
@@ -235,6 +236,7 @@ public class XLSSummaryBuilder extends AbstractXLSBuilder {
 	 * @param report
 	 * @return
 	 */
+	@Deprecated
 	private Integer makeColumnCount(StandardSummaryReport report) {
 		Integer companyColumnCount = report.hasCompanySummary() ? report.getCompanySummary().getHeaderRow().length : 0;
 		Integer regionColumnCount = report.hasRegionSummary() ? report.getRegionSummary().getHeaderRow().length : 0;

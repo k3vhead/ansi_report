@@ -80,6 +80,7 @@ public abstract class ReportBuilder extends ApplicationObject {
 	 * @deprecated Use ReportUtils.makeHeaderRowCount()
 	 * @return Number of rows in the header
 	 */
+	@Deprecated
 	protected int makeHeaderRowCount() {
 		int headerRowCount = 1;  // we've always got a banner
 		if ( ! StringUtils.isBlank(report.getTitle())) {

@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Level;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -116,6 +115,7 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 	 * @throws Exception Something bad happened
 	 * @deprecated Use makeBannerData() instead
 	 */
+	@Deprecated
 	protected String[] makeHeaderData(List<ReportHeaderCol> headerData, Integer index) throws Exception {
 		String[] data = new String[2];
 		if ( ! headerData.isEmpty() ) {
