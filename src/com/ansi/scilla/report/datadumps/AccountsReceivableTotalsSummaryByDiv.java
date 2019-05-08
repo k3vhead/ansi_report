@@ -10,7 +10,7 @@ public class AccountsReceivableTotalsSummaryByDiv extends DataDumpReport {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public static final  String REPORT_TITLE = "Accounts Receivable Totals Summary By Division";
+	public static final  String REPORT_TITLE = "AR Totals Summary By Division";
 
 	protected static final String sql = "select Div\n" + 
 			", (select sum(case \n" + 

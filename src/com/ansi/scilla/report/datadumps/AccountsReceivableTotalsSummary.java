@@ -15,7 +15,7 @@ public class AccountsReceivableTotalsSummary extends DataDumpReport {
 		makeReport(conn);
 	}
 	
-	public static final  String REPORT_TITLE = "Accounts Receivable Totals Summary";
+	public static final  String REPORT_TITLE = "AR Totals Summary";
 
 	protected static final String sql = "select Div\n" + 
 			", (select sum(case \n" + 

@@ -10,7 +10,7 @@ public class AccountsReceivableTotalsOver60DetailByDiv extends DataDumpReport {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public static final  String REPORT_TITLE = "Accounts Receivable Totals Over 60 Detail By Division";
+	public static final  String REPORT_TITLE = "AR Totals Over 60 Detail By Division";
 
 	protected static final String sql = "select Div, invoice_date as 'Invoiced', DaysDue, Client, Ticket, Site\n" + 
 			", isnull([over60],0.00) as [over60], isnull([over90],0.00) as [over90], isnull([over120],0.00) as [over120], isnull([over180],0.00) as [over180] \n" + 

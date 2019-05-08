@@ -15,7 +15,7 @@ public class AccountsReceivableTotalsOver60Detail extends DataDumpReport {
 		makeReport(conn);
 	}
 	
-	public static final  String REPORT_TITLE = "Accounts Receivable Totals Over 60 Detail";
+	public static final  String REPORT_TITLE = "AR Totals Over 60 Detail";
 
 	protected static final String sql = "select Div, invoice_date as 'Invoiced', DaysDue, Client, Ticket, Site\n" + 
 			", isnull([over60],0.00) as [over60], isnull([over90],0.00) as [over90], isnull([over120],0.00) as [over120], isnull([over180],0.00) as [over180] \n" + 
