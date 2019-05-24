@@ -136,7 +136,7 @@ public class InvoiceRegisterReport extends StandardReport {
 		workDate.set(Calendar.MILLISECOND, 0);		
 		this.startDate = (Calendar)workDate.clone();
 		
-		workDate.set(Calendar.DAY_OF_MONTH, workDate.getMaximum(Calendar.DAY_OF_MONTH));
+		workDate.set(Calendar.DAY_OF_MONTH, workDate.getActualMaximum(Calendar.DAY_OF_MONTH));
 		this.endDate = (Calendar)workDate.clone();
 		
 	}
