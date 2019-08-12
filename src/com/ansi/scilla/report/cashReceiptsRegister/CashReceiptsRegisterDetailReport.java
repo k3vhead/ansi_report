@@ -40,7 +40,7 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 	private final String sql = "select bill_to.name as 'bill_to_name'\r\n" + 
 			", ticket.job_id\r\n" + 
 			", ticket.ticket_id\r\n" + 
-			", ticket.fleetmatics_id\r\n" + 
+			", ticket.invoice_id\r\n" + 
 			", invoice_date\r\n" + 
 			", division.division_nbr\r\n" + 
 			", division.division_code\r\n" +
@@ -238,8 +238,8 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 				new ColumnHeader("billToName","Client Name", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobId", "Job Code", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 				new ColumnHeader("ticketId", "Ticket", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("fleetmaticsId", "FM Ticket", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("invoiceDate", "Invoice Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("invoiceId", "Invoice", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 				new ColumnHeader("divisionDisplay", "Div", DataFormats.STRING_CENTERED, SummaryType.NONE),
 				new ColumnHeader("paymentNote","Payment Notes", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("paymentDate", "Payment Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
@@ -291,7 +291,7 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 		public String billToName;
 		public Integer jobId;
 		public Integer ticketId;
-		public String fleetmaticsId;
+		public Integer invoiceId;
 		public Date invoiceDate;
 		public Integer divisionNbr;
 		public String divisionCode;
@@ -312,7 +312,7 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 //			this.billToName = this.billToName.substring(0, Math.min(this.billToName.length(), 25));
 			this.jobId = rs.getInt("job_id");
 			this.ticketId = rs.getInt("ticket_id");
-			this.fleetmaticsId = rs.getString("fleetmatics_id");
+			this.invoiceId = rs.getInt("invoice_id");
 			this.invoiceDate = new Date( rs.getDate("invoice_date").getTime());
 			this.divisionNbr = rs.getInt("division_nbr");
 			this.paymentNote = StringUtils.substring(rs.getString("payment_note"), 0, 15);
@@ -341,8 +341,8 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 		public Integer getTicketId() {
 			return ticketId;
 		}
-		public String getFleetmaticsId() {
-			return fleetmaticsId;
+		public Integer getInvoiceId() {
+			return invoiceId;
 		}
 		public Date getInvoiceDate() {
 			return invoiceDate;
