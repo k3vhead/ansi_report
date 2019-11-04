@@ -235,20 +235,20 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 //		super.setHeaderNotes(REPORT_NOTES);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("billToName","Client Name", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobId", "Job Code", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("ticketId", "Ticket", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("invoiceDate", "Invoice Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("invoiceId", "Invoice", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("divisionDisplay", "Div", DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("paymentNote","Payment Notes", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("paymentDate", "Payment Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("checkNbr", "Check Number", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("checkDate", "Check Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("amount","PPC\nPaid", DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-				new ColumnHeader("taxAmt","Taxes\nPaid", DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-				new ColumnHeader("total","Total\nPaid", DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-				new ColumnHeader("jobSiteName","Site Name", DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("billToName","Client Name", 2, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobId", "Job Code", 1, 0, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("ticketId", "Ticket", 1, 0, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("invoiceDate", "Invoice Date", 1, 0, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("invoiceId", "Invoice", 1, 0, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("divisionDisplay", "Div", 1, 0, DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("paymentNote","Payment Notes", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("paymentDate", "Payment Date", 1, 0, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("checkNbr", "Check Number", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("checkDate", "Check Date", 1, 0, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("amount","PPC\nPaid", 1, 0, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
+				new ColumnHeader("taxAmt","Taxes\nPaid", 1, 0, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
+				new ColumnHeader("total","Total\nPaid", 1, 0, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
+				new ColumnHeader("jobSiteName","Site Name", 2, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());

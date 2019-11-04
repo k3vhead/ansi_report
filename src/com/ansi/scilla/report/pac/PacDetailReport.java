@@ -207,19 +207,19 @@ public class PacDetailReport extends StandardReport {
 //		super.setHeaderNotes(REPORT_NOTES);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("reportDate", this.reportType.columnHeader, DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobId", "Job Code", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("name","Site Name", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("address1","Street 1", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("city","City", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("state","State", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("budget","Budget", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
-				new ColumnHeader("pricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobNbr","Job #", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("freq","Freq", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobStatus","Status", DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("leadType","Lead Type", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("volume","Volume", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("reportDate", this.reportType.columnHeader, 2, 0, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobId", "Job Code", 1, 0, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("name","Site Name", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("address1","Street 1", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("city","City", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("state","State", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("budget","Budget", 1, 0, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("pricePerCleaning","PPC", 1, 0, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobNbr","Job #", 1, 0, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("freq","Freq", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobStatus","Status", 1, 0, DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("leadType","Lead Type", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("volume","Volume", 1, 0, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());

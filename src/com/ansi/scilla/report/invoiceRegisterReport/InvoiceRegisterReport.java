@@ -144,15 +144,15 @@ public class InvoiceRegisterReport extends StandardReport {
 	private void makeData(Connection conn) throws Exception {
 		super.setSubtitle(makeSubtitle());
 		super.setHeaderRow(new ColumnHeader[] {
-			new ColumnHeader("clientName","Client Name", DataFormats.STRING_FORMAT, SummaryType.NONE),
-			new ColumnHeader("jobId", "Job ID", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("ticketId", "Ticket ID", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
-			new ColumnHeader("ticketType", "Type", DataFormats.STRING_CENTERED, SummaryType.NONE),
-			new ColumnHeader("dateComplete", "Date Complete", DataFormats.DATE_FORMAT, SummaryType.NONE),
-			new ColumnHeader("invoiceId", "Invoice #", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("invoiceDate","Invoice Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
-			new ColumnHeader("invoiceAmount", "Invoice Amount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM, "clientName"),
-			new ColumnHeader("buildingName","Building Name", DataFormats.STRING_FORMAT, SummaryType.NONE)
+			new ColumnHeader("clientName","Client Name", 2, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+			new ColumnHeader("jobId", "Job ID", 1, 0, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("ticketId", "Ticket ID", 1, 0, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
+			new ColumnHeader("ticketType", "Type", 1, 0, DataFormats.STRING_CENTERED, SummaryType.NONE),
+			new ColumnHeader("dateComplete", "Date Complete", 1, 0, DataFormats.DATE_FORMAT, SummaryType.NONE),
+			new ColumnHeader("invoiceId", "Invoice #", 1, 0, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("invoiceDate","Invoice Date", 1, 0, DataFormats.DATE_FORMAT, SummaryType.NONE),
+			new ColumnHeader("invoiceAmount", "Invoice Amount", 1, 0, DataFormats.DECIMAL_FORMAT, SummaryType.SUM, "clientName"),
+			new ColumnHeader("buildingName","Building Name", 2, 0, DataFormats.STRING_FORMAT, SummaryType.NONE)
 		});
 		
 		Method getRunDateMethod = this.getClass().getMethod("getRunDate", (Class<?>[])null);

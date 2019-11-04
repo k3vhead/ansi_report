@@ -264,18 +264,18 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		super.setHeaderNotes(REPORT_NOTE);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("ticketId", "Ticket", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
+				new ColumnHeader("ticketId", "Ticket", 2, 0, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
 //				new ColumnHeader("fleetmaticsId", "Tkt # FM", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("name","Site", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("address1","Street 1", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("city","City", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("lastRun","Last Run", DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("startDate","Run Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("pricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "ticketStatus"),
-				new ColumnHeader("jobNbr","J#", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
-				new ColumnHeader("jobFrequency", "FREQ", DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("ticketStatus", "ST", DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("invoiceStyle", "Invoice Style", DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("name","Site", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("address1","Street 1", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("city","City", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("lastRun","Last Run", 1, 0, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("startDate","Run Date", 1, 0, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("pricePerCleaning","PPC", 1, 0, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "ticketStatus"),
+				new ColumnHeader("jobNbr","J#", 1, 0, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
+				new ColumnHeader("jobFrequency", "FREQ", 1, 0, DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("ticketStatus", "ST", 1, 0, DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("invoiceStyle", "Invoice Style", 2, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());

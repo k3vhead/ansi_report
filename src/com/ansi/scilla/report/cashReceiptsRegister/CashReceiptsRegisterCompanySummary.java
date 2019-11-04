@@ -135,10 +135,10 @@ public class CashReceiptsRegisterCompanySummary extends StandardReport {
 		super.setHeaderNotes(REPORT_NOTES);
 
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("name", "Company", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("amount", "Invoices\nPaid\nAmount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
-				new ColumnHeader("taxAmt", "Taxes\nPaid\nAmount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
-				new ColumnHeader("total", "Total\nPayment\nAmount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM)//,
+				new ColumnHeader("name", "Company", 2, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("amount", "Invoices\nPaid\nAmount", 1, 0, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
+				new ColumnHeader("taxAmt", "Taxes\nPaid\nAmount", 1, 0, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
+				new ColumnHeader("total", "Total\nPayment\nAmount", 2, 0, DataFormats.DECIMAL_FORMAT, SummaryType.SUM)//,
 //				new ColumnHeader("excess", "Excess Cash Amount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM)
 		});
 		
