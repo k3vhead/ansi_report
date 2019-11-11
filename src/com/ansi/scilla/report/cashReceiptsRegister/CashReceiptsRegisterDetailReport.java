@@ -235,7 +235,7 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 //		super.setHeaderNotes(REPORT_NOTES);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("billToName","Client Name", 2, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("billToName","Client Name", 3, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobId", "Job Code", 1, 0, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 				new ColumnHeader("ticketId", "Ticket", 1, 0, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 				new ColumnHeader("invoiceDate", "Invoice Date", 1, 0, DataFormats.DATE_FORMAT, SummaryType.NONE),

@@ -92,7 +92,7 @@ public class XLSBuilder extends AbstractXLSBuilder {
 		if ( ! StringUtils.isBlank(report.getHeaderNotes())) {			
 			row = XLSReportBuilderUtils.makeRow(sheet, startingRow + headerRowCount); //sheet.createRow(startingRow + headerRowCount);
 			String reportNote = this.report.getHeaderNotes();
-			Integer endCell = report.getHeaderRow().length + 1;
+			Integer endCell = report.getHeaderRow().length;
 			sheet.addMergedRegion(new CellRangeAddress(headerRowCount, headerRowCount, 0, endCell));
 			cell = row.createCell(0);
 			cell.setCellStyle(rf.cellStyleReportNote);
@@ -158,20 +158,25 @@ public class XLSBuilder extends AbstractXLSBuilder {
 				ColumnHeader columnHeader = report.getHeaderRow()[i];				
 				Object value = makeDisplayData(columnHeader, dataRow);
 				super.doSummaries(columnHeader, value);
-				if ( i == 1 ) {
-					columnIndex++;
-					Integer startMerge = this.reportStartLoc.columnIndex;
-					Integer endMerge = this.reportStartLoc.columnIndex + 1;
-					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startMerge, endMerge)); 
+				if ( columnHeader.getColspan() > 0 ) {
+					Integer firstColumn = columnIndex;
+					Integer lastColumn = firstColumn + columnHeader.getColspan() - 1;
+					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, firstColumn, lastColumn));
+//					columnIndex = columnIndex + columnHeader.getColspan() - 1;
 				}
-				if ( i == report.getHeaderRow().length - 1 ) {
-					Integer startMerge = this.reportStartLoc.columnIndex + report.getHeaderRow().length;
-					Integer endMerge = this.reportStartLoc.columnIndex + report.getHeaderRow().length + 1;
-					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startMerge, endMerge));
-				}
+//				if ( i == 1 ) {
+//					columnIndex++;
+//					Integer startMerge = this.reportStartLoc.columnIndex;
+//					Integer endMerge = this.reportStartLoc.columnIndex + 1;
+//					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startMerge, endMerge)); 
+//				}
+//				if ( i == report.getHeaderRow().length - 1 ) {
+//					Integer startMerge = this.reportStartLoc.columnIndex + report.getHeaderRow().length;
+//					Integer endMerge = this.reportStartLoc.columnIndex + report.getHeaderRow().length + 1;
+//					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startMerge, endMerge));
+//				}
 				super.populateCell(columnHeader, value, columnIndex, dataRow, row);
-				columnIndex++;
-
+				columnIndex = columnIndex + columnHeader.getColspan();
 			}
 			rowNum++;
 		}

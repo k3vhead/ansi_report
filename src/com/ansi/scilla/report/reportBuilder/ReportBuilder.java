@@ -215,7 +215,7 @@ public abstract class ReportBuilder extends ApplicationObject {
 		if ( columnHeader.getSummaryType().equals(SummaryType.AVERAGE)) {
 			Integer count = reportCount.get(columnHeader.getFieldName());
 			Double sum = reportSum.get(columnHeader.getFieldName());
-			Double value = sum / new Double(count);
+			Double value = sum / Double.valueOf(count);
 			display = makeFormattedDisplayData(columnHeader.getFormatter(), value);
 		} else if ( columnHeader.getSummaryType().equals(SummaryType.COUNT)) {
 			Integer value = reportCount.get(columnHeader.getFieldName());
@@ -240,7 +240,7 @@ public abstract class ReportBuilder extends ApplicationObject {
 		if ( columnHeader.getSummaryType().equals(SummaryType.AVERAGE)) {
 			Integer count = subtotalCount.get(fieldName);
 			Double sum = subtotalSum.get(fieldName);
-			Double value = sum / new Double(count);
+			Double value = sum / Double.valueOf(count);
 			display = makeFormattedDisplayData(columnHeader.getFormatter(), value);
 		} else if ( columnHeader.getSummaryType().equals(SummaryType.COUNT)) {
 			Integer value = subtotalCount.get(fieldName);

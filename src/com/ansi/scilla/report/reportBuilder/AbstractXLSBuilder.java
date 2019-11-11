@@ -297,13 +297,17 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 			for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
 				ColumnHeader columnHeader = report.getHeaderRow()[i];
 				
-				if ( i == 1 ) {
-					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
-					columnIndex++;
+				if ( columnHeader.getColspan() > 0 ) {
+					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, columnIndex, columnIndex + columnHeader.getColspan()));
+					columnIndex = columnIndex + columnHeader.getColspan();
 				}
-				if ( i == report.getHeaderRow().length - 1 ) {
-					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, report.getHeaderRow().length, report.getHeaderRow().length+1));
-				}
+//				if ( i == 1 ) {
+//					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+//					columnIndex++;
+//				}
+//				if ( i == report.getHeaderRow().length - 1 ) {
+//					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, report.getHeaderRow().length, report.getHeaderRow().length+1));
+//				}
 				
 				String fieldName = columnHeader.getFieldName();
 				if ( fieldsToDisplay.contains(fieldName)) {
@@ -343,20 +347,27 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 
 			int columnIndex = 0;
 			for ( int i = 0; i < subtotalValues.length; i++ ) {
-				if ( i == 1 ) {
-					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
-					columnIndex++;
+				ColumnHeader columnHeader = report.getHeaderRow()[i];
+				if ( columnHeader.getColspan() > 1 ) {
+					Integer firstColumn = columnIndex;
+					Integer lastColumn = firstColumn + columnHeader.getColspan() - 1;
+					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, firstColumn, lastColumn));
 				}
-				if ( i == report.getHeaderRow().length - 1 ) {
-					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, report.getHeaderRow().length, report.getHeaderRow().length+1));
-				}
+//				if ( i == 1 ) {
+//					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+//					columnIndex++;
+//				}
+//				if ( i == report.getHeaderRow().length - 1 ) {
+//					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, report.getHeaderRow().length, report.getHeaderRow().length+1));
+//				}
 				if ( ! StringUtils.isBlank(subtotalValues[i]) ) {
 					// we're doing a subtotal for this field				
 					XSSFCell reportCell = reportRow.createCell(columnIndex);
 					reportCell.setCellValue(subtotalValues[i]);
 					reportCell.setCellStyle(rf.cellStyleSubtotalDecimal);
 				}
-				columnIndex++;
+//				columnIndex++;
+				columnIndex = columnIndex + columnHeader.getColspan();
 			}
 		}
 	}
@@ -373,17 +384,22 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 		int columnIndex = this.reportStartLoc.columnIndex;
 		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
 			ColumnHeader columnHeader = report.getHeaderRow()[i];
-			if ( i == 1 ) {
-				Integer startMerge = this.reportStartLoc.columnIndex;
-				Integer endMerge = this.reportStartLoc.columnIndex + 1;
-				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startMerge, endMerge));
-				columnIndex++;
+			if ( columnHeader.getColspan() > 0 ) {
+				Integer firstColumn = columnIndex;
+				Integer lastColumn = firstColumn + columnHeader.getColspan() - 1;
+				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, firstColumn, lastColumn));
 			}
-			if ( i == report.getHeaderRow().length - 1 ) {
-				Integer startMerge = this.reportStartLoc.columnIndex + report.getHeaderRow().length;
-				Integer endMerge = this.reportStartLoc.columnIndex + report.getHeaderRow().length + 1;
-				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startMerge, endMerge));
-			}
+//			if ( i == 1 ) {
+//				Integer startMerge = this.reportStartLoc.columnIndex;
+//				Integer endMerge = this.reportStartLoc.columnIndex + 1;
+//				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startMerge, endMerge));
+//				columnIndex++;
+//			}
+//			if ( i == report.getHeaderRow().length - 1 ) {
+//				Integer startMerge = this.reportStartLoc.columnIndex + report.getHeaderRow().length;
+//				Integer endMerge = this.reportStartLoc.columnIndex + report.getHeaderRow().length + 1;
+//				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startMerge, endMerge));
+//			}
 			cell = row.createCell(columnIndex);
 			if ( !columnHeader.getSummaryType().equals(SummaryType.NONE)) {
 				addASummary = true;
@@ -391,7 +407,7 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 				cell.setCellValue(makeSummaryData(columnHeader));
 				cell.setCellStyle(cellStyles.get(columnHeader.getFormatter()));
 			}
-			columnIndex++;
+			columnIndex = columnIndex + columnHeader.getColspan();
 		}
 		rowNum++;
 	}

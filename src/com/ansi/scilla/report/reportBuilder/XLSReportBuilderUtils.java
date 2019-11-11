@@ -58,7 +58,7 @@ public class XLSReportBuilderUtils extends ReportBuilderUtils {
 			Integer headerRowNum = startingRow + headerRowCount;
 			row = makeRow(sheet, headerRowNum);
 			String reportNote = report.getHeaderNotes();
-			Integer endCell = report.getHeaderRow().length + 1;
+			Integer endCell = report.getHeaderRow().length; // + 1;
 			sheet.addMergedRegion(new CellRangeAddress(headerRowCount, headerRowCount, 0, endCell));
 			cell = row.createCell(0);
 			cell.setCellStyle(rf.cellStyleReportNote);
@@ -237,19 +237,34 @@ public class XLSReportBuilderUtils extends ReportBuilderUtils {
 		row = XLSReportBuilderUtils.makeRow(sheet, rowNum);  //sheet.createRow(rowNum);
 
 //		row.setHeight(rf.standardHeaderHeight);
+		short rowHeight = row.getHeight();
+		int maxLines = -1;
+		for ( ColumnHeader columnHeader : report.getHeaderRow() ) {
+			String[] pieces = StringUtils.split(columnHeader.getLabel(), "\n");
+			if ( pieces.length > maxLines ) {
+				maxLines = pieces.length;
+			}
+		}
+		row.setHeight((short)(rowHeight*maxLines));
 		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
 			ColumnHeader columnHeader = report.getHeaderRow()[i];
-			if ( i == 1 ) {
-				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn, startingColumn + 1));
-				columnIndex++;
+			if ( columnHeader.getColspan() > 0 ) {
+				Integer firstColumn = columnIndex;
+				Integer lastColumn = firstColumn + columnHeader.getColspan() - 1;
+				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, firstColumn, lastColumn));
 			}
-			if ( i == report.getHeaderRow().length - 1 ) {
-				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn + report.getHeaderRow().length, startingColumn + report.getHeaderRow().length+1));
-			}
+//			if ( i == 1 ) {
+//				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn, startingColumn + 1));
+//				columnIndex++;
+//			}
+//			if ( i == report.getHeaderRow().length - 1 ) {
+//				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn + report.getHeaderRow().length, startingColumn + report.getHeaderRow().length+1));
+//			}
 			cell = row.createCell(columnIndex);
 			cell.setCellValue(columnHeader.getLabel());
 			cell.setCellStyle(rf.cellStyleColHdrLeft);
-			columnIndex++;
+//			columnIndex++;
+			columnIndex = columnIndex + columnHeader.getColspan();
 		}
 	}
 }

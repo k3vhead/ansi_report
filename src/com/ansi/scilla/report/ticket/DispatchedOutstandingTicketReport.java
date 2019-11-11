@@ -275,7 +275,7 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 				new ColumnHeader("jobNbr","J#", 1, 0, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
 				new ColumnHeader("jobFrequency", "FREQ", 1, 0, DataFormats.STRING_CENTERED, SummaryType.NONE),
 				new ColumnHeader("ticketStatus", "ST", 1, 0, DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("invoiceStyle", "Invoice Style", 2, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("invoiceStyle", "Invoice Style", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());

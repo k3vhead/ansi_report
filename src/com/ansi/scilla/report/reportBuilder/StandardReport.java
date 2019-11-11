@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.functors.InvokerTransformer;
 import org.apache.commons.collections.functors.UniquePredicate;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -53,7 +52,12 @@ public abstract class StandardReport extends AbstractReport {
 
 	@Override
 	public Integer getReportWidth() {
-		return this.getHeaderRow().length + 2;  // we add 2 because first and last columns are double wide
+//		return this.getHeaderRow().length + 2;  // we add 2 because first and last columns are double wide
+		Integer reportWidth = 0;
+		for ( ColumnHeader columnHeader : this.getHeaderRow() ) {
+			reportWidth = reportWidth + columnHeader.getColspan();
+		}
+		return reportWidth;
 	}
 
 	@SuppressWarnings("unchecked")

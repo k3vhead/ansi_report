@@ -3,7 +3,10 @@ package com.ansi.scilla.report.test;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
@@ -12,15 +15,17 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.utils.AppUtils;
+import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
 import com.ansi.scilla.report.reportBuilder.HTMLBuilder;
 import com.ansi.scilla.report.reportBuilder.XLSBuilder;
-import com.ansi.scilla.report.sixMonthRollingVolume.SixMonthRollingVolumeReport;;
+import com.ansi.scilla.report.sixMonthRollingVolume.SixMonthRollingVolumeReport;
+import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;;
 
 
 public class DavesReportTester {
 
-	private final String testResultDirectory = "/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_headers/";
+	private final String testResultDirectory = "/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_headers/ansi_report/";
 	
 	protected ReportType reportType;
 	protected Calendar startDate;
@@ -57,7 +62,9 @@ public class DavesReportTester {
 			
 //			makeClientUsage(conn);
 //			make6mrv(conn);
-			makePastDue2(conn);
+//			makePastDue2(conn);
+//			makeCRR(conn);
+			makeDO(conn);
 			
 			conn.rollback();
 		} finally {
@@ -68,6 +75,28 @@ public class DavesReportTester {
 		logger.info("Done");		
 	}
 
+
+	private void makeDO(Connection conn) throws Exception {
+		Calendar endDate = new GregorianCalendar(2019, Calendar.AUGUST, 31);
+		DispatchedOutstandingTicketReport report = DispatchedOutstandingTicketReport.buildReport(conn, 101, endDate);
+		XSSFWorkbook workbook = XLSBuilder.build(report);
+		workbook.write(new FileOutputStream(makeFileName("DO_Ticket")));
+	}
+
+	private void makeCRR(Connection conn) throws Exception {
+		Calendar startDate = new GregorianCalendar(2019, Calendar.AUGUST, 1);
+		Calendar endDate = new GregorianCalendar(2019, Calendar.AUGUST, 31);
+		CashReceiptsRegisterDetailReport crrDetail = CashReceiptsRegisterDetailReport.buildReport(conn, startDate, endDate);
+		XSSFWorkbook workbook = XLSBuilder.build(crrDetail);
+		workbook.write(new FileOutputStream(makeFileName("CRR_DETAIL")));
+	}
+
+	private String makeFileName(String fileName) {
+		Date today = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddhhmmss");
+//		testResultDirectory + "CRR_Detail.xlsx"
+		return testResultDirectory + fileName + "_" + sdf.format(today) + ".xlsx";
+	}
 
 	private void make6mrv(Connection conn) throws Exception {
 		Integer divisionId = 101;
