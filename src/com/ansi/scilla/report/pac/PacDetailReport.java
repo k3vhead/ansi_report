@@ -24,6 +24,7 @@ import com.ansi.scilla.common.jobticket.JobFrequency;
 import com.ansi.scilla.common.jobticket.JobStatus;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
@@ -249,6 +250,20 @@ public class PacDetailReport extends StandardReport {
 				new ReportHeaderRow("To:", getEndDateMethod, 3, DataFormats.DATE_FORMAT)
 		});
 		super.makeHeaderRight(headerRight);
+		
+		super.setColumnWidths(new Integer[] {
+				ColumnWidth.DATE.width(),
+				ColumnWidth.DATETIME.width(),
+				ColumnWidth.ADDRESS_NAME.width(),
+				ColumnWidth.ADDRESS_ADDRESS1.width(),
+				ColumnWidth.ADDRESS_CITY.width(),
+				ColumnWidth.ADDRESS_STATE.width(),
+				(Integer)null,
+				(Integer)null,
+				ColumnWidth.JOB_JOB_NBR.width(),
+				ColumnWidth.JOB_JOB_FREQUENCY.width(),
+				ColumnWidth.JOB_JOB_STATUS.width(),
+		});
 	}
 	
 	

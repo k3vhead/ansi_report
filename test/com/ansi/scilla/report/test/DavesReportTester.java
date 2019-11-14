@@ -62,8 +62,8 @@ public class DavesReportTester {
 //			makeClientUsage(conn);
 //		threadList.add(new Thread(new MakeCRR()));
 //		threadList.add(new Thread(new MakeDO()));
-		threadList.add(new Thread(new MakeInvoiceRegister()));
-//		threadList.add(new Thread(new MakePACListing()));
+//		threadList.add(new Thread(new MakeInvoiceRegister()));
+		threadList.add(new Thread(new MakePACListing()));
 //			makePastDue2(conn);
 //		threadList.add(new Thread(new MakeTicketStatus()));
 

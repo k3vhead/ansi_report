@@ -10,6 +10,7 @@ package com.ansi.scilla.report.reportBuilder;
  */
 public enum ColumnWidth {
 	DATETIME(3750),
+	DATE(2750),
 	HEADER_COL1(2000),
 	HEADER_COL_RIGHT(2000),
 	
