@@ -283,10 +283,10 @@ public class PacSummaryReport extends StandardReport {
 //		super.setHeaderNotes(REPORT_NOTES);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("jobStatus", "", 2, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobCount", "Jobs", 1, 0, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("pricePerCleaning","PPC", 1, 0, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
-				new ColumnHeader("volume","Volume", 2, 0, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobStatus", "", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobCount", "Jobs", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("pricePerCleaning","PPC", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("volume","Volume", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());

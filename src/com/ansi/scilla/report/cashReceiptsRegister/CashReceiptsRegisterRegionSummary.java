@@ -9,7 +9,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,7 +20,6 @@ import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
 
@@ -137,10 +135,10 @@ public class CashReceiptsRegisterRegionSummary extends StandardReport {
 		super.setHeaderNotes(REPORT_NOTES);
 
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("name", "Region", 2, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("amount", "Invoices\nPaid\nAmount", 1, 0, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
-				new ColumnHeader("taxAmt", "Taxes\nPaid\nAmount", 1, 0, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
-				new ColumnHeader("total", "Total\nPayment\nAmount", 2, 0, DataFormats.DECIMAL_FORMAT, SummaryType.SUM)//,
+				new ColumnHeader("name", "Region", 2, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("amount", "Invoices\nPaid\nAmount", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
+				new ColumnHeader("taxAmt", "Taxes\nPaid\nAmount", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
+				new ColumnHeader("total", "Total\nPayment\nAmount", 2, DataFormats.DECIMAL_FORMAT, SummaryType.SUM)//,
 //				new ColumnHeader("excess", "Excess Cash Amount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM)
 		});
 		

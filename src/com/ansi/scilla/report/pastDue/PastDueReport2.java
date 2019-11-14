@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFPrintSetup;
@@ -146,15 +146,15 @@ public class PastDueReport2 extends StandardReport {
 	private void makeData(Connection conn, Calendar pastDueDate, Integer divisionId) throws Exception {
 		//super.setSubtitle(makeSubtitle());
 		super.setHeaderRow(new ColumnHeader[] {
-			new ColumnHeader("billToName", "BILL TO NAME", 2, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),//BILL TO NAME
-			new ColumnHeader("ticketId","Ticket\nInvoice", 1, 0, DataFormats.STRING_CENTERED, SummaryType.NONE),//JOB#
-			new ColumnHeader("invoiceDate", "Completed\nInvoiced", 1, 0, DataFormats.DATE_FORMAT, SummaryType.NONE),//completed invoiced dates
-			new ColumnHeader("jobId", "JOB", 1, 0, DataFormats.STRING_CENTERED, SummaryType.NONE),//job number
-			new ColumnHeader("actPPC", "PPC", 1, 0, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//actPPC
-			new ColumnHeader("amountPaid", "PAID", 1, 0, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//Paid Amount
-			new ColumnHeader("amountDue", "DUE", 1, 0, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
-			new ColumnHeader("amountPastDue", "PAST DUE", 1, 0, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
-			new ColumnHeader("jobSiteAddress", "SITE ADDRESS", 2, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),//siteAddress
+			new ColumnHeader("billToName", "BILL TO NAME", 2, DataFormats.STRING_FORMAT, SummaryType.NONE),//BILL TO NAME
+			new ColumnHeader("ticketId","Ticket\nInvoice", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),//JOB#
+			new ColumnHeader("invoiceDate", "Completed\nInvoiced", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),//completed invoiced dates
+			new ColumnHeader("jobId", "JOB", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),//job number
+			new ColumnHeader("actPPC", "PPC", 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//actPPC
+			new ColumnHeader("amountPaid", "PAID", 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//Paid Amount
+			new ColumnHeader("amountDue", "DUE", 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
+			new ColumnHeader("amountPastDue", "PAST DUE", 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
+			new ColumnHeader("jobSiteAddress", "SITE ADDRESS", 2, DataFormats.STRING_FORMAT, SummaryType.NONE),//siteAddress
 		});		
 		
 		java.sql.Date myDate = new java.sql.Date(pastDueDate.getTimeInMillis());

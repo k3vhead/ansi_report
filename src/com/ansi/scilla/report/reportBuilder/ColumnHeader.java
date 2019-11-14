@@ -12,10 +12,9 @@ public class ColumnHeader extends ApplicationObject {
 	private SummaryType summaryType;	
 	private String subTotalTrigger;
 	private Integer colspan;
-	private Integer width;
 	
-	public ColumnHeader(String fieldName, String label, Integer colspan, Integer width, DataFormats formatter, SummaryType summaryType) {
-		this(fieldName, label, colspan, width, formatter, summaryType, null);
+	public ColumnHeader(String fieldName, String label, Integer colspan, DataFormats formatter, SummaryType summaryType) {
+		this(fieldName, label, colspan, formatter, summaryType, null);
 	}
 	
 	/**
@@ -28,7 +27,7 @@ public class ColumnHeader extends ApplicationObject {
 	 * @param summaryType Whether/what kind of summary to display at end of column
 	 * @param subTotalTrigger - name of the field that, upon value change, triggers the display of a subtotal
 	 */
-	public ColumnHeader(String fieldName, String label, Integer colspan, Integer width, DataFormats formatter, SummaryType summaryType, String subTotalTrigger) {
+	public ColumnHeader(String fieldName, String label, Integer colspan, DataFormats formatter, SummaryType summaryType, String subTotalTrigger) {
 		super();
 		this.fieldName = fieldName;
 		this.label = label;
@@ -36,7 +35,6 @@ public class ColumnHeader extends ApplicationObject {
 		this.summaryType = summaryType;
 		this.subTotalTrigger = subTotalTrigger;
 		this.colspan = colspan;
-		this.width = width;
 	}
 	
 	public String getFieldName() {
@@ -80,13 +78,6 @@ public class ColumnHeader extends ApplicationObject {
 		this.colspan = colspan;
 	}
 
-	public Integer getWidth() {
-		return width;
-	}
-
-	public void setWidth(Integer width) {
-		this.width = width;
-	}
 	
 	
 }

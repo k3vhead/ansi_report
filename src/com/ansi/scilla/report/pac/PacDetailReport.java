@@ -12,8 +12,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Logger;
 import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -207,19 +207,19 @@ public class PacDetailReport extends StandardReport {
 //		super.setHeaderNotes(REPORT_NOTES);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("reportDate", this.reportType.columnHeader, 2, 0, DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobId", "Job Code", 1, 0, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("name","Site Name", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("address1","Street 1", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("city","City", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("state","State", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("budget","Budget", 1, 0, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
-				new ColumnHeader("pricePerCleaning","PPC", 1, 0, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobNbr","Job #", 1, 0, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("freq","Freq", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobStatus","Status", 1, 0, DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("leadType","Lead Type", 1, 0, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("volume","Volume", 1, 0, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("reportDate", this.reportType.columnHeader, 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobId", "Job Code", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("name","Site Name", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("address1","Street 1", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("city","City", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("state","State", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("budget","Budget", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("pricePerCleaning","PPC", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobNbr","Job #", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("freq","Freq", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobStatus","Status", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("leadType","Lead Type", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("volume","Volume", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());

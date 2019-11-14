@@ -266,5 +266,11 @@ public class XLSReportBuilderUtils extends ReportBuilderUtils {
 //			columnIndex++;
 			columnIndex = columnIndex + columnHeader.getColspan();
 		}
+		
+		for ( int i = 0; i < report.getColumnWidths().length; i++ ) {
+			if ( report.getColumnWidths()[i] != null && report.getColumnWidths()[i] > 0 ) {
+				sheet.setColumnWidth(i, report.getColumnWidths()[i]);
+			}
+		}
 	}
 }

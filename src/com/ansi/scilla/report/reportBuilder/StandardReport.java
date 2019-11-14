@@ -18,9 +18,11 @@ public abstract class StandardReport extends AbstractReport {
 	private static final long serialVersionUID = 1L;
 
 	private ColumnHeader[] headerRow;
+	private Integer[] columnWidths;
 	private String[] pageBreakFieldList;	
 	private List<Object> dataRows;
-	private Logger logger = LogManager.getLogger(this.getClass());
+	protected Logger logger = LogManager.getLogger(this.getClass());
+
 	
 	public StandardReport() {
 		super();
@@ -33,6 +35,15 @@ public abstract class StandardReport extends AbstractReport {
 	public void setHeaderRow(ColumnHeader[] headerRow) {
 		this.headerRow = headerRow;		
 	}
+	
+	public Integer[] getColumnWidths() {
+		return columnWidths;
+	}
+
+	public void setColumnWidths(Integer[] columnWidths) {
+		this.columnWidths = columnWidths;
+	}
+
 	public String[] getPageBreakFieldList() {
 		return pageBreakFieldList;
 	}
@@ -49,7 +60,10 @@ public abstract class StandardReport extends AbstractReport {
 	public void addDataRow(Object dataRow) {
 		this.dataRows.add(dataRow);		
 	}
+	
 
+	
+	
 	@Override
 	public Integer getReportWidth() {
 //		return this.getHeaderRow().length + 2;  // we add 2 because first and last columns are double wide
