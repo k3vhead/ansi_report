@@ -154,6 +154,9 @@ public class XLSBuilder extends AbstractXLSBuilder {
 			rowNum = makeSubtotal(report, sheet, dataRow, rowNum);
 			row = XLSReportBuilderUtils.makeRow(sheet, rowNum);   //sheet.createRow(rowNum);	
 			int columnIndex = this.reportStartLoc.columnIndex;
+			if ( this.report instanceof StandardReport ) {
+				columnIndex = columnIndex + ((StandardReport)this.report).getFirstDetailColumn();
+			}
 			for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
 				ColumnHeader columnHeader = report.getHeaderRow()[i];				
 				Object value = makeDisplayData(columnHeader, dataRow);

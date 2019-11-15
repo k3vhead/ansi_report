@@ -298,8 +298,10 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 				ColumnHeader columnHeader = report.getHeaderRow()[i];
 				
 				if ( columnHeader.getColspan() > 0 ) {
-					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, columnIndex, columnIndex + columnHeader.getColspan()));
-					columnIndex = columnIndex + columnHeader.getColspan();
+					Integer firstColumn = columnIndex;
+					Integer lastColumn = columnIndex + columnHeader.getColspan() - 1;
+					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, firstColumn, lastColumn));
+//					columnIndex = columnIndex + columnHeader.getColspan();
 				}
 //				if ( i == 1 ) {
 //					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
@@ -316,7 +318,7 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 					reportCell.setCellValue(subtotal);
 					reportCell.setCellStyle(rf.cellStyleSubtotalDecimal);
 				}
-				columnIndex++;
+				columnIndex = columnIndex + columnHeader.getColspan();
 			}
 			rowNum++;  // we added a row, so the location of the next detail row needs to be incremented
 

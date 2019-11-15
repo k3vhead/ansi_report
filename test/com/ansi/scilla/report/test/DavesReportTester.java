@@ -60,12 +60,12 @@ public class DavesReportTester {
 		
 //			make6mrv(conn);
 //			makeClientUsage(conn);
-//		threadList.add(new Thread(new MakeCRR()));
-//		threadList.add(new Thread(new MakeDO()));
-//		threadList.add(new Thread(new MakeInvoiceRegister()));
+		threadList.add(new Thread(new MakeCRRDetail()));
+		threadList.add(new Thread(new MakeDO()));
+		threadList.add(new Thread(new MakeInvoiceRegister()));
 		threadList.add(new Thread(new MakePACListing()));
 //			makePastDue2(conn);
-//		threadList.add(new Thread(new MakeTicketStatus()));
+		threadList.add(new Thread(new MakeTicketStatus()));
 
 		for ( Thread thread : threadList ) {
 			thread.start();
@@ -135,7 +135,7 @@ public class DavesReportTester {
 	
 	}
 
-	public class MakeCRR extends ReportMaker {
+	public class MakeCRRDetail extends ReportMaker {
 		@Override
 		public void makeReport(Connection conn) throws Exception {
 			logger.info("Start CRR");

@@ -232,7 +232,7 @@ public class XLSReportBuilderUtils extends ReportBuilderUtils {
 		XSSFCell cell = null;
 		
 		int rowNum = reportStartLoc.rowIndex + XLSReportBuilderUtils.makeHeaderRowCount(report) + 1;
-		int columnIndex = reportStartLoc.columnIndex;
+		int columnIndex = reportStartLoc.columnIndex + report.getFirstDetailColumn();
 		int startingColumn = reportStartLoc.columnIndex;
 		row = XLSReportBuilderUtils.makeRow(sheet, rowNum);  //sheet.createRow(rowNum);
 

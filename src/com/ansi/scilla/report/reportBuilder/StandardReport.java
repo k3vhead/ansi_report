@@ -22,6 +22,7 @@ public abstract class StandardReport extends AbstractReport {
 	private String[] pageBreakFieldList;	
 	private List<Object> dataRows;
 	protected Logger logger = LogManager.getLogger(this.getClass());
+	private Integer firstDetailColumn = 0; //column number for the first data detail column
 
 	
 	public StandardReport() {
@@ -60,10 +61,13 @@ public abstract class StandardReport extends AbstractReport {
 	public void addDataRow(Object dataRow) {
 		this.dataRows.add(dataRow);		
 	}
-	
+	public Integer getFirstDetailColumn() {
+		return firstDetailColumn;
+	}
+	public void setFirstDetailColumn(Integer firstDetailColumn) {
+		this.firstDetailColumn = firstDetailColumn;
+	}
 
-	
-	
 	@Override
 	public Integer getReportWidth() {
 //		return this.getHeaderRow().length + 2;  // we add 2 because first and last columns are double wide

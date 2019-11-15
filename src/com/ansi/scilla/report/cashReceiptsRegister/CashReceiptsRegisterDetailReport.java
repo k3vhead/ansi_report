@@ -23,6 +23,7 @@ import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
@@ -181,7 +182,7 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 //		super.setHeaderNotes(REPORT_NOTES);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("billToName","Client Name", 2, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("billToName","Client Name", 3, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobId", "Job Code", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 				new ColumnHeader("ticketId", "Ticket", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 				new ColumnHeader("invoiceDate", "Invoice Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
@@ -216,6 +217,25 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 				new ReportHeaderRow("To:", getEndDateMethod, 3, DataFormats.DATE_FORMAT)
 		});
 		super.makeHeaderRight(headerRight);
+		
+		super.setColumnWidths(new Integer[] {
+				(Integer)null,
+				ColumnWidth.DATETIME.width(),
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				Math.max(0, ColumnWidth.ADDRESS_NAME.width() - ColumnWidth.DATE.width()),
+		});
 	}
 	
 	public void makeXLS(XSSFWorkbook workbook) throws Exception {

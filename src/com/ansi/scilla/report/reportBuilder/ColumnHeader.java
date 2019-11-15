@@ -21,8 +21,7 @@ public class ColumnHeader extends ApplicationObject {
 	 * Make a column header for report details
 	 * @param fieldName Field name
 	 * @param label Text for the column header
-	 * @param coolspan For use by the XLS Builder: The number of cells to be merged horizontally
-	 * @param width For use by the XLS Builder: The width of the column
+	 * @param colspan For use by the XLS Builder: The number of cells to be merged horizontally
 	 * @param formatter Method for formatting the data
 	 * @param summaryType Whether/what kind of summary to display at end of column
 	 * @param subTotalTrigger - name of the field that, upon value change, triggers the display of a subtotal

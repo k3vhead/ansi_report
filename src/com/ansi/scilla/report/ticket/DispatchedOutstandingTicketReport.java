@@ -25,6 +25,7 @@ import com.ansi.scilla.common.jobticket.TicketStatus;
 import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
@@ -309,7 +310,20 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		});
 		super.makeHeaderRight(headerRight);
 
-		
+		super.setColumnWidths(new Integer[] {
+				(Integer)null,
+				ColumnWidth.DATETIME.width(),
+				ColumnWidth.ADDRESS_NAME.width() - ColumnWidth.DATETIME.width(),
+				ColumnWidth.ADDRESS_ADDRESS1.width(),
+				ColumnWidth.ADDRESS_CITY.width(),
+				ColumnWidth.DATE.width(),
+				ColumnWidth.DATE.width(),
+				ColumnWidth.JOB_PPC.width(),
+				ColumnWidth.JOB_JOB_NBR.width(),
+				ColumnWidth.JOB_JOB_FREQUENCY.width(),
+				ColumnWidth.HDR_RIGHT_NON_DISPATCHED.width(),
+				(Integer)null,
+		});
 		//Method getDispOutstanding = this.getClass().getMethod("getDispOutstanding", (Class<?>[])null);
 		//Method getFinished = this.getClass().getMethod("getFinished", (Class<?>[])null);
 		

@@ -250,6 +250,18 @@ public class TicketStatusReport extends StandardReport {
 				new ReportHeaderRow("Tickets:", dataSizeMethod, 2, DataFormats.INTEGER_FORMAT)
 		});
 		super.makeHeaderRight(headerRight);
+		
+		super.setColumnWidths(new Integer[] {
+				ColumnWidth.DATE.width(),
+				ColumnWidth.DATETIME.width(),
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				ColumnWidth.JOB_JOB_NBR.width(),
+				ColumnWidth.ADDRESS_NAME.width(),
+				ColumnWidth.ADDRESS_ADDRESS1.width(),				
+		});
 	}
 	
 	
