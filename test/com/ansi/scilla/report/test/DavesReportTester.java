@@ -15,9 +15,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.ansi.scilla.common.db.ApplicationProperties;
 import com.ansi.scilla.common.utils.AppUtils;
 import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
+import com.ansi.scilla.report.datadumps.AccountsReceivableTotalsOver60Detail;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
 import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
@@ -59,13 +59,14 @@ public class DavesReportTester {
 		List<Thread> threadList = new ArrayList<Thread>();
 		
 //			make6mrv(conn);
+		threadList.add(new Thread(new MakeAROver60()));
 //			makeClientUsage(conn);
-		threadList.add(new Thread(new MakeCRRDetail()));
-		threadList.add(new Thread(new MakeDO()));
-		threadList.add(new Thread(new MakeInvoiceRegister()));
-		threadList.add(new Thread(new MakePACListing()));
+//		threadList.add(new Thread(new MakeCRRDetail()));
+//		threadList.add(new Thread(new MakeDO()));
+//		threadList.add(new Thread(new MakeInvoiceRegister()));
+//		threadList.add(new Thread(new MakePACListing()));
 //			makePastDue2(conn);
-		threadList.add(new Thread(new MakeTicketStatus()));
+//		threadList.add(new Thread(new MakeTicketStatus()));
 
 		for ( Thread thread : threadList ) {
 			thread.start();
@@ -135,6 +136,19 @@ public class DavesReportTester {
 	
 	}
 
+	public class MakeAROver60 extends ReportMaker {
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start AROver60");
+			AccountsReceivableTotalsOver60Detail crrDetail = AccountsReceivableTotalsOver60Detail.buildReport(conn);
+			XSSFWorkbook workbook = crrDetail.makeXLS();
+			workbook.write(new FileOutputStream(makeFileName("AROver60")));
+			logger.info("End AROver60");			
+		}
+		
+	}
+	
+	
 	public class MakeCRRDetail extends ReportMaker {
 		@Override
 		public void makeReport(Connection conn) throws Exception {
