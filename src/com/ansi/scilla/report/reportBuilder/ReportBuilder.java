@@ -303,6 +303,20 @@ public abstract class ReportBuilder extends ApplicationObject {
 		
 		return display;
 	}
+	
+	protected String makeMaxWidth(ColumnHeader columnHeader, Object row, Object value) {
+		String display = "";
+		if(value != null) {
+			if(columnHeader.getMaxCharacters() != null) {
+				if(value.toString().length() > columnHeader.getMaxCharacters()) {
+
+					display = value.toString().substring(0, columnHeader.getMaxCharacters() - 3);
+					display.concat("...");
+				}
+			}
+		}
+		return display;
+	}
 
 	
 }
