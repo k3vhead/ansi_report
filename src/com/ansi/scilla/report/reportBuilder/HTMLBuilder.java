@@ -57,6 +57,11 @@ public class HTMLBuilder extends AbstractHTMLBuilder {
 				ColumnHeader columnHeader = report.getHeaderRow()[i];				
 				Object value = makeDisplayData(columnHeader,row);
 				String display = makeFormattedDisplayData(columnHeader.getFormatter(), value);
+				if(display != null) {
+					if(columnHeader.getMaxCharacters() != null) {
+						StringUtils.abbreviate(display, columnHeader.getMaxCharacters());
+					}
+				}
 				super.doSummaries(columnHeader, value);
 				buffer.append("\n\t<td class=\"ansi-stdrpt-column-" + i + "\">");
 				buffer.append("<span class=\"ansi-stdrpt-column-text-" + i + "\">");
