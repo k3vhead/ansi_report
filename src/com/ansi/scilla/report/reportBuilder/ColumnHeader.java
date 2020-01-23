@@ -41,12 +41,7 @@ public class ColumnHeader extends ApplicationObject {
 	
 	public ColumnHeader(String fieldName, String label, DataFormats formatter, 
 			SummaryType summaryType, String subTotalTrigger, Integer maxCharacters) {
-		super();
-		this.fieldName = fieldName;
-		this.label = label;
-		this.formatter = formatter;
-		this.summaryType = summaryType;
-		this.subTotalTrigger = subTotalTrigger;
+		this(fieldName, label, formatter, summaryType, subTotalTrigger);
 		this.maxCharacters = maxCharacters;
 	}
 	
