@@ -277,6 +277,9 @@ public abstract class ReportBuilder extends ApplicationObject {
 		String methodName = "get" + StringUtils.capitalize(columnHeader.getFieldName());
 		Method dataMethod = row.getClass().getMethod(methodName, (Class<?>[])null);
 		Object value = dataMethod.invoke(row, (Object[])null);
+		if ( value instanceof String && columnHeader.getMaxCharacters() != null ) {
+			value = StringUtils.abbreviate((String)value, columnHeader.getMaxCharacters());
+		}
 		return value;
 	}
 
