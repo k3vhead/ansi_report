@@ -186,6 +186,7 @@ public class SmrvDetailReport extends StandardReport {
 	}
 
 	private List<RowData> makeData(Connection conn, Integer divisionId, Calendar startDate) throws Exception {
+		this.logger = LogManager.getLogger(this.getClass());
 		startDate.set(Calendar.HOUR_OF_DAY, 0);
 		startDate.set(Calendar.MINUTE, 0);
 		startDate.set(Calendar.SECOND, 0);
@@ -201,11 +202,11 @@ public class SmrvDetailReport extends StandardReport {
 
 		Integer queryMonth = startDate.get(Calendar.MONTH) + 1; // add 1 because January is 0;
 		Integer queryYear = startDate.get(Calendar.YEAR);
-		Double[] jobMonthlyTotal = new Double[] {0.0D,0.0D,0.0D,0.0D,0.0D,0.0D};
+//		Double[] jobMonthlyTotal = new Double[] {0.0D,0.0D,0.0D,0.0D,0.0D,0.0D};
 		Integer[] jobQueryMonth = new Integer[] {0,0,0,0,0,0};
 		Integer[] jobQueryYear = new Integer[] {0,0,0,0,0,0};
 		Calendar jobStartDate = Calendar.getInstance(new AnsiTime());
-//		logger.log(Level.DEBUG, "\t" + "startDate:" + startDate.getTime() + "\t" + "endDate:" + endDate.getTime());
+		logger.log(Level.DEBUG, "\t" + "startDate:" + startDate.getTime() + "\t" + "endDate:" + endDate.getTime());
 		
 		PreparedStatement ps = conn.prepareStatement(sql);
 		
@@ -272,19 +273,22 @@ public class SmrvDetailReport extends StandardReport {
 				dataRow.ppcm02 = new BigDecimal( dataRow.jobMonthlyTotal[1]);
 				dataRow.ppcm03 = new BigDecimal( dataRow.jobMonthlyTotal[2]);
 				dataRow.ppcq01 = BigDecimal.ZERO;
-				dataRow.ppcq01.add(dataRow.ppcm01);
-				dataRow.ppcq01.add(dataRow.ppcm02);
-				dataRow.ppcq01.add(dataRow.ppcm03);
+				dataRow.ppcq01=dataRow.ppcq01.add(dataRow.ppcm01);
+				dataRow.ppcq01=dataRow.ppcq01.add(dataRow.ppcm02);
+				dataRow.ppcq01=dataRow.ppcq01.add(dataRow.ppcm03);
+//				logger.log(Level.INFO, "\tppcq01:"+ dataRow.ppcq01);
 				dataRow.ppcm04 = new BigDecimal( dataRow.jobMonthlyTotal[3]);
 				dataRow.ppcm05 = new BigDecimal( dataRow.jobMonthlyTotal[4]);
 				dataRow.ppcm06 = new BigDecimal( dataRow.jobMonthlyTotal[5]);
 				dataRow.ppcq02 = BigDecimal.ZERO;
-				dataRow.ppcq02.add(dataRow.ppcm04);
-				dataRow.ppcq02.add(dataRow.ppcm05);
-				dataRow.ppcq02.add(dataRow.ppcm06);
+				dataRow.ppcq02=dataRow.ppcq02.add(dataRow.ppcm04);
+				dataRow.ppcq02=dataRow.ppcq02.add(dataRow.ppcm05);
+				dataRow.ppcq02=dataRow.ppcq02.add(dataRow.ppcm06);
+//				logger.log(Level.INFO, "\tppcq02:"+ dataRow.ppcq02);
 				dataRow.ppch01 = BigDecimal.ZERO;
-				dataRow.ppch01.add(dataRow.ppcq01);
-				dataRow.ppch01.add(dataRow.ppcq02);
+				dataRow.ppch01=dataRow.ppch01.add(dataRow.ppcq01);
+				dataRow.ppch01=dataRow.ppch01.add(dataRow.ppcq02);
+//				logger.log(Level.INFO, "\tppch01:"+ dataRow.ppch01);
 
 			}
 		}
@@ -322,10 +326,12 @@ public class SmrvDetailReport extends StandardReport {
 				new ColumnHeader("ppcm01",dateHeaderList.get(0), 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
 				new ColumnHeader("ppcm02",dateHeaderList.get(1), 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
 				new ColumnHeader("ppcm03",dateHeaderList.get(2), 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
+//				new ColumnHeader("ppcq01","Q1", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
 				new ColumnHeader("ppcm04",dateHeaderList.get(3), 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
 				new ColumnHeader("ppcm05",dateHeaderList.get(4), 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
 				new ColumnHeader("ppcm06",dateHeaderList.get(5), 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
-//				new ColumnHeader("ppch01","Totals", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
+//				new ColumnHeader("ppcq02","Q2", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
+				new ColumnHeader("ppch01","Totals", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
@@ -376,7 +382,7 @@ public class SmrvDetailReport extends StandardReport {
 				(Integer)null,
 				(Integer)null,
 				(Integer)null,
-//				(Integer)null,
+				(Integer)null,
 		});
 }
 	
