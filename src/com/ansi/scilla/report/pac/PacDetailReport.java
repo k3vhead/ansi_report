@@ -209,9 +209,9 @@ public class PacDetailReport extends StandardReport {
 		super.setHeaderRow(new ColumnHeader[] {
 				new ColumnHeader("reportDate", this.reportType.columnHeader, DataFormats.DATE_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobId", "Job Code", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("name","Site Name", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("address1","Street 1", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("city","City", DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("name","Site Name", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 13),
+				new ColumnHeader("address1","Street 1", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 27),
+				new ColumnHeader("city","City", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 12),
 				new ColumnHeader("state","State", DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("budget","Budget", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 				new ColumnHeader("pricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),

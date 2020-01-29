@@ -218,8 +218,8 @@ public class TicketStatusReport extends StandardReport {
 				new ColumnHeader("PricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
 				new ColumnHeader("actPricePerCleaning","Invoiced", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobNbr","Job #", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
-				new ColumnHeader("name","Site Name", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 15),
-				new ColumnHeader("address1","Site Address", DataFormats.STRING_FORMAT, SummaryType.NONE, null, null),
+				new ColumnHeader("name","Site Name", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 50),
+				new ColumnHeader("address1","Site Address", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 30),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
