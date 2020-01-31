@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.functors.InvokerTransformer;
 import org.apache.commons.collections.functors.UniquePredicate;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,9 +18,12 @@ public abstract class StandardReport extends AbstractReport {
 	private static final long serialVersionUID = 1L;
 
 	private ColumnHeader[] headerRow;
+	private Integer[] columnWidths;
 	private String[] pageBreakFieldList;	
 	private List<Object> dataRows;
-	private Logger logger = LogManager.getLogger(this.getClass());
+	protected Logger logger = LogManager.getLogger(this.getClass());
+	private Integer firstDetailColumn = 0; //column number for the first data detail column
+
 	
 	public StandardReport() {
 		super();
@@ -34,6 +36,15 @@ public abstract class StandardReport extends AbstractReport {
 	public void setHeaderRow(ColumnHeader[] headerRow) {
 		this.headerRow = headerRow;		
 	}
+	
+	public Integer[] getColumnWidths() {
+		return columnWidths;
+	}
+
+	public void setColumnWidths(Integer[] columnWidths) {
+		this.columnWidths = columnWidths;
+	}
+
 	public String[] getPageBreakFieldList() {
 		return pageBreakFieldList;
 	}
@@ -50,10 +61,21 @@ public abstract class StandardReport extends AbstractReport {
 	public void addDataRow(Object dataRow) {
 		this.dataRows.add(dataRow);		
 	}
+	public Integer getFirstDetailColumn() {
+		return firstDetailColumn;
+	}
+	public void setFirstDetailColumn(Integer firstDetailColumn) {
+		this.firstDetailColumn = firstDetailColumn;
+	}
 
 	@Override
 	public Integer getReportWidth() {
-		return this.getHeaderRow().length + 2;  // we add 2 because first and last columns are double wide
+//		return this.getHeaderRow().length + 2;  // we add 2 because first and last columns are double wide
+		Integer reportWidth = 0;
+		for ( ColumnHeader columnHeader : this.getHeaderRow() ) {
+			reportWidth = reportWidth + columnHeader.getColspan();
+		}
+		return reportWidth;
 	}
 
 	@SuppressWarnings("unchecked")

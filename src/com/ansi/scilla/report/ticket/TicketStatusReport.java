@@ -20,6 +20,7 @@ import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.jobticket.TicketStatus;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
@@ -211,15 +212,15 @@ public class TicketStatusReport extends StandardReport {
 //		super.setHeaderNotes(REPORT_NOTES);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("processDate", "Date Completed", DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobId", "Job Id", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("ticketId","Ticket #", DataFormats.NUMBER_FORMAT, SummaryType.COUNT),
-				new ColumnHeader("ticketStatus","Status", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("PricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
-				new ColumnHeader("actPricePerCleaning","Invoiced", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobNbr","Job #", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
-				new ColumnHeader("name","Site Name", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 50),
-				new ColumnHeader("address1","Site Address", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 30),
+				new ColumnHeader("processDate", "Date Completed", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobId", "Job Id", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("ticketId","Ticket #", 1, DataFormats.NUMBER_FORMAT, SummaryType.COUNT),
+				new ColumnHeader("ticketStatus","Status", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("PricePerCleaning","PPC", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM),
+				new ColumnHeader("actPricePerCleaning","Invoiced", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobNbr","Job #", 1, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
+				new ColumnHeader("name","Site Name", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 50),
+				new ColumnHeader("address1","Site Address", 2, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 30),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
@@ -249,6 +250,18 @@ public class TicketStatusReport extends StandardReport {
 				new ReportHeaderRow("Tickets:", dataSizeMethod, 2, DataFormats.INTEGER_FORMAT)
 		});
 		super.makeHeaderRight(headerRight);
+		
+		super.setColumnWidths(new Integer[] {
+				ColumnWidth.DATE.width(),
+				ColumnWidth.DATETIME.width(),
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				ColumnWidth.JOB_JOB_NBR.width(),
+				ColumnWidth.ADDRESS_NAME.width(),
+				ColumnWidth.ADDRESS_ADDRESS1.width(),				
+		});
 	}
 	
 	

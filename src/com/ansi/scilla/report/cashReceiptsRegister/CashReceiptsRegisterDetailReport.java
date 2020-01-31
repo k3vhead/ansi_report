@@ -23,6 +23,7 @@ import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
@@ -70,14 +71,6 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 	private Calendar startDate;
 	private Calendar endDate;
 	private Integer lastDivision;
-
-//	private Double totalAmount;
-//	private Double totalTaxAmt;
-//	private Double totalTotal;
-
-//	private Double divAmount;
-//	private Double divTaxAmt;
-//	private Double divTotal;
 	
 	private List<RowData> data;
 	
@@ -165,15 +158,6 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 		endDate.set(Calendar.SECOND, 0);
 		endDate.set(Calendar.MILLISECOND, 0);
 		
-//		this.lastDivision = -1;
-//		this.totalAmount=0.00;
-//		this.totalTaxAmt=0.00;
-//		this.totalTotal=0.00;
-
-//		this.divAmount=0.00;
-//		this.divTaxAmt=0.00;
-//		this.divTotal=0.00;
-
 		PreparedStatement ps = conn.prepareStatement(sql);
 		ps.setDate(1, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(2, new java.sql.Date(endDate.getTimeInMillis()));
@@ -181,47 +165,10 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 		
 		List<RowData> data = new ArrayList<RowData>();
 		RowData newRow;
-		RowData subTotalRow;
 		while ( rs.next() ) {
 			newRow = new RowData(rs, report);
-//			if (newRow.divisionNbr == report.lastDivision) {
-//				report.divAmount = report.divAmount + newRow.amount;
-//				report.divTaxAmt = report.divTaxAmt + newRow.taxAmt;
-//				report.divTotal = report.divTotal + newRow.total;
-//			} else {
-//				if (report.lastDivision != -1) {
-//					subTotalRow = new RowData();
-//					subTotalRow.setPaymentNote("Div "+lastDivision+" Result");
-//					subTotalRow.setAmount(report.divAmount);
-//					subTotalRow.setTaxAmt(report.divTaxAmt);
-//					subTotalRow.setTotal(report.divTotal);
-//					data.add(subTotalRow);
-//				}
-//				report.divAmount = newRow.amount;
-//				report.divTaxAmt = newRow.taxAmt;
-//				report.divTotal = newRow.total;
-//				report.lastDivision = newRow.divisionNbr;
-//			}
-//			report.totalAmount = report.totalAmount + newRow.amount;
-//			report.totalTaxAmt = report.totalTaxAmt + newRow.taxAmt;
-//			report.totalTotal = report.totalTotal + newRow.total;
-
 			data.add(newRow);
 		}
-//		if (report.lastDivision != -1) {
-//			subTotalRow = new RowData();
-//			subTotalRow.setPaymentNote("Div "+lastDivision+" Result");
-//			subTotalRow.setAmount(report.divAmount);
-//			subTotalRow.setTaxAmt(report.divTaxAmt);
-//			subTotalRow.setTotal(report.divTotal);
-//			data.add(subTotalRow);
-//		}
-//		RowData totalRow = new RowData();
-//		totalRow.setPaymentNote("Grand Total");
-//		totalRow.setAmount(report.totalAmount);
-//		totalRow.setTaxAmt(report.totalTaxAmt);
-//		totalRow.setTotal(report.totalTotal);
-//		data.add(totalRow);
 		rs.close();
 		
 		return data;
@@ -235,20 +182,20 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 //		super.setHeaderNotes(REPORT_NOTES);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("billToName","Client Name", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobId", "Job Code", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("ticketId", "Ticket", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("invoiceDate", "Invoice Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("invoiceId", "Invoice", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("divisionDisplay", "Div", DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("paymentNote","Payment Notes", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("paymentDate", "Payment Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("checkNbr", "Check Number", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("checkDate", "Check Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("amount","PPC\nPaid", DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-				new ColumnHeader("taxAmt","Taxes\nPaid", DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-				new ColumnHeader("total","Total\nPaid", DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-				new ColumnHeader("jobSiteName","Site Name", DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("billToName","Client Name", 3, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobId", "Job Code", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("ticketId", "Ticket", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("invoiceDate", "Invoice Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("invoiceId", "Invoice", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("divisionDisplay", "Div", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("paymentNote","Payment Notes", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("paymentDate", "Payment Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("checkNbr", "Check Number", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("checkDate", "Check Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("amount","PPC\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
+				new ColumnHeader("taxAmt","Taxes\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
+				new ColumnHeader("total","Total\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
+				new ColumnHeader("jobSiteName","Site Name", 2, DataFormats.STRING_FORMAT, SummaryType.NONE),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
@@ -270,6 +217,25 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 				new ReportHeaderRow("To:", getEndDateMethod, 3, DataFormats.DATE_FORMAT)
 		});
 		super.makeHeaderRight(headerRight);
+		
+		super.setColumnWidths(new Integer[] {
+				(Integer)null,
+				ColumnWidth.DATETIME.width(),
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				Math.max(0, ColumnWidth.ADDRESS_NAME.width() - ColumnWidth.DATE.width()),
+		});
 	}
 	
 	public void makeXLS(XSSFWorkbook workbook) throws Exception {

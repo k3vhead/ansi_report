@@ -12,9 +12,10 @@ public class ColumnHeader extends ApplicationObject {
 	private SummaryType summaryType;	
 	private String subTotalTrigger;
 	private Integer maxCharacters;
+	private Integer colspan;
 	
-	public ColumnHeader(String fieldName, String label, DataFormats formatter, SummaryType summaryType) {
-		this(fieldName, label, formatter, summaryType, null);
+	public ColumnHeader(String fieldName, String label, Integer colspan, DataFormats formatter, SummaryType summaryType) {
+		this(fieldName, label, colspan, formatter, summaryType, null);
 	}
 	
 //	public ColumnHeader(String fieldName, String label, DataFormats formatter,
@@ -26,22 +27,24 @@ public class ColumnHeader extends ApplicationObject {
 	 * Make a column header for report details
 	 * @param fieldName Field name
 	 * @param label Text for the column header
+	 * @param colspan For use by the XLS Builder: The number of cells to be merged horizontally
 	 * @param formatter Method for formatting the data
 	 * @param summaryType Whether/what kind of summary to display at end of column
 	 * @param subTotalTrigger - name of the field that, upon value change, triggers the display of a subtotal
 	 */
-	public ColumnHeader(String fieldName, String label, DataFormats formatter, SummaryType summaryType, String subTotalTrigger) {
+	public ColumnHeader(String fieldName, String label, Integer colspan, DataFormats formatter, SummaryType summaryType, String subTotalTrigger) {
 		super();
 		this.fieldName = fieldName;
 		this.label = label;
 		this.formatter = formatter;
 		this.summaryType = summaryType;
 		this.subTotalTrigger = subTotalTrigger;
+		this.colspan = colspan;
 	}
 	
-	public ColumnHeader(String fieldName, String label, DataFormats formatter, 
+	public ColumnHeader(String fieldName, String label, Integer colspan, DataFormats formatter, 
 			SummaryType summaryType, String subTotalTrigger, Integer maxCharacters) {
-		this(fieldName, label, formatter, summaryType, subTotalTrigger);
+		this(fieldName, label, colspan, formatter, summaryType, subTotalTrigger);
 		this.maxCharacters = maxCharacters;
 	}
 	
@@ -85,6 +88,15 @@ public class ColumnHeader extends ApplicationObject {
 	public void setMaxCharacters(Integer maxCharacters) {
 		this.maxCharacters = maxCharacters;
 	}
+
+	public Integer getColspan() {
+		return colspan;
+	}
+
+	public void setColspan(Integer colspan) {
+		this.colspan = colspan;
+	}
+
 	
 	
 }

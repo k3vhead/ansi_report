@@ -58,7 +58,7 @@ public class XLSReportBuilderUtils extends ReportBuilderUtils {
 			Integer headerRowNum = startingRow + headerRowCount;
 			row = makeRow(sheet, headerRowNum);
 			String reportNote = report.getHeaderNotes();
-			Integer endCell = report.getHeaderRow().length + 1;
+			Integer endCell = report.getHeaderRow().length; // + 1;
 			sheet.addMergedRegion(new CellRangeAddress(headerRowCount, headerRowCount, 0, endCell));
 			cell = row.createCell(0);
 			cell.setCellStyle(rf.cellStyleReportNote);
@@ -232,24 +232,47 @@ public class XLSReportBuilderUtils extends ReportBuilderUtils {
 		XSSFCell cell = null;
 		
 		int rowNum = reportStartLoc.rowIndex + XLSReportBuilderUtils.makeHeaderRowCount(report) + 1;
-		int columnIndex = reportStartLoc.columnIndex;
+		int columnIndex = reportStartLoc.columnIndex + report.getFirstDetailColumn();
 		int startingColumn = reportStartLoc.columnIndex;
 		row = XLSReportBuilderUtils.makeRow(sheet, rowNum);  //sheet.createRow(rowNum);
 
 //		row.setHeight(rf.standardHeaderHeight);
+		short rowHeight = row.getHeight();
+		int maxLines = -1;
+		for ( ColumnHeader columnHeader : report.getHeaderRow() ) {
+			String[] pieces = StringUtils.split(columnHeader.getLabel(), "\n");
+			if ( pieces.length > maxLines ) {
+				maxLines = pieces.length;
+			}
+		}
+		row.setHeight((short)(rowHeight*maxLines));
 		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
 			ColumnHeader columnHeader = report.getHeaderRow()[i];
-			if ( i == 1 ) {
-				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn, startingColumn + 1));
-				columnIndex++;
+			if ( columnHeader.getColspan() > 0 ) {
+				Integer firstColumn = columnIndex;
+				Integer lastColumn = firstColumn + columnHeader.getColspan() - 1;
+				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, firstColumn, lastColumn));
 			}
-			if ( i == report.getHeaderRow().length - 1 ) {
-				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn + report.getHeaderRow().length, startingColumn + report.getHeaderRow().length+1));
-			}
+//			if ( i == 1 ) {
+//				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn, startingColumn + 1));
+//				columnIndex++;
+//			}
+//			if ( i == report.getHeaderRow().length - 1 ) {
+//				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn + report.getHeaderRow().length, startingColumn + report.getHeaderRow().length+1));
+//			}
 			cell = row.createCell(columnIndex);
 			cell.setCellValue(columnHeader.getLabel());
 			cell.setCellStyle(rf.cellStyleColHdrLeft);
-			columnIndex++;
+//			columnIndex++;
+			columnIndex = columnIndex + columnHeader.getColspan();
+		}
+		
+		if ( report.getColumnWidths() != null ) {
+			for ( int i = 0; i < report.getColumnWidths().length; i++ ) {
+				if ( report.getColumnWidths()[i] != null && report.getColumnWidths()[i] > 0 ) {
+					sheet.setColumnWidth(i, report.getColumnWidths()[i]);
+				}
+			}
 		}
 	}
 }

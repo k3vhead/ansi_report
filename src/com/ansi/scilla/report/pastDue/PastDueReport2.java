@@ -152,16 +152,15 @@ public class PastDueReport2 extends StandardReport {
 	private void makeData(Connection conn, Calendar pastDueDate, Integer divisionId) throws Exception {
 		//super.setSubtitle(makeSubtitle());
 		super.setHeaderRow(new ColumnHeader[] {
-			new ColumnHeader("billToName", "BILL TO NAME", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 20),//BILL TO NAME
-			new ColumnHeader("ticketId","Ticket\nInvoice", DataFormats.STRING_CENTERED, SummaryType.NONE),//JOB#
-			new ColumnHeader("invoiceDate", "Completed\nInvoiced", DataFormats.DATE_FORMAT, SummaryType.NONE),//completed invoiced dates
-			new ColumnHeader("jobId", "JOB", DataFormats.STRING_CENTERED, SummaryType.NONE),//job number
-			new ColumnHeader("invoiceTerms", "TERMS", DataFormats.STRING_FORMAT, SummaryType.NONE),
-			new ColumnHeader("actPPC", "PPC", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//actPPC
-			new ColumnHeader("amountPaid", "PAID", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//Paid Amount
-			new ColumnHeader("amountDue", "DUE", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
-			new ColumnHeader("amountPastDue", "PAST DUE", DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
-			new ColumnHeader("jobSiteAddress", "SITE ADDRESS", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 20),//siteAddress
+			new ColumnHeader("billToName", "BILL TO NAME", 2, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 20),//BILL TO NAME
+			new ColumnHeader("ticketId","Ticket\nInvoice", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),//JOB#
+			new ColumnHeader("invoiceDate", "Completed\nInvoiced", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),//completed invoiced dates
+			new ColumnHeader("jobId", "JOB", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),//job number
+			new ColumnHeader("actPPC", "PPC", 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//actPPC
+			new ColumnHeader("amountPaid", "PAID", 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//Paid Amount
+			new ColumnHeader("amountDue", "DUE", 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
+			new ColumnHeader("amountPastDue", "PAST DUE", 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),//amountDue
+			new ColumnHeader("jobSiteAddress", "SITE ADDRESS", 2, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 20),//siteAddress
 		});		
 		
 		java.sql.Date myDate = new java.sql.Date(pastDueDate.getTimeInMillis());

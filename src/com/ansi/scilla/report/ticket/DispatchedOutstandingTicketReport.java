@@ -21,11 +21,11 @@ import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.db.Division;
-import com.ansi.scilla.common.invoice.InvoiceStyle;
 import com.ansi.scilla.common.jobticket.TicketStatus;
 import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
@@ -264,18 +264,18 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		super.setHeaderNotes(REPORT_NOTE);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("ticketId", "Ticket", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
+				new ColumnHeader("ticketId", "Ticket", 1, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
 //				new ColumnHeader("fleetmaticsId", "Tkt # FM", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("name","Site", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("address1","Street 1", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("city","City", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("lastRun","Last Run", DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("startDate","Run Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("pricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "ticketStatus"),
-				new ColumnHeader("jobNbr","J#", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
-				new ColumnHeader("jobFrequency", "FREQ", DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("ticketStatus", "ST", DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("invoiceStyle", "Invoice Style", DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("name","Site", 2, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("address1","Street 1", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("city","City", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("lastRun","Last Run", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("startDate","Run Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("pricePerCleaning","PPC", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "ticketStatus"),
+				new ColumnHeader("jobNbr","J#", 1, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
+				new ColumnHeader("jobFrequency", "FREQ", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("ticketStatus", "ST", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("invoiceStyle", "Invoice Style", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
@@ -310,7 +310,20 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		});
 		super.makeHeaderRight(headerRight);
 
-		
+		super.setColumnWidths(new Integer[] {
+				(Integer)null,
+				ColumnWidth.DATETIME.width(),
+				ColumnWidth.ADDRESS_NAME.width() - ColumnWidth.DATETIME.width(),
+				ColumnWidth.ADDRESS_ADDRESS1.width(),
+				ColumnWidth.ADDRESS_CITY.width(),
+				ColumnWidth.DATE.width(),
+				ColumnWidth.DATE.width(),
+				ColumnWidth.JOB_PPC.width(),
+				ColumnWidth.JOB_JOB_NBR.width(),
+				ColumnWidth.JOB_JOB_FREQUENCY.width(),
+				ColumnWidth.HDR_RIGHT_NON_DISPATCHED.width(),
+				(Integer)null,
+		});
 		//Method getDispOutstanding = this.getClass().getMethod("getDispOutstanding", (Class<?>[])null);
 		//Method getFinished = this.getClass().getMethod("getFinished", (Class<?>[])null);
 		

@@ -19,6 +19,7 @@ import com.ansi.scilla.common.jobticket.JobFrequency;
 import com.ansi.scilla.common.jobticket.JobStatus;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
@@ -283,10 +284,10 @@ public class PacSummaryReport extends StandardReport {
 //		super.setHeaderNotes(REPORT_NOTES);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("jobStatus", "", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobCount", "Jobs", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("pricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
-				new ColumnHeader("volume","Volume", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobStatus", "", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobCount", "Jobs", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("pricePerCleaning","PPC", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("volume","Volume", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
@@ -316,6 +317,18 @@ public class PacSummaryReport extends StandardReport {
 				new ReportHeaderRow("To:", getEndDateMethod, 3, DataFormats.DATE_FORMAT)
 		});
 		super.makeHeaderRight(headerRight);
+		
+		super.setFirstDetailColumn(2);
+		
+		super.setColumnWidths(new Integer[] {
+				(Integer)null,
+				ColumnWidth.DATETIME.width(),
+				ColumnWidth.HEADER_ANSI.width()/3,
+				ColumnWidth.HEADER_ANSI.width()/3,
+				ColumnWidth.HEADER_ANSI.width()/3,
+				(Integer)null,
+				ColumnWidth.DATE.width(),
+		});
 	}
 	
 	

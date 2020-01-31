@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +29,6 @@ import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
-import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
 
 public class SixMonthRollingVolumeSummary extends StandardReport {
 	
@@ -87,28 +85,28 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 	private void makeData(Connection conn) throws Exception {
 		//super.setSubtitle(makeSubtitle());
 		super.setHeaderRow(new ColumnHeader[] {
-			new ColumnHeader("quarterEnd", "Quarter End", DataFormats.DATE_FORMAT, SummaryType.NONE),
-			new ColumnHeader("jobCount","Job Count", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("contracts", "Contracts", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForecastOct", "Oct", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
-			new ColumnHeader("volForecastNov", "Nov", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
-			new ColumnHeader("volForecastDec", "Dec", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("quarter1", "Quarter", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForecastJan", "Jan", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForecastFeb", "Feb", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForecastMar", "Mar", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("quarter2", "Quarter", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForecastApr", "Apr", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForecastMay", "May", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForecastJun", "Jun", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("quarter3", "Quarter", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForecastJul", "Jul", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForecastAug", "Aug", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("volForecastSep", "Sep", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("quarter4", "Quarter", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("annual", "Annual", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("jobAvg", "Ave $/Job", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("contractAvg", "Ave $/Cont", DataFormats.NUMBER_FORMAT, SummaryType.NONE)
+			new ColumnHeader("quarterEnd", "Quarter End", 2, DataFormats.DATE_FORMAT, SummaryType.NONE),
+			new ColumnHeader("jobCount","Job Count", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("contracts", "Contracts", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastOct", "Oct", 1, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
+			new ColumnHeader("volForecastNov", "Nov", 1, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
+			new ColumnHeader("volForecastDec", "Dec", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("quarter1", "Quarter", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastJan", "Jan", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastFeb", "Feb", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastMar", "Mar", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("quarter2", "Quarter", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastApr", "Apr", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastMay", "May", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastJun", "Jun", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("quarter3", "Quarter", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastJul", "Jul", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastAug", "Aug", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("volForecastSep", "Sep", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("quarter4", "Quarter", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("annual", "Annual", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("jobAvg", "Ave $/Job", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("contractAvg", "Ave $/Cont", 2, DataFormats.NUMBER_FORMAT, SummaryType.NONE)
 		});		
 		
 		

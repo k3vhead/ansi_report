@@ -33,6 +33,7 @@ import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.ReportOrientation;
@@ -144,15 +145,15 @@ public class InvoiceRegisterReport extends StandardReport {
 	private void makeData(Connection conn) throws Exception {
 		super.setSubtitle(makeSubtitle());
 		super.setHeaderRow(new ColumnHeader[] {
-			new ColumnHeader("clientName","Client Name", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 40),
-			new ColumnHeader("jobId", "Job ID", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("ticketId", "Ticket ID", DataFormats.NUMBER_CENTERED, SummaryType.NONE),
-			new ColumnHeader("ticketType", "Type", DataFormats.STRING_CENTERED, SummaryType.NONE),
-			new ColumnHeader("dateComplete", "Date Complete", DataFormats.DATE_FORMAT, SummaryType.NONE),
-			new ColumnHeader("invoiceId", "Invoice #", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("invoiceDate","Invoice Date", DataFormats.DATE_FORMAT, SummaryType.NONE),
-			new ColumnHeader("invoiceAmount", "Invoice Amount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM, "clientName"),
-			new ColumnHeader("buildingName","Building Name", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 40)
+			new ColumnHeader("clientName","Client Name", 3, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 40),
+			new ColumnHeader("jobId", "Job ID", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("ticketId", "Ticket ID", 1, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
+			new ColumnHeader("ticketType", "Type", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
+			new ColumnHeader("dateComplete", "Date Complete", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+			new ColumnHeader("invoiceId", "Invoice #", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+			new ColumnHeader("invoiceDate","Invoice Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+			new ColumnHeader("invoiceAmount", "Invoice Amount", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM, "clientName"),
+			new ColumnHeader("buildingName","Building Name", 2, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 40)
 		});
 		
 		Method getRunDateMethod = this.getClass().getMethod("getRunDate", (Class<?>[])null);
@@ -178,6 +179,20 @@ public class InvoiceRegisterReport extends StandardReport {
 		super.makeHeaderRight(headerRight);
 		
 		
+		super.setColumnWidths(new Integer[] {
+				ColumnWidth.HEADER_COL1.width(),
+				ColumnWidth.DATETIME.width(),
+				ColumnWidth.CONTACT_NAME.width() - ColumnWidth.DATETIME.width() - ColumnWidth.HEADER_COL1.width(),
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				(Integer)null,
+				ColumnWidth.ADDRESS_NAME.width() - ColumnWidth.HEADER_COL_RIGHT.width(),
+				ColumnWidth.HEADER_COL_RIGHT.width()
+		});
 		
 		PreparedStatement psData = conn.prepareStatement(sql + "\norder by bill_to.name, ticket.invoice_date");
 		int n=1;

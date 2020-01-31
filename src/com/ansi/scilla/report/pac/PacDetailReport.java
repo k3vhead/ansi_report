@@ -12,8 +12,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Logger;
 import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -24,6 +24,7 @@ import com.ansi.scilla.common.jobticket.JobFrequency;
 import com.ansi.scilla.common.jobticket.JobStatus;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
@@ -207,19 +208,19 @@ public class PacDetailReport extends StandardReport {
 //		super.setHeaderNotes(REPORT_NOTES);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("reportDate", this.reportType.columnHeader, DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobId", "Job Code", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("name","Site Name", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 13),
-				new ColumnHeader("address1","Street 1", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 27),
-				new ColumnHeader("city","City", DataFormats.STRING_FORMAT, SummaryType.NONE, null, 12),
-				new ColumnHeader("state","State", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("budget","Budget", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
-				new ColumnHeader("pricePerCleaning","PPC", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobNbr","Job #", DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("freq","Freq", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobStatus","Status", DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("leadType","Lead Type", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("volume","Volume", DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("reportDate", this.reportType.columnHeader, 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobId", "Job Code", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("name","Site Name", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 13),
+				new ColumnHeader("address1","Street 1", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 27),
+				new ColumnHeader("city","City", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 12),
+				new ColumnHeader("state","State", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("budget","Budget", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("pricePerCleaning","PPC", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobNbr","Job #", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("freq","Freq", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobStatus","Status", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("leadType","Lead Type", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("volume","Volume", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
@@ -249,6 +250,20 @@ public class PacDetailReport extends StandardReport {
 				new ReportHeaderRow("To:", getEndDateMethod, 3, DataFormats.DATE_FORMAT)
 		});
 		super.makeHeaderRight(headerRight);
+		
+		super.setColumnWidths(new Integer[] {
+				ColumnWidth.DATE.width(),
+				ColumnWidth.DATETIME.width(),
+				ColumnWidth.ADDRESS_NAME.width(),
+				ColumnWidth.ADDRESS_ADDRESS1.width(),
+				ColumnWidth.ADDRESS_CITY.width(),
+				ColumnWidth.ADDRESS_STATE.width(),
+				(Integer)null,
+				(Integer)null,
+				ColumnWidth.JOB_JOB_NBR.width(),
+				ColumnWidth.JOB_JOB_FREQUENCY.width(),
+				ColumnWidth.JOB_JOB_STATUS.width(),
+		});
 	}
 	
 	
