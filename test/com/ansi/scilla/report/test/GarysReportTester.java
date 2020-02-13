@@ -28,9 +28,9 @@ import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
 import com.ansi.scilla.report.ticket.TicketStatusReport;;
 
 
-public class DavesReportTester {
+public class GarysReportTester {
 
-	private final String testResultDirectory = "/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_headers/ansi_report/";
+	private final String testResultDirectory = "CHANGE_THIS_VALUE";
 	
 	protected ReportType reportType;
 	protected Calendar startDate;
@@ -44,7 +44,7 @@ public class DavesReportTester {
 	
 	public static void main(String[] args) {
 		try {
-			new DavesReportTester().makeMyReport();
+			new GarysReportTester().makeMyReport();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -58,15 +58,14 @@ public class DavesReportTester {
 
 		List<Thread> threadList = new ArrayList<Thread>();
 		
-		threadList.add(new Thread(new MakeAROver60Detail()));
-//			threadList.add(new Thread(new Make6mrv()));
+//			make6mrv(conn);
 		threadList.add(new Thread(new MakeAROver60()));
-//			threadList.add(new Thread(new MakeClientUsage()));
+//			makeClientUsage(conn);
 //		threadList.add(new Thread(new MakeCRRDetail()));
 //		threadList.add(new Thread(new MakeDO()));
 //		threadList.add(new Thread(new MakeInvoiceRegister()));
 //		threadList.add(new Thread(new MakePACListing()));
-//			threadList.add(new Thread(new MakePastDue2()));
+//			makePastDue2(conn);
 //		threadList.add(new Thread(new MakeTicketStatus()));
 
 		for ( Thread thread : threadList ) {
@@ -115,47 +114,28 @@ public class DavesReportTester {
 	}
 	
 
-	public class Make6mrv extends ReportMaker {
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			Integer divisionId = 101;
-			Integer month = Calendar.JULY;
-			Integer year = 2019;
-			SixMonthRollingVolumeReport report = SixMonthRollingVolumeReport.buildReport(conn, divisionId, month, year);
-			XSSFWorkbook workbook = report.makeXLS();
-			workbook.write(new FileOutputStream("/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_headers/6MRV.xlsx"));
-		}
+	private void make6mrv(Connection conn) throws Exception {
+		Integer divisionId = 101;
+		Integer month = Calendar.JULY;
+		Integer year = 2019;
+		SixMonthRollingVolumeReport report = SixMonthRollingVolumeReport.buildReport(conn, divisionId, month, year);
+		XSSFWorkbook workbook = report.makeXLS();
+		workbook.write(new FileOutputStream("/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_headers/6MRV.xlsx"));
 	}
 
+	private void makeClientUsage(Connection conn) throws Exception {
+		Calendar startDate = null;
+		Integer divisionId = null;
+		logger.info("PastDueReport");
+		PastDueReport2 userReport = PastDueReport2.buildReport(conn, startDate, divisionId);
+		XSSFWorkbook workbook = XLSBuilder.build(userReport);
+		workbook.write(new FileOutputStream(testResultDirectory + "ClientUsage.xlsx"));
 	
-	public class MakeClientUsage extends ReportMaker {
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			Calendar startDate = null;
-			Integer divisionId = null;
-			logger.info("PastDueReport");
-			PastDueReport2 userReport = PastDueReport2.buildReport(conn, startDate, divisionId);
-			XSSFWorkbook workbook = XLSBuilder.build(userReport);
-			workbook.write(new FileOutputStream(testResultDirectory + "ClientUsage.xlsx"));
-		
-			String html = HTMLBuilder.build(userReport);
-			FileUtils.write(new File(testResultDirectory + "ClientUsage.html"), html);
-		
-		}
+		String html = HTMLBuilder.build(userReport);
+		FileUtils.write(new File(testResultDirectory + "ClientUsage.html"), html);
+	
 	}
-	
-	public class MakeAROver60Detail extends ReportMaker {
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			logger.info("Start AROver60Detail");
-			AccountsReceivableTotalsOver60Detail crrDetail = AccountsReceivableTotalsOver60Detail.buildReport(conn);
-			XSSFWorkbook workbook = crrDetail.makeXLS();
-			workbook.write(new FileOutputStream(makeFileName("AROver60Detail")));
-			logger.info("End AROver60Detail");			
-		}
-	}
-	
-	
+
 	public class MakeAROver60 extends ReportMaker {
 		@Override
 		public void makeReport(Connection conn) throws Exception {
@@ -211,26 +191,22 @@ public class DavesReportTester {
 		}		
 	}
 
-	public class MapkePastDue2 extends ReportMaker {
 
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			logger.info("PastDueReport");
-			Calendar startDate = null;
-			Integer divisionId = null;
-			PastDueReport2 report = PastDueReport2.buildReport(conn, startDate, divisionId);
-			if ( report == null ) {
-				throw new Exception("Null report");
-			}
-			XSSFWorkbook workbook = XLSBuilder.build(report);
-			workbook.write(new FileOutputStream(testResultDirectory + "PastDueDate.xlsx"));
-		
-			//		String html = HTMLBuilder.build(userReport);
-			//		FileUtils.write(new File(testResultDirectory + "PastDueDate.html"), html);		
+	private void makePastDue2(Connection conn) throws Exception {
+		logger.info("PastDueReport");
+		Calendar startDate = null;
+		Integer divisionId = null;
+		PastDueReport2 report = PastDueReport2.buildReport(conn, startDate, divisionId);
+		if ( report == null ) {
+			throw new Exception("Null report");
 		}
+		XSSFWorkbook workbook = XLSBuilder.build(report);
+		workbook.write(new FileOutputStream(testResultDirectory + "PastDueDate.xlsx"));
+	
+		//		String html = HTMLBuilder.build(userReport);
+		//		FileUtils.write(new File(testResultDirectory + "PastDueDate.html"), html);		
 	}
-	
-	
+
 	public class MakePACListing extends ReportMaker {
 
 		@Override
@@ -263,7 +239,11 @@ public class DavesReportTester {
 	}
 
 
-	
+	private String makeFileName(String fileName) {
+		Date today = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddhhmmss");
+		return testResultDirectory + fileName + "_" + sdf.format(today) + ".xlsx";
+	}
 
 	
 
