@@ -18,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.ansi.scilla.common.db.ApplicationProperties;
 import com.ansi.scilla.common.utils.AppUtils;
 import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
+import com.ansi.scilla.report.datadumps.AccountsReceivableTotalsOver60Detail;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
 import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
@@ -58,14 +59,15 @@ public class DavesReportTester {
 
 		List<Thread> threadList = new ArrayList<Thread>();
 		
+		threadList.add(new Thread(new MakeAROver60Detail()));
 //			make6mrv(conn);
 //			makeClientUsage(conn);
-		threadList.add(new Thread(new MakeCRRDetail()));
-		threadList.add(new Thread(new MakeDO()));
-		threadList.add(new Thread(new MakeInvoiceRegister()));
-		threadList.add(new Thread(new MakePACListing()));
+//		threadList.add(new Thread(new MakeCRRDetail()));
+//		threadList.add(new Thread(new MakeDO()));
+//		threadList.add(new Thread(new MakeInvoiceRegister()));
+//		threadList.add(new Thread(new MakePACListing()));
 //			makePastDue2(conn);
-		threadList.add(new Thread(new MakeTicketStatus()));
+//		threadList.add(new Thread(new MakeTicketStatus()));
 
 		for ( Thread thread : threadList ) {
 			thread.start();
@@ -122,6 +124,8 @@ public class DavesReportTester {
 		workbook.write(new FileOutputStream("/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_headers/6MRV.xlsx"));
 	}
 
+	
+	
 	private void makeClientUsage(Connection conn) throws Exception {
 		Calendar startDate = null;
 		Integer divisionId = null;
@@ -135,6 +139,19 @@ public class DavesReportTester {
 	
 	}
 
+	
+	public class MakeAROver60Detail extends ReportMaker {
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start AROver60Detail");
+			AccountsReceivableTotalsOver60Detail crrDetail = AccountsReceivableTotalsOver60Detail.buildReport(conn);
+			XSSFWorkbook workbook = crrDetail.makeXLS();
+			workbook.write(new FileOutputStream(makeFileName("AROver60Detail")));
+			logger.info("End AROver60Detail");			
+		}
+	}
+	
+	
 	public class MakeCRRDetail extends ReportMaker {
 		@Override
 		public void makeReport(Connection conn) throws Exception {
