@@ -229,7 +229,7 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 		if ( value != null ) {
 			String dataClass = value.getClass().getSimpleName();
 			if ( dataClass.equals("Integer")) {
-				Double cellValue = new Double((Integer)value);
+				Double cellValue = Double.valueOf((Integer)value); 
 				cell.setCellValue(cellValue);
 			} else if ( dataClass.equals("Timestamp")) {
 				Calendar cellValue = Calendar.getInstance(new AnsiTime());
@@ -240,7 +240,14 @@ public abstract class AbstractXLSBuilder extends ReportBuilder {
 				cell.setCellValue(cellValue.doubleValue());		
 			} else if ( dataClass.equals("Double")) {
 				Double cellValue = (Double)value;						
-				cell.setCellValue(cellValue.doubleValue());		
+				cell.setCellValue(cellValue.doubleValue());	
+			} else if ( dataClass.equals("Date")) {
+				Date cellValue = (Date)value;
+				if ( value.getClass().getName().equals("java.sql.Date")) {
+					// there's no POI method for java.sql.Date, so convert the date to java.util.Date
+					cellValue = new Date( ((java.sql.Date)cellValue).getTime());
+				}
+				cell.setCellValue(cellValue);		
 			} else {
 				// if you're looking here because you're reading a stack trace and found a "method not found error"
 				// you need to add another "else if" in the lines right above
