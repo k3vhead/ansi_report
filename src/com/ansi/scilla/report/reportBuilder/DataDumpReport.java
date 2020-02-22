@@ -290,10 +290,12 @@ public abstract class DataDumpReport extends CustomReport {
 					cell.setCellValue("");
 					cell.setCellStyle(reportFormatter.cellStyleStandardLeft);
 				} else {
+					String dataClass = value.getClass().getSimpleName();
 					XLSBuilder.setCellValue(cell, value);
+					cell.setCellStyle(xlsStyles.get(dataClass));
 				}
 			}
-			rowNum++;
+			rowNum++;			
 		}
 		
 		for ( int i=0; i < this.columnHeaders.size(); i++ ) {
