@@ -7,6 +7,7 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.db.Division;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * First and last days of the input run date (eg. If run date is 3/11/2020, return 2/1/2020 and 2/29/2020)
@@ -39,9 +40,11 @@ public class ReportParmDivEndDate extends ApplicationObject implements ReportPar
 		this.division = division;
 	}
 
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy HH:mm:ss", timezone="America/Chicago")
 	public Calendar getEndDate() {
 		return endDate;
 	}
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy HH:mm:ss", timezone="America/Chicago")
 	public void setEndDate(Calendar endDate) {
 		this.endDate = endDate;
 	}
