@@ -4,13 +4,13 @@ import java.util.Calendar;
 
 import com.ansi.scilla.common.db.Division;
 
-public class ReportParmDivStartEndDate extends ReportParmStartEndDate {
+public class ReportParmStartEndMonthDiv extends ReportParmStartEndMonth {
 
 	private static final long serialVersionUID = 1L;
 	
 	private Division division;
 
-	public ReportParmDivStartEndDate(Division division, Calendar runDate) {
+	public ReportParmStartEndMonthDiv(Division division, Calendar runDate) {
 		super(runDate);
 		this.division = division;
 	}
