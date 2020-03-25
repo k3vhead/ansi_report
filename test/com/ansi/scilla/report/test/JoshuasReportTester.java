@@ -7,7 +7,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.Midnight;
@@ -42,7 +43,7 @@ public class JoshuasReportTester {
 	}
 	
 	private void makeMyReport() throws Exception {
-		this.logger = Logger.getLogger("com.ansi.scilla.report.reportBuilder");
+		this.logger = LogManager.getLogger("com.ansi.scilla.report.reportBuilder");
 		logger.info("Start");
 		Connection conn = null;
 		

@@ -4,7 +4,6 @@ import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.util.Calendar;
 
-import org.apache.log4j.Level;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.Midnight;

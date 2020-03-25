@@ -2,7 +2,7 @@ package com.ansi.scilla.report.sixMonthRollingVolume;
 
 import java.sql.Connection;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.report.reportBuilder.AbstractReport;
