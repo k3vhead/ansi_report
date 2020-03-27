@@ -33,6 +33,15 @@ public class BatchScheduleFactory {
 		case LAST_FISCAL_QUARTER:
 			parm = makeLastFiscalQuarter(conn, runDate);
 			break;
+		case LAST_6_MONTH:
+			parm = makeLast(runDate, Calendar.MONTH, 6);
+			break;
+		case LAST_60_DAY:
+			parm = makeLast(runDate, Calendar.DAY_OF_YEAR, 60);
+			break;
+		case LAST_45_DAY:
+			parm = makeLast(runDate, Calendar.DAY_OF_YEAR, 45);
+			break;
 		case LAST_MONTH:
 			parm = makeLastMonth(runDate);
 			break;
@@ -44,6 +53,21 @@ public class BatchScheduleFactory {
 			
 		}
 		return parm;
+	}
+
+
+	/**
+	 * Returns the last &quote;amount&quote; of &quote;units&quote; from runDate
+	 * 
+	 * @param runDate
+	 * @param units   What we're adding, (eg Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_YEAR) to runDate   
+	 * @param amount  How much we're adding
+	 * @return
+	 */
+	private static ReportParmStartEnd makeLast(Calendar runDate, int units, int amount) {
+		Calendar startDate = (Calendar)runDate.clone();
+		startDate.add(units, -1 * amount);
+		return new ReportParmStartEnd(startDate, runDate);
 	}
 
 
@@ -192,6 +216,9 @@ public class BatchScheduleFactory {
 	public enum BatchSchedule {
 		LAST_WEEK,
 		LAST_MONTH,
+		LAST_45_DAY,
+		LAST_60_DAY,
+		LAST_6_MONTH,
 		LAST_FISCAL_QUARTER,
 		LAST_FISCAL_YEAR,
 		LAST_CALENDAR_YEAR,
