@@ -26,10 +26,14 @@ import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
 
-public class TicketStatusReport extends StandardReport {
+public class TicketStatusReport extends StandardReport implements ReportByDivStartEnd, ReportByDivision {
 
 	private static final long serialVersionUID = 1L;
+	public static final String FILENAME = "Ticket Status";
+	
 
 	private final String sql = "select ticket.process_date, ticket.ticket_id, ticket.ticket_status, "
 			+ "\n\tjob.price_per_cleaning, ticket.act_price_per_cleaning, "
@@ -201,6 +205,11 @@ public class TicketStatusReport extends StandardReport {
 	
 	public Double getCompletedPPC() {
 		return this.pricePerCleaningTotal;
+	}
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
 	}
 	
 	

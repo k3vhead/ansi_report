@@ -33,9 +33,13 @@ import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
 import com.ansi.scilla.report.reportBuilder.XLSReportBuilderUtils;
 import com.ansi.scilla.report.reportBuilder.XLSReportFormatter;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivEnd;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
 
-public class PastDueReport2 extends StandardReport {
+public class PastDueReport2 extends StandardReport implements ReportByDivEnd, ReportByDivision {
 	private static final long serialVersionUID = 1L;
+	
+	public static final String FILENAME = "Past Due";
 	
 	private final String sql = 
 		"select bill_to.name as bill_to_name, " +
@@ -216,6 +220,11 @@ public class PastDueReport2 extends StandardReport {
 			previousBillTo = rowData.getBillToName();
 		}
 		return reportRows;
+	}
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
 	}
 	
 	

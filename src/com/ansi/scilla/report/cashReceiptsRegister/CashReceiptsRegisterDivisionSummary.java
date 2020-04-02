@@ -15,15 +15,20 @@ import org.apache.logging.log4j.Logger;
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
 
-public class CashReceiptsRegisterDivisionSummary extends StandardReport {
+public class CashReceiptsRegisterDivisionSummary extends StandardReport implements ReportByStartEnd {
 
+	public static final String FILENAME = "CRR_Division_Summary";
+	
+	
 	private static final long serialVersionUID = 1L;
 
 	private final String DIVISION_SUMMARY_SQL = "select concat(division.division_nbr,'-',division.division_code) as name " +
@@ -93,6 +98,13 @@ public class CashReceiptsRegisterDivisionSummary extends StandardReport {
 		String endTitle = dateFormatter.format(endDate.getTime());
 		String subtitle = startTitle + " through " + endTitle;
 		makeReport(startDate, endDate, data, subtitle);
+	}
+	
+	
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
 	}
 	
 	

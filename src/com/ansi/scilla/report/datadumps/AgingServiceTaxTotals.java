@@ -1,12 +1,17 @@
 package com.ansi.scilla.report.datadumps;
 
 import java.sql.Connection;
+import java.util.Calendar;
 
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.report.reportBuilder.DataDumpReport;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByNoInput;
 
-public class AgingServiceTaxTotals extends DataDumpReport {
+public class AgingServiceTaxTotals extends DataDumpReport implements ReportByNoInput {
 	
 	private static final long serialVersionUID = 1L;
+	public static final String FILENAME = "Aging Service Tax Totals";
+	
 	
 	public AgingServiceTaxTotals(Connection conn) throws Exception{
 		super();
@@ -51,6 +56,10 @@ public class AgingServiceTaxTotals extends DataDumpReport {
 			"order by year, month";
 
 	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
 
 	public static AgingServiceTaxTotals buildReport(Connection conn) throws Exception {
 		return new AgingServiceTaxTotals(conn);

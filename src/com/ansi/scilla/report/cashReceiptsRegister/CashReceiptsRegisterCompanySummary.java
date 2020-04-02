@@ -9,25 +9,27 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.db.DivisionGroup;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.DataFormats;
 import com.ansi.scilla.report.reportBuilder.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
 
-public class CashReceiptsRegisterCompanySummary extends StandardReport {
+public class CashReceiptsRegisterCompanySummary extends StandardReport implements ReportByStartEnd {
 
-	private static final long serialVersionUID = 1L;
+	public static final String FILENAME = "CRR_SUMMARY";
+	
+	private static final long serialVersionUID = 1L;	
 
 	private final String COMPANY_SUMMARY_SQL ="select division_group.name " +
 			"\n, isnull(company.amount,'0.00') as amount " +
@@ -100,6 +102,10 @@ public class CashReceiptsRegisterCompanySummary extends StandardReport {
 		makeReport(startDate, endDate, data, subtitle);
 	}
 	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
 	
 	
 	private List<RowData> makeData(Connection conn, CashReceiptsRegisterCompanySummary report, Calendar startDate, Calendar endDate) throws SQLException {

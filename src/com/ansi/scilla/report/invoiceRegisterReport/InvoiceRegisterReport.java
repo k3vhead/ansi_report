@@ -39,10 +39,13 @@ import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivMonthYear;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
 
-public class InvoiceRegisterReport extends StandardReport {
+public class InvoiceRegisterReport extends StandardReport implements ReportByDivMonthYear, ReportByDivision {
 
 	private static final long serialVersionUID = 1L;
+	public static final String FILENAME = "IR";
 
 	private final String sql = "select bill_to.address_id, "
 		+ "\n\tbill_to.name as client_name, "
@@ -141,6 +144,13 @@ public class InvoiceRegisterReport extends StandardReport {
 		this.endDate = (Calendar)workDate.clone();
 		
 	}
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
+	
 
 	private void makeData(Connection conn) throws Exception {
 		super.setSubtitle(makeSubtitle());

@@ -1,12 +1,16 @@
 package com.ansi.scilla.report.datadumps;
 
 import java.sql.Connection;
+import java.util.Calendar;
 
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.report.reportBuilder.DataDumpReport;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByNoInput;
 
-public class AccountsReceivableTotalsSummary extends DataDumpReport {
+public class AccountsReceivableTotalsSummary extends DataDumpReport implements ReportByNoInput {
 	
 	private static final long serialVersionUID = 1L;
+	public static final String FILENAME = "Accounts Receivable Totals Summary";
 	
 	public AccountsReceivableTotalsSummary(Connection conn) throws Exception{
 		super();
@@ -82,6 +86,10 @@ public class AccountsReceivableTotalsSummary extends DataDumpReport {
 			;
 
 
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
 	
 
 	public static AccountsReceivableTotalsSummary buildReport(Connection conn) throws Exception {

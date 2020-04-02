@@ -1,12 +1,16 @@
 package com.ansi.scilla.report.datadumps;
 
 import java.sql.Connection;
+import java.util.Calendar;
 
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.report.reportBuilder.DataDumpReport;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByNoInput;
 
-public class ClientContact extends DataDumpReport {
+public class ClientContact extends DataDumpReport implements ReportByNoInput {
 	
 	private static final long serialVersionUID = 1L;
+	public static final String FILENAME = "Client Contact";
 	
 	public ClientContact(Connection conn) throws Exception{
 		super();
@@ -38,6 +42,12 @@ public class ClientContact extends DataDumpReport {
 
 	
 
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
+	
 	public static ClientContact buildReport(Connection conn) throws Exception {
 		return new ClientContact(conn);
 	}

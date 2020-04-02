@@ -30,10 +30,14 @@ import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
 
-public class PacDetailReport extends StandardReport {
+public class PacDetailReport extends StandardReport implements ReportByDivStartEnd, ReportByDivision {
 
 	private static final long serialVersionUID = 1L;
+	
+	public static final String FILENAME = "PAC Detail";
 
 	private final String sql = "select "
 			+ "\n\t$REPORT_DATE$ as report_date, "
@@ -155,6 +159,12 @@ public class PacDetailReport extends StandardReport {
 	public Integer makeDataSize() {
 		return this.data.size();
 	}
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
 	
 	private String makeDivision(Connection conn, Integer divisionId) throws Exception {
 		Division division = new Division();

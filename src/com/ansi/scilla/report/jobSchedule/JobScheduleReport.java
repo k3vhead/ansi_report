@@ -5,13 +5,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.report.reportBuilder.DataDumpReport;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
 
-public class JobScheduleReport extends DataDumpReport {
+public class JobScheduleReport extends DataDumpReport implements ReportByStartEnd {
 	
 	private static final long serialVersionUID = 1L;
 	
 	public static final  String REPORT_TITLE = "Job Schedule";
+	public static final String FILENAME = "Job Schedule";
 
 	protected static final String sql = "select * from job_schedule "
 			+ " where start_date>=? and start_date<=?"
@@ -35,6 +38,11 @@ public class JobScheduleReport extends DataDumpReport {
 
 	public static JobScheduleReport buildReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
 		return new JobScheduleReport(conn, startDate, endDate);
+	}
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
 	}
 	
 }

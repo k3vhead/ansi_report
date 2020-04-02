@@ -221,10 +221,10 @@ public class XLSReportBuilderUtils extends ReportBuilderUtils {
 	
 	/**
 	 * Add column headers to a standard report
-	 * @param report
-	 * @param reportStartLoc
-	 * @param sheet
-	 * @param rf
+	 * @param report	The report for which we're adding column headers
+	 * @param reportStartLoc	The row/column into which we're placing header
+	 * @param sheet	The sheet we're working with
+	 * @param rf	The XLS formatting specifications
 	 */
 	public static void makeColumnHeader(StandardReport report, ReportStartLoc reportStartLoc, XSSFSheet sheet, XLSReportFormatter rf) {
 //		StandardReport report = (StandardReport)report;

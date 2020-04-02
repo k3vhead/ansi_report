@@ -3,14 +3,18 @@ package com.ansi.scilla.report.datadumps;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Calendar;
 
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.report.reportBuilder.DataDumpReport;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByNoInput;
 
-public class AccountsReceivableTotalsSummaryByDiv extends DataDumpReport {
+public class AccountsReceivableTotalsSummaryByDiv extends DataDumpReport implements ReportByNoInput {
 	
 	private static final long serialVersionUID = 1L;
 	
 	public static final  String REPORT_TITLE = "AR Totals Summary By Division";
+	public static final String FILENAME = "Accounts Receivable Totals Summary By Division";
 
 	protected static final String sql = "select Div\n" + 
 			", (select sum(case \n" + 
@@ -91,6 +95,10 @@ public class AccountsReceivableTotalsSummaryByDiv extends DataDumpReport {
 	}
 	
 
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
 	
 
 	public static AccountsReceivableTotalsSummaryByDiv buildReport(Connection conn, Integer divisionId) throws Exception {

@@ -44,6 +44,8 @@ import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.HTMLReportFormatter;
 import com.ansi.scilla.report.reportBuilder.XLSBuilder;
 import com.ansi.scilla.report.reportBuilder.XLSReportFormatter;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivMonthYear;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
 
 /**
  * Six Month Rolling Volume Report. Static methods make&lt;format&gt; accept a number of 6-month
@@ -54,9 +56,12 @@ import com.ansi.scilla.report.reportBuilder.XLSReportFormatter;
  * @author dclewis
  *
  */
-public class SixMonthRollingVolumeReport extends CustomReport implements Comparable<SixMonthRollingVolumeReport> {
+public class SixMonthRollingVolumeReport extends CustomReport implements Comparable<SixMonthRollingVolumeReport>, ReportByDivMonthYear, ReportByDivision {
 
 	private static final long serialVersionUID = 1L;
+	
+	public static final String FILENAME = "SMRV";
+	
 	
 	private Double marginTop = XLSBuilder.marginTopDefault;
 	private Double marginBottom = XLSBuilder.marginBottomDefault;
@@ -181,6 +186,11 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		this.dataRows.add(dataRow);
 	}
 
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
 	
 	private void makeData(PreparedStatement ps, Integer divisionId, Calendar startDate) throws Exception {
 		Integer queryMonth = startDate.get(Calendar.MONTH) + 1; // add 1 because January is 0;

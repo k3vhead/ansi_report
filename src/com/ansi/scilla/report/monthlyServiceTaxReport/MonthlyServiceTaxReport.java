@@ -5,11 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.report.reportBuilder.DataDumpReport;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
 
-public class MonthlyServiceTaxReport extends DataDumpReport {
+public class MonthlyServiceTaxReport extends DataDumpReport implements ReportByStartEnd {
 	
 	private static final long serialVersionUID = 1L;
+	public static final String FILENAME = "Monthly Service Tax";
 	
 	public static final  String REPORT_TITLE = "Monthly Service Tax Report";
 
@@ -41,6 +44,10 @@ public class MonthlyServiceTaxReport extends DataDumpReport {
 	}
 	
 
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
 	
 
 	public static MonthlyServiceTaxReport buildReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {

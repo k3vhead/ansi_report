@@ -36,10 +36,14 @@ import com.ansi.scilla.report.reportBuilder.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivMonthYear;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
 
-public class SmrvDetailReport extends StandardReport {
+public class SmrvDetailReport extends StandardReport implements ReportByDivMonthYear, ReportByDivision {
 
 	private static final long serialVersionUID = 1L;
+	
+	public static final String FILENAME = "SMRV Detail";
 
 	final static String sql = "select job_site.name as job_site_name "
 			+ "\n\t, job_site.zip "
@@ -94,7 +98,6 @@ public class SmrvDetailReport extends StandardReport {
 	/**
 	 * Default Start Date is current Day 1 current month
 	 * @param conn Database Connection
-	 * @param reportType Which report is to be generated
 	 * @param divisionId Division Filter
 	 * @throws Exception Something bad happened
 	 */
@@ -119,7 +122,6 @@ public class SmrvDetailReport extends StandardReport {
 	 * @param divisionId Division Filter
 	 * @param month Month of the year (1-12)
 	 * @param year 4-digit year (eg 2017, not 17)
-	 * @return Report Object
 	 * @throws Exception something bad happened
 	 */
 	public SmrvDetailReport(Connection conn, Integer divisionId, Integer month, Integer year) throws Exception {
@@ -177,6 +179,13 @@ public class SmrvDetailReport extends StandardReport {
 	public Integer getContractCount() {
 		return this.contractCount;
 	}
+	
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
 	
 	private String makeDivision(Connection conn, Integer divisionId) throws Exception {
 		Division division = new Division();

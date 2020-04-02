@@ -21,6 +21,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.ColumnWidth;
@@ -32,10 +33,13 @@ import com.ansi.scilla.report.reportBuilder.ReportStartLoc;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.SummaryType;
 import com.ansi.scilla.report.reportBuilder.XLSBuilder;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
 import com.thewebthing.commons.lang.StringUtils;
 
-public class CashReceiptsRegisterDetailReport extends StandardReport {
+public class CashReceiptsRegisterDetailReport extends StandardReport implements ReportByStartEnd {
 
+	public static final String FILENAME = "CRR_Detail";
+	
 	private static final long serialVersionUID = 1L;
 
 	private final String sql = "select bill_to.name as 'bill_to_name'\r\n" + 
@@ -145,6 +149,12 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 	public Integer makeDataSize() {
 		return this.data.size();
 	}
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
 	
 	private List<RowData> makeData(Connection conn, CashReceiptsRegisterDetailReport report, Calendar startDate, Calendar endDate) throws Exception {
 		

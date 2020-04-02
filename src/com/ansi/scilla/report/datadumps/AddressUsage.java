@@ -1,12 +1,16 @@
 package com.ansi.scilla.report.datadumps;
 
 import java.sql.Connection;
+import java.util.Calendar;
 
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.report.reportBuilder.DataDumpReport;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByNoInput;
 
-public class AddressUsage extends DataDumpReport {
+public class AddressUsage extends DataDumpReport implements ReportByNoInput {
 	
-private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
+	public static final String FILENAME = "Address Usage";
 	
 	public AddressUsage(Connection conn) throws Exception{
 		super();
@@ -24,6 +28,11 @@ private static final long serialVersionUID = 1L;
 			+ "\ngroup by address.address_id, address.name, address.address1, address.address2, address.city, address.state, address.zip, address.country_code "
 			+ "\norder by address.name";
 
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
 	
 
 	public static AddressUsage buildReport(Connection conn) throws Exception {
