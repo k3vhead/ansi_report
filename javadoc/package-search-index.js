@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.ansi.scilla.report.reportBuilder"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.ansi.scilla.report.reportBuilder.pdfBuilder"}]

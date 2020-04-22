@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"com.ansi.scilla.report.reportBuilder","l":"XLSReportBuilderUtils"}]
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"com.ansi.scilla.report.reportBuilder.pdfBuilder","l":"PDFReportBuilderUtils.HeaderPosition"},{"p":"com.ansi.scilla.report.reportBuilder.pdfBuilder","l":"PDFReportBuilderUtils"}]
