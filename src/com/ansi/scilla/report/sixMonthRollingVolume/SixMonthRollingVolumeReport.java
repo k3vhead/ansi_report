@@ -39,13 +39,13 @@ import com.ansi.scilla.report.htmlTable.HTMLCell;
 import com.ansi.scilla.report.htmlTable.HTMLRow;
 import com.ansi.scilla.report.htmlTable.HTMLTable;
 import com.ansi.scilla.report.reportBuilder.CustomReport;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.HTMLReportFormatter;
-import com.ansi.scilla.report.reportBuilder.XLSBuilder;
-import com.ansi.scilla.report.reportBuilder.XLSReportFormatter;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
+import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLReportFormatter;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivMonthYear;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSReportFormatter;
 
 /**
  * Six Month Rolling Volume Report. Static methods make&lt;format&gt; accept a number of 6-month

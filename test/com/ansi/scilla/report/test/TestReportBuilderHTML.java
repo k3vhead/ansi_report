@@ -9,8 +9,8 @@ import org.apache.commons.io.FileUtils;
 import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.utils.AppUtils;
 import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
-import com.ansi.scilla.report.reportBuilder.HTMLBuilder;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
+import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLBuilder;
 
 public class TestReportBuilderHTML {
 

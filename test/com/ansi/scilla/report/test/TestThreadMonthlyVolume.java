@@ -129,7 +129,6 @@ public class TestThreadMonthlyVolume {
 				new TestThreadMonthlyVolume().testTwoQuery();
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

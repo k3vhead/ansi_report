@@ -10,9 +10,9 @@ import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.report.reportBuilder.AbstractReport;
 import com.ansi.scilla.report.reportBuilder.CompoundReport;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.XLSBuilder;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivMonthYear;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 
 public class SmrvReport extends CompoundReport implements ReportByDivMonthYear, ReportByDivision {
 

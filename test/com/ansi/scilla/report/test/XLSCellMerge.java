@@ -15,7 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.ansi.scilla.report.reportBuilder.XLSReportFormatter;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSReportFormatter;
 
 public class XLSCellMerge {
 

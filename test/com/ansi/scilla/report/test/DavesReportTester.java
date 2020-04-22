@@ -22,16 +22,23 @@ import com.ansi.scilla.report.datadumps.AccountsReceivableTotalsOver60Detail;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
 import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
-import com.ansi.scilla.report.reportBuilder.HTMLBuilder;
-import com.ansi.scilla.report.reportBuilder.XLSBuilder;
+import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLBuilder;
+import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFBuilder;
+import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFReportFormatter;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 import com.ansi.scilla.report.sixMonthRollingVolume.SixMonthRollingVolumeReport;
 import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
-import com.ansi.scilla.report.ticket.TicketStatusReport;;
+import com.ansi.scilla.report.ticket.TicketStatusReport;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfWriter;;
 
 
 public class DavesReportTester {
 
-	private final String testResultDirectory = "/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_headers/ansi_report/";
+	private final String testResultDirectory = "/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_pdf/";
 	
 	protected ReportType reportType;
 	protected Calendar startDate;
@@ -60,14 +67,14 @@ public class DavesReportTester {
 		List<Thread> threadList = new ArrayList<Thread>();
 		
 //			make6mrv(conn);
-		threadList.add(new Thread(new MakeAROver60()));
+//		threadList.add(new Thread(new MakeAROver60()));
 //			makeClientUsage(conn);
 //		threadList.add(new Thread(new MakeCRRDetail()));
-//		threadList.add(new Thread(new MakeDO()));
-//		threadList.add(new Thread(new MakeInvoiceRegister()));
+		threadList.add(new Thread(new MakeDO()));
+		threadList.add(new Thread(new MakeInvoiceRegister()));
 //		threadList.add(new Thread(new MakePACListing()));
 //			makePastDue2(conn);
-//		threadList.add(new Thread(new MakeTicketStatus()));
+		threadList.add(new Thread(new MakeTicketStatus()));
 
 		for ( Thread thread : threadList ) {
 			thread.start();
@@ -110,6 +117,12 @@ public class DavesReportTester {
 			Date today = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddhhmmss");
 			return testResultDirectory + fileName + "_" + sdf.format(today) + ".xlsx";
+		}
+		
+		protected String makePdfName(String fileName) {
+			Date today = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddhhmmss");
+			return testResultDirectory + fileName + "_" + sdf.format(today) + ".pdf";
 		}
 
 	}
@@ -169,10 +182,17 @@ public class DavesReportTester {
 		@Override
 		public void makeReport(Connection conn) throws Exception {
 			logger.info("Start MakeDO");
-			Calendar endDate = new GregorianCalendar(2019, Calendar.AUGUST, 31);
+			String fileName = "DO_Ticket";
+			Calendar endDate = new GregorianCalendar(2020, Calendar.APRIL, 1);
 			DispatchedOutstandingTicketReport report = DispatchedOutstandingTicketReport.buildReport(conn, 101, endDate);
-			XSSFWorkbook workbook = XLSBuilder.build(report);
-			workbook.write(new FileOutputStream(makeFileName("DO_Ticket")));
+//			XSSFWorkbook workbook = XLSBuilder.build(report);
+//			workbook.write(new FileOutputStream(makeFileName(fileName)));
+			
+			Document document = new Document(PageSize.LETTER.rotate(), PDFBuilder.marginLeft, PDFBuilder.marginRight, PDFBuilder.marginTop, PDFBuilder.marginBottom);
+			PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(makePdfName(fileName)));
+			document.open();
+			PDFBuilder.build(report, document, pdfWriter);
+			document.close();
 			logger.info("End MakeDO");
 		}
 		
@@ -182,12 +202,20 @@ public class DavesReportTester {
 		@Override
 		public void makeReport(Connection conn) throws Exception {
 			logger.info("Start IRR");
+			String fileName = "IRR";
 			Integer divisionId = 101;
 			Integer month = Calendar.AUGUST;
 			Integer year = 2019;
 			InvoiceRegisterReport report = InvoiceRegisterReport.buildReport(conn, divisionId, month, year);
-			XSSFWorkbook workbook = XLSBuilder.build(report);
-			workbook.write(new FileOutputStream(makeFileName("IRR")));	
+//			XSSFWorkbook workbook = XLSBuilder.build(report);
+//			workbook.write(new FileOutputStream(makeFileName(fileName)));	
+			
+			Document document = new Document(PageSize.LETTER.rotate(), PDFBuilder.marginLeft, PDFBuilder.marginRight, PDFBuilder.marginTop, PDFBuilder.marginBottom);
+			PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(makePdfName(fileName)));
+			document.open();
+			PDFBuilder.build(report, document, pdfWriter);
+			document.close();
+			
 			logger.info("End IRR");
 		}		
 	}
@@ -230,11 +258,18 @@ public class DavesReportTester {
 		public void makeReport(Connection conn) throws Exception {
 			logger.info("Start Ticket STatus");
 			Integer divisionId = 101;
-			Calendar startDate = new GregorianCalendar(2019, Calendar.AUGUST, 1);
-			Calendar endDate = new GregorianCalendar(2019, Calendar.AUGUST, 30);
+			Calendar startDate = new GregorianCalendar(2020, Calendar.MARCH, 1);
+			Calendar endDate = new GregorianCalendar(2020, Calendar.APRIL, 30);
+			String fileName = "TicketStatus";
 			TicketStatusReport report = TicketStatusReport.buildReport(conn, divisionId, startDate, endDate);
-			XSSFWorkbook workbook = XLSBuilder.build(report);
-			workbook.write(new FileOutputStream(makeFileName("TicketStatus")));
+//			XSSFWorkbook workbook = XLSBuilder.build(report);
+//			workbook.write(new FileOutputStream(makeFileName(fileName)));
+			
+			Document document = new Document(PageSize.LETTER.rotate(), PDFBuilder.marginLeft, PDFBuilder.marginRight, PDFBuilder.marginTop, PDFBuilder.marginBottom);
+			PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(makePdfName(fileName)));
+			document.open();
+			PDFBuilder.build(report, document, pdfWriter);
+			document.close();
 			logger.info("End Ticket Status");			
 		}		
 	}

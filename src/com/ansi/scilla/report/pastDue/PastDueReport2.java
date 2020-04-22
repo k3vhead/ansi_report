@@ -24,17 +24,17 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.db.Division;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
-import com.ansi.scilla.report.reportBuilder.ReportOrientation;
-import com.ansi.scilla.report.reportBuilder.ReportStartLoc;
 import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
-import com.ansi.scilla.report.reportBuilder.XLSReportBuilderUtils;
-import com.ansi.scilla.report.reportBuilder.XLSReportFormatter;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.ReportStartLoc;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivEnd;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSReportBuilderUtils;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSReportFormatter;
 
 public class PastDueReport2 extends StandardReport implements ReportByDivEnd, ReportByDivision {
 	private static final long serialVersionUID = 1L;

@@ -14,8 +14,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.utils.AppUtils;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
-import com.ansi.scilla.report.reportBuilder.HTMLBuilder;
-import com.ansi.scilla.report.reportBuilder.XLSBuilder;;
+import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLBuilder;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;;
 
 
 public class JoshuasReportTester {

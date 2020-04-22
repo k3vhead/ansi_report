@@ -2,6 +2,8 @@ package com.ansi.scilla.report.reportBuilder;
 
 import java.util.List;
 
+import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
+
 
 public abstract class StandardSummaryReport extends AbstractReport {
 

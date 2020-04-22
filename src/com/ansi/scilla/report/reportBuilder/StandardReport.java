@@ -10,6 +10,8 @@ import org.apache.commons.collections.functors.UniquePredicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.thewebthing.commons.lang.StringUtils;
 
 

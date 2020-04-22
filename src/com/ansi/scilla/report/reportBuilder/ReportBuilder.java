@@ -13,10 +13,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.common.ApplicationObject;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.NoPreviousValue;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderCol;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.formatter.ReportFormatter;
 
 public abstract class ReportBuilder extends ApplicationObject {
 
 	private static final long serialVersionUID = 1L;
+	
+
 	/**
 	 * We'll use these to create a summary line at the end of the report. The key 
 	 * to each map is the fieldName. Non-null values will be added to the value in the 

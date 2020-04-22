@@ -10,6 +10,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.common.AnsiTime;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderCol;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
+import com.ansi.scilla.report.reportBuilder.formatter.ReportPageLayout;
 import com.thewebthing.commons.lang.StringUtils;
 
 public abstract class AbstractReport extends AnsiReport {
