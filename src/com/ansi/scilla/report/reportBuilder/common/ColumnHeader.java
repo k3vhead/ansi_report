@@ -12,11 +12,17 @@ public class ColumnHeader extends ApplicationObject {
 	private DataFormats formatter;
 	private SummaryType summaryType;	
 	private String subTotalTrigger;
+	private Integer maxCharacters;
 	private Integer colspan;
 	
 	public ColumnHeader(String fieldName, String label, Integer colspan, DataFormats formatter, SummaryType summaryType) {
 		this(fieldName, label, colspan, formatter, summaryType, null);
 	}
+	
+//	public ColumnHeader(String fieldName, String label, DataFormats formatter,
+//			SummaryType summaryType, Integer maxCharacters) {
+//		this(fieldName, label, formatter, summaryType, null, maxCharacters);
+//	}
 	
 	/**
 	 * Make a column header for report details
@@ -35,6 +41,12 @@ public class ColumnHeader extends ApplicationObject {
 		this.summaryType = summaryType;
 		this.subTotalTrigger = subTotalTrigger;
 		this.colspan = colspan;
+	}
+	
+	public ColumnHeader(String fieldName, String label, Integer colspan, DataFormats formatter, 
+			SummaryType summaryType, String subTotalTrigger, Integer maxCharacters) {
+		this(fieldName, label, colspan, formatter, summaryType, subTotalTrigger);
+		this.maxCharacters = maxCharacters;
 	}
 	
 	public String getFieldName() {
@@ -68,6 +80,14 @@ public class ColumnHeader extends ApplicationObject {
 
 	public void setSubTotalTrigger(String subTotalTrigger) {
 		this.subTotalTrigger = subTotalTrigger;
+	}
+
+	public Integer getMaxCharacters() {
+		return maxCharacters;
+	}
+
+	public void setMaxCharacters(Integer maxCharacters) {
+		this.maxCharacters = maxCharacters;
 	}
 
 	public Integer getColspan() {

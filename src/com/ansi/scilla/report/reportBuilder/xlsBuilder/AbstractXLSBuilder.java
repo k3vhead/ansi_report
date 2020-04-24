@@ -196,7 +196,7 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 				cell.setCellValue(cellValue.doubleValue());		
 			} else if ( dataClass.equals("Double")) {
 				Double cellValue = (Double)value;						
-				cell.setCellValue(cellValue.doubleValue());		
+				cell.setCellValue(cellValue.doubleValue());	
 			} else {
 				// if you're looking here because you're reading a stack trace and found a "method not found error"
 				// you need to add another "else if" in the lines right above

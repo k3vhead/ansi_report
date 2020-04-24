@@ -165,6 +165,14 @@ public class XLSBuilder extends AbstractXLSBuilder {
 			for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
 				ColumnHeader columnHeader = report.getHeaderRow()[i];				
 				Object value = makeDisplayData(columnHeader, dataRow);
+				if(value != null) {
+//					String display = makeFormattedDisplayData(columnHeader.getFormatter(), value);
+//					if(display != null) {
+						if(columnHeader.getMaxCharacters() != null) {
+							StringUtils.abbreviate(value.toString(), columnHeader.getMaxCharacters());
+						}
+//					}
+				}
 				super.doSummaries(columnHeader, value);
 				if ( columnHeader.getColspan() > 0 ) {
 					Integer firstColumn = columnIndex;

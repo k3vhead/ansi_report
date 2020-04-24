@@ -285,6 +285,9 @@ public abstract class ReportBuilder extends ApplicationObject {
 		String methodName = "get" + StringUtils.capitalize(columnHeader.getFieldName());
 		Method dataMethod = row.getClass().getMethod(methodName, (Class<?>[])null);
 		Object value = dataMethod.invoke(row, (Object[])null);
+		if ( value instanceof String && columnHeader.getMaxCharacters() != null ) {
+			value = StringUtils.abbreviate((String)value, columnHeader.getMaxCharacters());
+		}
 		return value;
 	}
 
@@ -309,6 +312,20 @@ public abstract class ReportBuilder extends ApplicationObject {
 			display = (String)formatterMethod.invoke(formatter, new Object[] {value} );
 		}
 		
+		return display;
+	}
+	
+	protected String makeMaxWidth(ColumnHeader columnHeader, Object row, Object value) {
+		String display = "";
+		if(value != null) {
+			if(columnHeader.getMaxCharacters() != null) {
+				if(value.toString().length() > columnHeader.getMaxCharacters()) {
+
+					display = value.toString().substring(0, columnHeader.getMaxCharacters() - 3);
+					display.concat("...");
+				}
+			}
+		}
 		return display;
 	}
 

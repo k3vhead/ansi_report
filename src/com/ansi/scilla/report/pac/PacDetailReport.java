@@ -220,9 +220,9 @@ public class PacDetailReport extends StandardReport implements ReportByDivStartE
 		super.setHeaderRow(new ColumnHeader[] {
 				new ColumnHeader("reportDate", this.reportType.columnHeader, 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobId", "Job Code", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("name","Site Name", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("address1","Street 1", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("city","City", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("name","Site Name", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 13),
+				new ColumnHeader("address1","Street 1", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 27),
+				new ColumnHeader("city","City", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 12),
 				new ColumnHeader("state","State", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("budget","Budget", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 				new ColumnHeader("pricePerCleaning","PPC", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
