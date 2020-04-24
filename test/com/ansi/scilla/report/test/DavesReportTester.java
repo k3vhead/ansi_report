@@ -1,5 +1,6 @@
 package com.ansi.scilla.report.test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
@@ -18,21 +19,19 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.utils.AppUtils;
 import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
+import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterSummaryReport;
 import com.ansi.scilla.report.datadumps.AccountsReceivableTotalsOver60Detail;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
 import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
 import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLBuilder;
 import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFBuilder;
-import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFReportFormatter;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 import com.ansi.scilla.report.sixMonthRollingVolume.SixMonthRollingVolumeReport;
 import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
 import com.ansi.scilla.report.ticket.TicketStatusReport;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.PageSize;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfWriter;;
 
 
@@ -67,14 +66,15 @@ public class DavesReportTester {
 		List<Thread> threadList = new ArrayList<Thread>();
 		
 //			make6mrv(conn);
-//		threadList.add(new Thread(new MakeAROver60()));
+		threadList.add(new Thread(new MakeAROver60()));
 //			makeClientUsage(conn);
 //		threadList.add(new Thread(new MakeCRRDetail()));
-		threadList.add(new Thread(new MakeDO()));
-		threadList.add(new Thread(new MakeInvoiceRegister()));
+//**		threadList.add(new Thread(new MakeCRRSummary()));
+//**		threadList.add(new Thread(new MakeDO()));
+//**		threadList.add(new Thread(new MakeInvoiceRegister()));
 //		threadList.add(new Thread(new MakePACListing()));
 //			makePastDue2(conn);
-		threadList.add(new Thread(new MakeTicketStatus()));
+//**		threadList.add(new Thread(new MakeTicketStatus()));
 
 		for ( Thread thread : threadList ) {
 			thread.start();
@@ -154,9 +154,13 @@ public class DavesReportTester {
 		@Override
 		public void makeReport(Connection conn) throws Exception {
 			logger.info("Start AROver60");
-			AccountsReceivableTotalsOver60Detail crrDetail = AccountsReceivableTotalsOver60Detail.buildReport(conn);
-			XSSFWorkbook workbook = crrDetail.makeXLS();
-			workbook.write(new FileOutputStream(makeFileName("AROver60")));
+			String fileName = "AROver60";
+			AccountsReceivableTotalsOver60Detail report = AccountsReceivableTotalsOver60Detail.buildReport(conn);
+//			XSSFWorkbook workbook = report.makeXLS();
+//			workbook.write(new FileOutputStream(makeFileName(fileName)));
+			
+			ByteArrayOutputStream baos = report.makePDF();
+			baos.writeTo(new FileOutputStream(makePdfName(fileName)));
 			logger.info("End AROver60");			
 		}
 		
@@ -173,6 +177,29 @@ public class DavesReportTester {
 			XSSFWorkbook workbook = XLSBuilder.build(crrDetail);
 			workbook.write(new FileOutputStream(makeFileName("CRR_DETAIL")));
 			logger.info("End CRR");			
+		}
+		
+	}
+	
+	
+	public class MakeCRRSummary extends ReportMaker {
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start CRR Summary");
+			String fileName = CashReceiptsRegisterSummaryReport.FILENAME;
+			Calendar startDate = new GregorianCalendar(2019, Calendar.AUGUST, 1);
+			Calendar endDate = new GregorianCalendar(2019, Calendar.AUGUST, 31);
+			CashReceiptsRegisterSummaryReport report = CashReceiptsRegisterSummaryReport.buildReport(conn, startDate, endDate);
+//			XSSFWorkbook workbook = new XSSFWorkbook();
+//			report.makeXLS(workbook);
+//			workbook.write(new FileOutputStream(makeFileName(fileName)));
+			
+			Document document = new Document(PageSize.LETTER.rotate(), PDFBuilder.marginLeft, PDFBuilder.marginRight, PDFBuilder.marginTop, PDFBuilder.marginBottom);
+			PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(makePdfName(fileName)));
+			document.open();
+			PDFBuilder.build(report, document, pdfWriter);
+			document.close();
+			logger.info("End CRR Summary");			
 		}
 		
 	}

@@ -38,11 +38,10 @@ public class PDFBuilder extends AbstractPDFBuilder {
 	private Document buildReport(Document document, PdfWriter pdfWriter) throws Exception {
 		if ( this.report instanceof StandardSummaryReport ) {
 			logger.log(Level.DEBUG, "Making standard summary report header");
-			//TODO: make summary header
-//			pdfWriter.setPageEvent(new SummaryReportHeader((SummaryReport)report));
+			pdfWriter.setPageEvent(new StandardSummaryPDFReportHeader((StandardSummaryReport)report));
 		} else {
 			logger.log(Level.DEBUG, "Making standard report header");
-			pdfWriter.setPageEvent(new StandardReportHeader((StandardReport)report));
+			pdfWriter.setPageEvent(new StandardPDFReportHeader((StandardReport)report));
 		}
 		
 		//TODO : Margin top based on number of rows in header (incl. notes)
@@ -61,17 +60,18 @@ public class PDFBuilder extends AbstractPDFBuilder {
 
 	}
 
-	/**
-	 * Add report as new page(s) to an existing document
-	 * @param report
-	 * @param document
-	 * @return
-	 * @throws Exception
-	 */
+	
 	public static void build(StandardReport report, Document document, PdfWriter pdfWriter) throws Exception {
 		PDFBuilder builder = new PDFBuilder(report);		
 		builder.buildReport(document, pdfWriter);
 	}
+	
+	public static void build(StandardSummaryReport report, Document document, PdfWriter pdfWriter) throws Exception {
+		PDFBuilder builder = new PDFBuilder(report);		
+		builder.buildReport(document, pdfWriter);
+	}
+
+	
 	
 	/**
 	 * Create a new spreadsheet with one tab filled with the input report

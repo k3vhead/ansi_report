@@ -1,5 +1,6 @@
 package com.ansi.scilla.report.reportBuilder;
 
+import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -31,8 +32,15 @@ import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLReportFormatter;
+import com.ansi.scilla.report.reportBuilder.pdfBuilder.DataDumpPDFReportHeader;
+import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFBuilder;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSReportFormatter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 
 
 public abstract class DataDumpReport extends CustomReport {
@@ -411,6 +419,21 @@ public abstract class DataDumpReport extends CustomReport {
 		return StringUtils.join(reportLineList.iterator(), "\n");
 	}
 
+	
+	public ByteArrayOutputStream makePDF() throws DocumentException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		Document document = new Document(PageSize.LETTER.rotate(), PDFBuilder.marginLeft, PDFBuilder.marginRight, PDFBuilder.marginTop, PDFBuilder.marginBottom);
+		PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
+		DataDumpPDFReportHeader x = new DataDumpPDFReportHeader(this);
+		pdfWriter.setPageEvent(x);
+		document.open();
+//		document.add(x.getHeaderTable());
+		document.add(new Paragraph("THis is a datadump report. "));
+		document.close();
+
+		return baos;
+	}
+	
 	private String makeCreatedDate() {
 		Calendar today = Calendar.getInstance(new AnsiTime());
 		DateFormatter formatter = (DateFormatter)DataFormats.DETAIL_TIME_FORMAT.formatter();

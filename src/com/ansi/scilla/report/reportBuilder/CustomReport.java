@@ -19,4 +19,5 @@ public abstract class CustomReport extends AbstractReport {
 	public abstract XSSFWorkbook makeXLS() throws Exception;
 	public abstract void add2XLS(XSSFWorkbook workbook) throws Exception;
 	public abstract String makeHTML() throws Exception;
+	
 }

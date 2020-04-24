@@ -24,7 +24,6 @@ import com.itextpdf.text.TabStop;
 import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
 
@@ -33,24 +32,17 @@ import com.itextpdf.text.pdf.PdfWriter;
  * @author dclewis
  *
  */
-public class StandardReportHeader extends PdfPageEventHelper {
+public class StandardPDFReportHeader extends AbstractPDFReportHeader {
 	
 	private static final Float standardHeaderCellWidth = 252F;
 	
-	private PdfPTable headerTable;
-	private PdfTemplate t;
 	
-	public StandardReportHeader(StandardReport report) throws Exception {
+	public StandardPDFReportHeader(StandardReport report) throws Exception {
 		super();
 		makeHeaderTable(report);
 	}
 	
-	public PdfPTable getHeaderTable() {
-		return headerTable;
-	}
-	public void setHeaderTable(PdfPTable headerTable) {
-		this.headerTable = headerTable;
-	}
+	
 
 
 
