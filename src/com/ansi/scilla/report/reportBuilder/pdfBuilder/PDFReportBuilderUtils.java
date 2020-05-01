@@ -11,12 +11,12 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 
-import com.ansi.scilla.report.reportBuilder.AbstractReport;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.common.ReportBuilderUtils;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderCol;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.reportType.AbstractReport;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;

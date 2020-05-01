@@ -3,10 +3,10 @@ package com.ansi.scilla.report.reportBuilder.htmlBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.common.NoPreviousValue;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.thewebthing.commons.lang.StringUtils;
 
 

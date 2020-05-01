@@ -24,7 +24,6 @@ import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.jobticket.TicketStatus;
 import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.common.utils.ObjectTransformer;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
@@ -32,6 +31,7 @@ import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivEnd;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.ColumnWidth;
 
 public class DispatchedOutstandingTicketReport extends StandardReport implements ReportByDivEnd, ReportByDivision {
@@ -167,8 +167,8 @@ public class DispatchedOutstandingTicketReport extends StandardReport implements
 	}
 
 	private List<RowData> makeData(Connection conn, Integer divisionId, Calendar endDate) throws Exception {
-		logger.log(Level.DEBUG, sql);
-		logger.log(Level.DEBUG, divisionId + "\n" + endDate);
+//		logger.log(Level.DEBUG, sql);
+//		logger.log(Level.DEBUG, divisionId + "\n" + endDate);
 		PreparedStatement ps = conn.prepareStatement(sql);
 		int n = 1;
 		ps.setDate(n, new java.sql.Date(endDate.getTimeInMillis()));

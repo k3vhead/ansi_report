@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.util.Calendar;
 
 import com.ansi.scilla.common.db.Division;
-import com.ansi.scilla.report.reportBuilder.DataDumpReport;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportType.DataDumpReport;
 
 public class MonthlyServiceTaxByDayReport extends DataDumpReport implements ReportByStartEnd {
 	

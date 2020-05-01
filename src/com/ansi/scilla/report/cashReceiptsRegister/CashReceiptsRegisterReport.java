@@ -7,9 +7,9 @@ import java.util.Calendar;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.db.Division;
-import com.ansi.scilla.report.reportBuilder.AbstractReport;
-import com.ansi.scilla.report.reportBuilder.CompoundReport;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportType.AbstractReport;
+import com.ansi.scilla.report.reportBuilder.reportType.CompoundReport;
 
 public class CashReceiptsRegisterReport extends CompoundReport implements ReportByStartEnd {
 

@@ -8,12 +8,12 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.ansi.scilla.report.reportBuilder.ReportBuilder;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.StandardSummaryReport;
 import com.ansi.scilla.report.reportBuilder.common.ReportBuilderUtils;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderCol;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.reportType.ReportBuilder;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardSummaryReport;
 
 
 public abstract class AbstractHTMLBuilder extends ReportBuilder {

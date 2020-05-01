@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.util.Calendar;
 
 import com.ansi.scilla.common.db.Division;
-import com.ansi.scilla.report.reportBuilder.DataDumpReport;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByNoInput;
+import com.ansi.scilla.report.reportBuilder.reportType.DataDumpReport;
 
 public class AgingCashTotals extends DataDumpReport implements ReportByNoInput {
 	

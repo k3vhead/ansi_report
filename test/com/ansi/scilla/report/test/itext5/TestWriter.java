@@ -3,7 +3,7 @@ package com.ansi.scilla.report.test.itext5;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 
-import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFBuilder;
+import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFReportFormatter;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
@@ -22,7 +22,7 @@ public class TestWriter {
 	
 	private ByteArrayOutputStream makeDocument() throws DocumentException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Document document = new Document(PageSize.LETTER.rotate(), PDFBuilder.marginLeft, PDFBuilder.marginRight, PDFBuilder.marginTop, PDFBuilder.marginBottom);
+		Document document = new Document(PageSize.LETTER.rotate(), PDFReportFormatter.marginLeft, PDFReportFormatter.marginRight, PDFReportFormatter.marginTop, PDFReportFormatter.marginBottom);
 		PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
 		document.open();
 		document.add(new Paragraph("Adding stuff to a PDF just to fill some space"));

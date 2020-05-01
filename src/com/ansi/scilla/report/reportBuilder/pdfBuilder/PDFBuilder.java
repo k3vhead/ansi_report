@@ -1,21 +1,20 @@
 package com.ansi.scilla.report.reportBuilder.pdfBuilder;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.StandardSummaryReport;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.common.NoPreviousValue;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardSummaryReport;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
-import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -35,17 +34,16 @@ public class PDFBuilder extends AbstractPDFBuilder {
 	}
 	
 	
-	private Document buildReport(Document document, PdfWriter pdfWriter) throws Exception {
-		if ( this.report instanceof StandardSummaryReport ) {
-			logger.log(Level.DEBUG, "Making standard summary report header");
-			pdfWriter.setPageEvent(new StandardSummaryPDFReportHeader((StandardSummaryReport)report));
-		} else {
-			logger.log(Level.DEBUG, "Making standard report header");
-			pdfWriter.setPageEvent(new StandardPDFReportHeader((StandardReport)report));
-		}
+	private ByteArrayOutputStream buildReport() throws Exception {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		
-		//TODO : Margin top based on number of rows in header (incl. notes)
-//		document.setMargins(left, right, top, bottom);
+		PDFReportHeader header = new PDFReportHeader(report);
+		float topMargin = header.getHeaderTable().getTotalHeight() + (PDFReportFormatter.shortSideSize - PDFReportFormatter.headerDefaultPositionY) + 4.0F;
+		Document document = new Document(PageSize.LETTER.rotate(), PDFReportFormatter.marginLeft, PDFReportFormatter.marginRight, topMargin, PDFReportFormatter.marginBottom);
+		PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
+		document.open();
+		pdfWriter.setPageEvent(header);
+
 		//TODO : Column Widths
 		//TODO : Footer / page count
 		PdfPTable dataTable = new PdfPTable(((StandardReport)report).getHeaderRow().length);
@@ -56,54 +54,14 @@ public class PDFBuilder extends AbstractPDFBuilder {
 		makeFinalSubtotal(dataTable);
 		makeSummary(dataTable);	
 		document.add(dataTable);
-		return document;
+		document.close();
+
+		return baos;
 
 	}
 
 	
-	public static void build(StandardReport report, Document document, PdfWriter pdfWriter) throws Exception {
-		PDFBuilder builder = new PDFBuilder(report);		
-		builder.buildReport(document, pdfWriter);
-	}
-	
-	public static void build(StandardSummaryReport report, Document document, PdfWriter pdfWriter) throws Exception {
-		PDFBuilder builder = new PDFBuilder(report);		
-		builder.buildReport(document, pdfWriter);
-	}
 
-	
-	
-	/**
-	 * Create a new spreadsheet with one tab filled with the input report
-	 * 
-	 * @param report
-	 * @return
-	 * @throws Exception
-	 */
-//	public static Document build(StandardReport report) throws Exception {
-////		Document workbook = new Document(PageSize.LETTER, marginLeft, marginRight, marginTop, marginBottom);
-//		PDFBuilder builder = new PDFBuilder(report);
-//		Document workbook = builder.buildReport();
-//		return workbook;
-//	}
-
-	
-	/**
-	 * Add a report as a block of cells to an existing spreadsheet tab
-	 * 
-	 * @param report
-	 * @param sheet
-	 * @param reportStartLoc
-	 * @throws Exception
-	 */
-	public static void build(StandardReport report, XSSFSheet sheet, ReportStartLoc reportStartLoc) throws Exception {
-//		XLSBuilder builder = new XLSBuilder(report);
-//		builder.setReportStartLoc(reportStartLoc);
-//		builder.makeFormatters(sheet.getWorkbook());
-//		builder.buildReport(sheet);
-	}
-	
-	
 	private void makeDetails(StandardReport report, PdfPTable dataTable) throws Exception {
 		
 		for ( Object dataRow : report.getDataRows() ) {
@@ -223,152 +181,10 @@ public class PDFBuilder extends AbstractPDFBuilder {
 			}
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-/*
-	
 
-	
-	private float drawColumnText(PdfContentByte canvas, Rectangle rect, Element p, boolean simulate) throws DocumentException {
-		ColumnText ct = new ColumnText(canvas);
-		ct.setSimpleColumn(rect);
-		ct.addElement(p);
-		ct.go(simulate);
-		return ct.getYLine();
+	public static ByteArrayOutputStream build(StandardReport report) throws Exception {
+		return new PDFBuilder(report).buildReport();
 	}
 	
-	
-
-	
-	
-	private void makePDFHeader() throws Exception{
-		StringBuffer buffer = new StringBuffer();
-		XSSFWorkbook workbook = new XSSFWorkbook();
-		XSSFSheet sheet = workbook.createSheet();
-		CreationHelper createHelper = workbook.getCreationHelper();
-		sheet.getPrintSetup().setLandscape(true);
-		sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
-		sheet.getPrintSetup().setFitWidth((short)1);
-		
-		short dataFormatDate = createHelper.createDataFormat().getFormat("mm/dd/yyyy");
-	    short dataFormatDateTime = createHelper.createDataFormat().getFormat("mm/dd/yyyy hh:mm:ss");
-	    short dataFormatDecimal = createHelper.createDataFormat().getFormat("#,##0.00");
-	    short dataFormatInteger = createHelper.createDataFormat().getFormat("#,##0");
-	    Integer fontHeight = 9;
-	    XSSFFont fontDefaultFont = workbook.createFont();
-		fontDefaultFont.setFontHeight(fontHeight);
-		
-		CellStyle cellStyleRunDate = workbook.createCellStyle();
-	    cellStyleRunDate.setDataFormat(dataFormatDateTime);
-	    cellStyleRunDate.setAlignment(CellStyle.ALIGN_LEFT);
-	    cellStyleRunDate.setFont(fontDefaultFont);
-		
-	    CellStyle cellStyleHeaderDivision = workbook.createCellStyle();
-	    cellStyleHeaderDivision.setAlignment(CellStyle.ALIGN_RIGHT);
-	    cellStyleHeaderDivision.setDataFormat(dataFormatInteger);
-	    cellStyleHeaderDivision.setFont(fontDefaultFont);
-	    
-		//Date today = new Date();
-		int rowNum = 0;
-		int colNum = 0;
-		XSSFRow row = null;
-		XSSFCell cell = null;
-		
-	    row = sheet.createRow(rowNum);
-	    row.setHeight((short)400);
-//	    sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,1,2));
-//	    sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,3,7));
-	    cell = row.createCell(colNum);	
-//	    cell.setCellStyle(cellStyleHeaderLabel);
-	    //cell.setCellStyle(cellStyleCreatedLabel);	    
-	    cell.setCellValue("Created:");
-	    colNum++;
-	    cell = row.createCell(colNum);
-	    cell.setCellStyle(cellStyleRunDate);
-	    cell.setCellValue(this.runDate);
-	    colNum++;
-	    colNum++;  // make up for merged rows
-	    cell = row.createCell(colNum);
-	    //cell.setCellStyle(cellStyleAnsi);
-	    cell.setCellValue("American National Skyline, Inc.");
-	    colNum = 9;
-	    cell = row.createCell(colNum);
-	    //cell.setCellStyle(cellStyleCreatedLabel);
-	    cell.setCellValue("Division:");
-	    colNum++;
-	    cell = row.createCell(colNum);
-	    cell.setCellStyle(cellStyleHeaderDivision);
-	    cell.setCellValue(this.div);
-		
-
-	}
-	
-	
-	public ByteArrayOutputStream makePDF(Connection conn, List<TicketPrintResult> ticketList) throws Exception {
-		
-		Document document = new Document(PageSize.LETTER, marginLeft, marginRight, marginTop, marginBottom);
-		
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
-		pdfWriter.setPageEvent(new TicketWatermarkManagerCopy());
-		pdfWriter.setPageEvent(new TicketWatermarkOfficeCopy());
-
-		document.open();
-			
-		PdfContentByte cb = pdfWriter.getDirectContent();
-		for(TicketPrintResult ticket : ticketList){
-			//Position(LLX, LLY, URX, URY);
-			//remitTo = new Position(50F,715F,130F,766F);
-			remitTo = new Position(15F,730F,70F,780F);
-			Rectangle rect = new Rectangle(remitTo.llx, remitTo.lly, remitTo.urx, remitTo.ury);
-			//rect.setBorder(Rectangle.BOX);
-			rect.setBorderWidth(0.5f);
-			//rect.setBorderColor(BaseColor.RED);
-			rect.setBackgroundColor(BaseColor.LIGHT_GRAY);
-			cb.rectangle(rect);
-			Paragraph paragraph = new Paragraph();
-			paragraph.setLeading(0F, 1.1F);
-//			paragraph.setIndentationLeft(154.8F);
-			paragraph.setAlignment(Paragraph.ALIGN_LEFT);
-			paragraph.setIndentationLeft(3);
-			paragraph.add(new Chunk("Direct Labor:", fontHelv8));
-			paragraph.add(new Chunk("\n"));
-			paragraph.add(new Chunk("P.P.C.:", fontHelv8));
-			paragraph.add(new Chunk("\n"));
-			paragraph.add(new Chunk("Pay Method:", fontHelv8));
-			paragraph.add(new Chunk("\n"));
-			paragraph.add(new Chunk("Site Contact:", fontHelv8));
-			paragraph.add(new Chunk("\n"));
-			paragraph.add(new Chunk("Job Contact:", fontHelv8));
-			drawColumnText(cb, rect, paragraph, false);
-			
-		}
-//		Paragraph paragraph = new Paragraph(new Chunk("Stuff goes here"));
-//		document.add(paragraph);
-		try {
-			document.close();
-		} catch ( Exception e ) {
-			System.err.println(e.getMessage());
-		}
-		
-		return baos;
-	}
-	
-	
-*/	
 	
 }

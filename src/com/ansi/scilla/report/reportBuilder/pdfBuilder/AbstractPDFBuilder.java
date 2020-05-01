@@ -1,19 +1,8 @@
 package com.ansi.scilla.report.reportBuilder.pdfBuilder;
 
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-
-import com.ansi.scilla.common.AnsiTime;
-import com.ansi.scilla.report.reportBuilder.PrintableReport;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.StandardSummaryReport;
-import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.reportType.PrintableReport;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardSummaryReport;
 
 
 public abstract class AbstractPDFBuilder extends PrintableReport {
@@ -21,12 +10,9 @@ public abstract class AbstractPDFBuilder extends PrintableReport {
 	private static final long serialVersionUID = 1L;	
 	
 	
-	public static final float marginLeft = 30F;
-	public static final float marginRight = 30F;
-	public static final float marginTop = 75F;
-	public static final float marginBottom = 36F;
+	
 
-	protected ReportStartLoc reportStartLoc = new ReportStartLoc(marginTop, marginLeft);
+	protected ReportStartLoc reportStartLoc = new ReportStartLoc(PDFReportFormatter.marginTop, PDFReportFormatter.marginLeft);
 
 	public AbstractPDFBuilder(StandardReport report) {
 		super(report);

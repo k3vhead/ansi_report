@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.ansi.scilla.report.reportBuilder;
+package com.ansi.scilla.report.reportBuilder.reportType;
 
 import java.util.Calendar;
 import java.util.Date;

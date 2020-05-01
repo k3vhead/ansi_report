@@ -12,6 +12,7 @@ import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.BaseFont;
 
 public class PDFReportFormatter extends ApplicationObject {
@@ -41,6 +42,20 @@ public class PDFReportFormatter extends ApplicationObject {
 	public static final HashMap<DataFormats, Integer> cellStyles;
 	public static final SimpleDateFormat dataFormatDate = new SimpleDateFormat("MM/dd/yyyy");
 	public static final SimpleDateFormat dataFormatDateTime = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+
+	
+	public static final float marginLeft = 30F;
+	public static final float marginRight = 30F;
+	public static final float marginTop = 75F;
+	public static final float marginBottom = 36F;
+	public static final float marginTopDatadump = 35F;
+	
+	public static final float headerDefaultPositionX = 34F;
+	public static final float headerDefaultPositionY = 612F;
+	
+	// Dimensions of a 8 1/2 x 11 paper
+	public static final float shortSideSize = PageSize.LETTER.getWidth();
+	public static final float longSideSize = PageSize.LETTER.getHeight();
 	
 	
 	

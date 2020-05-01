@@ -26,13 +26,11 @@ import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
 import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLBuilder;
 import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFBuilder;
+import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFSummaryBuilder;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 import com.ansi.scilla.report.sixMonthRollingVolume.SixMonthRollingVolumeReport;
 import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
-import com.ansi.scilla.report.ticket.TicketStatusReport;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.pdf.PdfWriter;;
+import com.ansi.scilla.report.ticket.TicketStatusReport;;
 
 
 public class DavesReportTester {
@@ -65,16 +63,16 @@ public class DavesReportTester {
 
 		List<Thread> threadList = new ArrayList<Thread>();
 		
-//			make6mrv(conn);
-		threadList.add(new Thread(new MakeAROver60()));
-//			makeClientUsage(conn);
+//		threadList.add(new Thread(new make6mrv()));
+//		threadList.add(new Thread(new MakeAROver60()));   			// this is a datadump
+//		threadList.add(new Thread(new MakeClientUsage()));
 //		threadList.add(new Thread(new MakeCRRDetail()));
-//**		threadList.add(new Thread(new MakeCRRSummary()));
-//**		threadList.add(new Thread(new MakeDO()));
-//**		threadList.add(new Thread(new MakeInvoiceRegister()));
+		threadList.add(new Thread(new MakeCRRSummary()));   		// this is a standard summary
+//		threadList.add(new Thread(new MakeDO()));					// this is a standard report with banner notes
+//		threadList.add(new Thread(new MakeInvoiceRegister()));   	// this is a standard report
 //		threadList.add(new Thread(new MakePACListing()));
-//			makePastDue2(conn);
-//**		threadList.add(new Thread(new MakeTicketStatus()));
+//		threadList.add(new Thread(new makePastDue2()));	
+//		threadList.add(new Thread(new MakeTicketStatus()));			// this is a standard report
 
 		for ( Thread thread : threadList ) {
 			thread.start();
@@ -124,30 +122,42 @@ public class DavesReportTester {
 			SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddhhmmss");
 			return testResultDirectory + fileName + "_" + sdf.format(today) + ".pdf";
 		}
+		
+		protected String makeHtmlName(String fileName) {
+			Date today = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddhhmmss");
+			return testResultDirectory + fileName + "_" + sdf.format(today) + ".html";
+		}
 
 	}
 	
-
-	private void make6mrv(Connection conn) throws Exception {
-		Integer divisionId = 101;
-		Integer month = Calendar.JULY;
-		Integer year = 2019;
-		SixMonthRollingVolumeReport report = SixMonthRollingVolumeReport.buildReport(conn, divisionId, month, year);
-		XSSFWorkbook workbook = report.makeXLS();
-		workbook.write(new FileOutputStream("/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_headers/6MRV.xlsx"));
+	public class Make6MRV extends ReportMaker {
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			Integer divisionId = 101;
+			Integer month = Calendar.JULY;
+			Integer year = 2019;
+			String fileName = "6MRV";
+			SixMonthRollingVolumeReport report = SixMonthRollingVolumeReport.buildReport(conn, divisionId, month, year);
+			XSSFWorkbook workbook = report.makeXLS();
+			workbook.write(new FileOutputStream(makeFileName(fileName)));
+		}
 	}
 
-	private void makeClientUsage(Connection conn) throws Exception {
-		Calendar startDate = null;
-		Integer divisionId = null;
-		logger.info("PastDueReport");
-		PastDueReport2 userReport = PastDueReport2.buildReport(conn, startDate, divisionId);
-		XSSFWorkbook workbook = XLSBuilder.build(userReport);
-		workbook.write(new FileOutputStream(testResultDirectory + "ClientUsage.xlsx"));
-	
-		String html = HTMLBuilder.build(userReport);
-		FileUtils.write(new File(testResultDirectory + "ClientUsage.html"), html);
-	
+	public class MakeClientUsage extends ReportMaker {
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			Calendar startDate = null;
+			Integer divisionId = null;
+			logger.info("PastDueReport");
+			String fileName = "ClientUsage.xlsx";
+			PastDueReport2 userReport = PastDueReport2.buildReport(conn, startDate, divisionId);
+			XSSFWorkbook workbook = XLSBuilder.build(userReport);
+			workbook.write(new FileOutputStream(makeFileName(fileName)));
+		
+			String html = HTMLBuilder.build(userReport);
+			FileUtils.write(new File(makeHtmlName(fileName)), html);
+		}
 	}
 
 	public class MakeAROver60 extends ReportMaker {
@@ -194,11 +204,8 @@ public class DavesReportTester {
 //			report.makeXLS(workbook);
 //			workbook.write(new FileOutputStream(makeFileName(fileName)));
 			
-			Document document = new Document(PageSize.LETTER.rotate(), PDFBuilder.marginLeft, PDFBuilder.marginRight, PDFBuilder.marginTop, PDFBuilder.marginBottom);
-			PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(makePdfName(fileName)));
-			document.open();
-			PDFBuilder.build(report, document, pdfWriter);
-			document.close();
+			ByteArrayOutputStream baos = PDFSummaryBuilder.build(report);
+			baos.writeTo(new FileOutputStream(makePdfName(fileName)));
 			logger.info("End CRR Summary");			
 		}
 		
@@ -215,11 +222,9 @@ public class DavesReportTester {
 //			XSSFWorkbook workbook = XLSBuilder.build(report);
 //			workbook.write(new FileOutputStream(makeFileName(fileName)));
 			
-			Document document = new Document(PageSize.LETTER.rotate(), PDFBuilder.marginLeft, PDFBuilder.marginRight, PDFBuilder.marginTop, PDFBuilder.marginBottom);
-			PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(makePdfName(fileName)));
-			document.open();
-			PDFBuilder.build(report, document, pdfWriter);
-			document.close();
+			ByteArrayOutputStream baos = PDFBuilder.build(report);
+			baos.writeTo(new FileOutputStream(makePdfName(fileName)));
+
 			logger.info("End MakeDO");
 		}
 		
@@ -237,30 +242,31 @@ public class DavesReportTester {
 //			XSSFWorkbook workbook = XLSBuilder.build(report);
 //			workbook.write(new FileOutputStream(makeFileName(fileName)));	
 			
-			Document document = new Document(PageSize.LETTER.rotate(), PDFBuilder.marginLeft, PDFBuilder.marginRight, PDFBuilder.marginTop, PDFBuilder.marginBottom);
-			PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(makePdfName(fileName)));
-			document.open();
-			PDFBuilder.build(report, document, pdfWriter);
-			document.close();
+			ByteArrayOutputStream baos = PDFBuilder.build(report);
+			baos.writeTo(new FileOutputStream(makePdfName(fileName)));
 			
 			logger.info("End IRR");
 		}		
 	}
 
+	public class makePastDue2 extends ReportMaker {
 
-	private void makePastDue2(Connection conn) throws Exception {
-		logger.info("PastDueReport");
-		Calendar startDate = null;
-		Integer divisionId = null;
-		PastDueReport2 report = PastDueReport2.buildReport(conn, startDate, divisionId);
-		if ( report == null ) {
-			throw new Exception("Null report");
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("PastDueReport");
+			Calendar startDate = null;
+			Integer divisionId = null;
+			String fileName = "PastDueDate.xlsx";
+			PastDueReport2 report = PastDueReport2.buildReport(conn, startDate, divisionId);
+			if ( report == null ) {
+				throw new Exception("Null report");
+			}
+			XSSFWorkbook workbook = XLSBuilder.build(report);
+			workbook.write(new FileOutputStream(makeFileName(fileName)));
+		
+			//		String html = HTMLBuilder.build(userReport);
+			//		FileUtils.write(new File((makeHtmlName(fileName)), html);		
 		}
-		XSSFWorkbook workbook = XLSBuilder.build(report);
-		workbook.write(new FileOutputStream(testResultDirectory + "PastDueDate.xlsx"));
-	
-		//		String html = HTMLBuilder.build(userReport);
-		//		FileUtils.write(new File(testResultDirectory + "PastDueDate.html"), html);		
 	}
 
 	public class MakePACListing extends ReportMaker {
@@ -292,11 +298,8 @@ public class DavesReportTester {
 //			XSSFWorkbook workbook = XLSBuilder.build(report);
 //			workbook.write(new FileOutputStream(makeFileName(fileName)));
 			
-			Document document = new Document(PageSize.LETTER.rotate(), PDFBuilder.marginLeft, PDFBuilder.marginRight, PDFBuilder.marginTop, PDFBuilder.marginBottom);
-			PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(makePdfName(fileName)));
-			document.open();
-			PDFBuilder.build(report, document, pdfWriter);
-			document.close();
+			ByteArrayOutputStream baos = PDFBuilder.build(report);
+			baos.writeTo(new FileOutputStream(makePdfName(fileName)));
 			logger.info("End Ticket Status");			
 		}		
 	}

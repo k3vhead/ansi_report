@@ -38,12 +38,12 @@ import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.report.htmlTable.HTMLCell;
 import com.ansi.scilla.report.htmlTable.HTMLRow;
 import com.ansi.scilla.report.htmlTable.HTMLTable;
-import com.ansi.scilla.report.reportBuilder.CustomReport;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLReportFormatter;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivMonthYear;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.reportType.CustomReport;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSReportFormatter;
 

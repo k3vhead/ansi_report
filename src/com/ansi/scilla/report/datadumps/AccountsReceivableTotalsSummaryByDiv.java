@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.util.Calendar;
 
 import com.ansi.scilla.common.db.Division;
-import com.ansi.scilla.report.reportBuilder.DataDumpReport;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByNoInput;
+import com.ansi.scilla.report.reportBuilder.reportType.DataDumpReport;
 
 public class AccountsReceivableTotalsSummaryByDiv extends DataDumpReport implements ReportByNoInput {
 	

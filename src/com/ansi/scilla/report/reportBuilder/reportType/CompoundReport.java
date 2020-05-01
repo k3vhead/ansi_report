@@ -1,4 +1,4 @@
-package com.ansi.scilla.report.reportBuilder;
+package com.ansi.scilla.report.reportBuilder.reportType;
 
 
 public abstract class CompoundReport extends AnsiReport {

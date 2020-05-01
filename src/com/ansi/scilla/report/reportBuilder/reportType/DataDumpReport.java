@@ -1,4 +1,4 @@
-package com.ansi.scilla.report.reportBuilder;
+package com.ansi.scilla.report.reportBuilder.reportType;
 
 import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
@@ -32,14 +32,21 @@ import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLReportFormatter;
-import com.ansi.scilla.report.reportBuilder.pdfBuilder.DataDumpPDFReportHeader;
-import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFBuilder;
+import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFReportBuilderUtils;
+import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFReportFormatter;
+import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFReportHeader;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSReportFormatter;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 
@@ -52,10 +59,11 @@ public abstract class DataDumpReport extends CustomReport {
 	protected List<List<Object>> dataRows;
 	protected Logger logger;
 	
-	protected Map<String, String> cellStyles;
-	protected Map<String, String> cellContentStyles;
+	protected Map<String, String> htmlCellStyles;
+	protected Map<String, String> htmlCellContentStyles;
 	protected Map<String, DataFormats> dataFormatters;
 	protected Map<String, CellStyle> xlsStyles;
+	protected Map<String, Integer> pdfCellStyles;
 	
 	protected Double marginTop = XLSBuilder.marginTopDefault;
 	protected Double marginBottom = XLSBuilder.marginBottomDefault;
@@ -66,7 +74,8 @@ public abstract class DataDumpReport extends CustomReport {
 	protected DataDumpReport() throws Exception {
 		super();		
 		this.logger = LogManager.getLogger(this.getClass());
-		makeCellStyles();
+		makeHtmlCellStyles();
+		makePdfCellStyles();
 		makeCellContentStyles();
 		makeDataFormatters();
 	}
@@ -81,42 +90,61 @@ public abstract class DataDumpReport extends CustomReport {
 	/**
 	 * Default formatting for HTML Cells. This method can be overridden for custom formatting
 	 */
-	private void makeCellStyles() {
-		cellStyles = new HashMap<String, String>();
-		cellStyles.put("String", HTMLReportFormatter.CSS_DATA_LEFT);
+	private void makeHtmlCellStyles() {
+		htmlCellStyles = new HashMap<String, String>();
+		htmlCellStyles.put("String", HTMLReportFormatter.CSS_DATA_LEFT);
 		
-		cellStyles.put("Integer", HTMLReportFormatter.CSS_DATA_RIGHT);
+		htmlCellStyles.put("Integer", HTMLReportFormatter.CSS_DATA_RIGHT);
 		
-		cellStyles.put("Double", HTMLReportFormatter.CSS_DATA_RIGHT);
-		cellStyles.put("Float", HTMLReportFormatter.CSS_DATA_RIGHT);
-		cellStyles.put("BigDecimal", HTMLReportFormatter.CSS_DATA_RIGHT);
+		htmlCellStyles.put("Double", HTMLReportFormatter.CSS_DATA_RIGHT);
+		htmlCellStyles.put("Float", HTMLReportFormatter.CSS_DATA_RIGHT);
+		htmlCellStyles.put("BigDecimal", HTMLReportFormatter.CSS_DATA_RIGHT);
 
-		cellStyles.put("Calendar", HTMLReportFormatter.CSS_DATA_LEFT);		
-		cellStyles.put("GregorianCalendar", HTMLReportFormatter.CSS_DATA_LEFT);		
-		cellStyles.put("Date", HTMLReportFormatter.CSS_DATA_LEFT);		
-		cellStyles.put("Midnight", HTMLReportFormatter.CSS_DATA_LEFT);
-		cellStyles.put("Timestamp", HTMLReportFormatter.CSS_DATA_LEFT);
+		htmlCellStyles.put("Calendar", HTMLReportFormatter.CSS_DATA_LEFT);		
+		htmlCellStyles.put("GregorianCalendar", HTMLReportFormatter.CSS_DATA_LEFT);		
+		htmlCellStyles.put("Date", HTMLReportFormatter.CSS_DATA_LEFT);		
+		htmlCellStyles.put("Midnight", HTMLReportFormatter.CSS_DATA_LEFT);
+		htmlCellStyles.put("Timestamp", HTMLReportFormatter.CSS_DATA_LEFT);
 	}
+
+	
+	private void makePdfCellStyles() {
+		pdfCellStyles = new HashMap<String, Integer>();
+		pdfCellStyles.put("String", Element.ALIGN_LEFT);
+		
+		pdfCellStyles.put("Integer", Element.ALIGN_RIGHT);
+		
+		pdfCellStyles.put("Double", Element.ALIGN_RIGHT);
+		pdfCellStyles.put("Float", Element.ALIGN_RIGHT);
+		pdfCellStyles.put("BigDecimal", Element.ALIGN_RIGHT);
+
+		pdfCellStyles.put("Calendar", Element.ALIGN_LEFT);		
+		pdfCellStyles.put("GregorianCalendar", Element.ALIGN_LEFT);		
+		pdfCellStyles.put("Date", Element.ALIGN_LEFT);		
+		pdfCellStyles.put("Midnight", Element.ALIGN_LEFT);
+		pdfCellStyles.put("Timestamp", Element.ALIGN_LEFT);		
+	}
+
 
 	/**
 	 * Default formatting for HTML Cells. This method can be overridden for custom formatting
 	 */
 	private void makeCellContentStyles() {
-		cellContentStyles = new HashMap<String, String>();
+		htmlCellContentStyles = new HashMap<String, String>();
 		
-		cellContentStyles.put("String", HTMLReportFormatter.CSS_DATA_LEFT_TEXT);
+		htmlCellContentStyles.put("String", HTMLReportFormatter.CSS_DATA_LEFT_TEXT);
 		
-		cellContentStyles.put("Integer", HTMLReportFormatter.CSS_DATA_RIGHT_TEXT);
+		htmlCellContentStyles.put("Integer", HTMLReportFormatter.CSS_DATA_RIGHT_TEXT);
 		
-		cellContentStyles.put("Double", HTMLReportFormatter.CSS_DATA_RIGHT_TEXT);
-		cellContentStyles.put("Float", HTMLReportFormatter.CSS_DATA_RIGHT_TEXT);
-		cellContentStyles.put("BigDecimal", HTMLReportFormatter.CSS_DATA_RIGHT_TEXT);
+		htmlCellContentStyles.put("Double", HTMLReportFormatter.CSS_DATA_RIGHT_TEXT);
+		htmlCellContentStyles.put("Float", HTMLReportFormatter.CSS_DATA_RIGHT_TEXT);
+		htmlCellContentStyles.put("BigDecimal", HTMLReportFormatter.CSS_DATA_RIGHT_TEXT);
 
-		cellContentStyles.put("Calendar", HTMLReportFormatter.CSS_DATA_LEFT_TEXT);		
-		cellContentStyles.put("GregorianCalendar", HTMLReportFormatter.CSS_DATA_LEFT_TEXT);		
-		cellContentStyles.put("Date", HTMLReportFormatter.CSS_DATA_LEFT_TEXT);		
-		cellContentStyles.put("Midnight", HTMLReportFormatter.CSS_DATA_LEFT_TEXT);
-		cellContentStyles.put("Timestamp", HTMLReportFormatter.CSS_DATA_LEFT_TEXT);
+		htmlCellContentStyles.put("Calendar", HTMLReportFormatter.CSS_DATA_LEFT_TEXT);		
+		htmlCellContentStyles.put("GregorianCalendar", HTMLReportFormatter.CSS_DATA_LEFT_TEXT);		
+		htmlCellContentStyles.put("Date", HTMLReportFormatter.CSS_DATA_LEFT_TEXT);		
+		htmlCellContentStyles.put("Midnight", HTMLReportFormatter.CSS_DATA_LEFT_TEXT);
+		htmlCellContentStyles.put("Timestamp", HTMLReportFormatter.CSS_DATA_LEFT_TEXT);
 	}
 
 	private void makeXlsStyles(XLSReportFormatter reportFormatter) {
@@ -396,13 +424,13 @@ public abstract class DataDumpReport extends CustomReport {
 				} else {
 					String dataClass = value.getClass().getSimpleName();
 					cell.setCellValue(value);
-					if ( this.cellStyles.containsKey(dataClass)) {
-						cell.setCellStyle(cellStyles.get(dataClass));
+					if ( this.htmlCellStyles.containsKey(dataClass)) {
+						cell.setCellStyle(htmlCellStyles.get(dataClass));
 					} else {
 						throw new InvalidFormatException("Missing cell style for " + dataClass);
 					}
-					if ( this.cellContentStyles.containsKey(dataClass)) {
-						cell.setCellContentStyle(cellContentStyles.get(dataClass));
+					if ( this.htmlCellContentStyles.containsKey(dataClass)) {
+						cell.setCellContentStyle(htmlCellContentStyles.get(dataClass));
 					} else {
 						throw new InvalidFormatException("Missing content style for " + dataClass);
 					}
@@ -422,15 +450,63 @@ public abstract class DataDumpReport extends CustomReport {
 	}
 
 	
-	public ByteArrayOutputStream makePDF() throws DocumentException {
+	public ByteArrayOutputStream makePDF() throws DocumentException, Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Document document = new Document(PageSize.LETTER.rotate(), PDFBuilder.marginLeft, PDFBuilder.marginRight, PDFBuilder.marginTop, PDFBuilder.marginBottom);
+		Document document = new Document(PageSize.LETTER.rotate(), PDFReportFormatter.marginLeft, PDFReportFormatter.marginRight, PDFReportFormatter.marginTopDatadump, PDFReportFormatter.marginBottom);
 		PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
-		DataDumpPDFReportHeader x = new DataDumpPDFReportHeader(this);
-		pdfWriter.setPageEvent(x);
+		pdfWriter.setPageEvent(new PDFReportHeader(this));
 		document.open();
-//		document.add(x.getHeaderTable());
-		document.add(new Paragraph("THis is a datadump report. "));
+
+		PdfPTable dataTable = new PdfPTable(dataRows.get(0).size());
+		dataTable.setWidthPercentage(100F);
+//		dataTable.setLockedWidth(true);
+		
+		for ( int columnIndex = 0; columnIndex < this.columnHeaders.size(); columnIndex++ ) {
+			PdfPCell cell = new PdfPCell(new Phrase(new Chunk(this.columnHeaders.get(columnIndex), PDFReportFormatter.fontStandardWhiteBold)));
+			cell.setBorder(Rectangle.NO_BORDER);
+//			headerLeft.setBorderColor(BaseColor.BLACK);
+//			headerLeft.setBorderWidth(1F);
+			cell.setIndent(0F);
+			cell.setPaddingTop(0F);
+			cell.setPaddingBottom(4F);
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_TOP);
+			cell.setBackgroundColor(BaseColor.BLACK);
+			dataTable.addCell(cell);
+		}
+		
+		for ( List<Object> dataRow : this.dataRows ) {
+			for ( int columnIndex = 0; columnIndex < dataRow.size(); columnIndex++ ) {
+				Object value = dataRow.get(columnIndex);
+				if ( value == null ) {
+					PdfPCell cell = new PdfPCell(new Phrase(""));
+					cell.setBorder(Rectangle.NO_BORDER);
+//					headerLeft.setBorderColor(BaseColor.BLACK);
+//					headerLeft.setBorderWidth(1F);
+					cell.setIndent(0F);
+					cell.setPaddingTop(0F);
+					cell.setPaddingBottom(0F);
+					dataTable.addCell(cell);
+				} else {
+					String dataClass = value.getClass().getSimpleName();
+					DataFormats dataFormats = dataFormatters.get(dataClass);					
+					String display = PDFReportBuilderUtils.formatValue(dataFormats, value);
+					Phrase content = new Phrase(new Chunk(display, PDFReportFormatter.fontStandardBlack));
+					PdfPCell cell = new PdfPCell(content);	
+					cell.setBorder(Rectangle.NO_BORDER);
+//					headerLeft.setBorderColor(BaseColor.BLACK);
+//					headerLeft.setBorderWidth(1F);
+					cell.setIndent(0F);
+					cell.setPaddingTop(0F);
+					cell.setPaddingBottom(0F);
+					cell.setHorizontalAlignment(pdfCellStyles.get(dataClass));
+					cell.setVerticalAlignment(Element.ALIGN_TOP);
+					dataTable.addCell(cell);
+				}
+			}
+		}
+		dataTable.setHeaderRows(1);
+		document.add(dataTable);
 		document.close();
 
 		return baos;

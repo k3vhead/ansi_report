@@ -1,6 +1,6 @@
 package com.ansi.scilla.report.reportBuilder.htmlBuilder;
 
-import com.ansi.scilla.report.reportBuilder.StandardSummaryReport;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardSummaryReport;
 
 public class HTMLSummaryBuilder extends AbstractHTMLBuilder {
 
