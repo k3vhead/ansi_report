@@ -1,10 +1,12 @@
 package com.ansi.scilla.report.sixMonthRollingVolume;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,11 +43,26 @@ import com.ansi.scilla.report.htmlTable.HTMLTable;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLReportFormatter;
+import com.ansi.scilla.report.reportBuilder.pdfBuilder.AnsiPCell;
+import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFReportFormatter;
+import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFReportHeader;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivMonthYear;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
 import com.ansi.scilla.report.reportBuilder.reportType.CustomReport;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSReportFormatter;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 /**
  * Six Month Rolling Volume Report. Static methods make&lt;format&gt; accept a number of 6-month
@@ -67,7 +84,13 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 	private Double marginBottom = XLSBuilder.marginBottomDefault;
 	private Double marginLeft = XLSBuilder.marginLeftDefault;
 	private Double marginRight = XLSBuilder.marginRightDefault;
-
+	
+	private final SimpleDateFormat columnDateHeaderFormat = new SimpleDateFormat("MM/yyyy");
+	private final SimpleDateFormat detailCellDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+	private final DecimalFormat detailCellNumberFormat = new DecimalFormat("#,##0.00");
+	
+	private final Font fontStandardWhite;
+	private final Font fontStandardBlack;
 
 	final static String sql = "select job_site.name as job_site_name "
 			+ "\n\t, job_site.zip "
@@ -132,11 +155,24 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 	private SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.S");
 	private Logger logger;
 
+	
+	
+	
 	private SixMonthRollingVolumeReport() {
 		super();
 		this.logger = LogManager.getLogger(this.getClass());
 		this.setTitle(REPORT_TITLE);
 		this.dataRows = new ArrayList<Object>();
+		
+		try {
+			String calibriTTF = PDFReportFormatter.class.getClassLoader().getResource("resources/calibri.ttf").getFile();
+			BaseFont calibri = BaseFont.createFont(calibriTTF, BaseFont.WINANSI, true);
+			fontStandardBlack = new Font(calibri, 8F);
+			fontStandardWhite = new Font(calibri, 9F);
+			fontStandardWhite.setColor(BaseColor.WHITE);
+		} catch ( Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	private SixMonthRollingVolumeReport(PreparedStatement ps, Division division, Calendar startDate) throws Exception {
@@ -385,6 +421,7 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		endDate.add(Calendar.MONTH, 6);
 		String endMonth = row0DateFormatter.format(endDate.getTime());
 		String row0Date = startMonth + " through " + endMonth;
+		this.setSubtitle(row0Date);
 		
 		sheet.setAutobreaks(true);
 		XSSFPrintSetup ps = sheet.getPrintSetup();
@@ -396,7 +433,7 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		sheet.setMargin(XSSFSheet.LeftMargin, this.marginLeft);
 		
 		
-		SimpleDateFormat columnDateHeaderFormat = new SimpleDateFormat("MM/yyyy");
+		
 		XSSFCell cell = null;
 		XSSFRow row = null;
 		int rownum = 0;
@@ -1014,6 +1051,182 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		reportLineList.add("</body>\n</html>");		
 		return StringUtils.join(reportLineList, "\n");
 	}
+
+	
+	
+	@Override
+	public ByteArrayOutputStream makePDF() throws Exception {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
+		PDFReportHeader header = new PDFReportHeader(this);
+		float topMargin = header.getHeaderTable().getTotalHeight() + (PDFReportFormatter.shortSideSize - PDFReportFormatter.headerDefaultPositionY) + 4.0F;
+		Document document = new Document(PageSize.LETTER.rotate(), PDFReportFormatter.marginLeft, PDFReportFormatter.marginRight, topMargin, PDFReportFormatter.marginBottom);
+		PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
+		document.open();
+		pdfWriter.setPageEvent(header);
+
+		//TODO : Footer / page count
+		PdfPTable dataTable = new PdfPTable(14);
+		float[] colWidths = new float[14];
+		float tableWidth = PDFReportFormatter.longSideSize - (PDFReportFormatter.marginLeft + PDFReportFormatter.marginRight);
+		colWidths[0] = 0.15F * tableWidth; // building name
+		colWidths[1] = 0.06F * tableWidth; // zip
+		colWidths[2] = 0.15F * tableWidth; // Street
+		colWidths[3] = 0.055F * tableWidth; // job #
+		colWidths[4] = 0.065F * tableWidth; // last run
+		colWidths[5] = 0.06F * tableWidth; // job id
+		colWidths[6] = 0.053F * tableWidth; // Freq
+		colWidths[7] = 0.061F * tableWidth; // month 1
+		colWidths[8] = 0.061F * tableWidth; // month 2
+		colWidths[9] = 0.061F * tableWidth; // month 3
+		colWidths[10] = 0.061F * tableWidth; // month 4
+		colWidths[11] = 0.061F * tableWidth; // month 5
+		colWidths[12] = 0.061F * tableWidth; // month 6
+		colWidths[13] = 0.061F * tableWidth; // total
+		
+		dataTable.setHeaderRows(1);	// set column headers to repeat on each page
+		dataTable.setTotalWidth(colWidths);
+		dataTable.setWidthPercentage(100F);
+		dataTable.setLockedWidth(true);
+
+
+		/**
+		 * Column Headers
+		 */
+		PdfPCell headerCell = new AnsiPCell();
+		headerCell.setVerticalAlignment(Element.ALIGN_TOP);
+		headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+//		headerCell.setBorder(Rectangle.NO_BORDER);
+		headerCell.setBorderColor(BaseColor.BLACK);
+		headerCell.setBorderWidth(1F);
+		headerCell.setIndent(0F);
+		headerCell.setPaddingTop(4F);
+		headerCell.setPaddingBottom(4F);
+		headerCell.setBackgroundColor(BaseColor.BLACK);	
+		
+		for ( int i = 0; i<colHeaders.length; i++ ) {			
+			headerCell.setPhrase(new Phrase(new Chunk(colHeaders[i], fontStandardWhite)));
+			dataTable.addCell(headerCell);
+		}
+		for ( int i = 0; i < 6; i++ ) {
+			Calendar columnDate = (Calendar)startDate.clone();
+			columnDate.add(Calendar.MONTH, i);
+			String columnDateHeader = columnDateHeaderFormat.format(columnDate.getTime());
+			headerCell.setPhrase(new Phrase(new Chunk(columnDateHeader, fontStandardWhite)));
+			dataTable.addCell(headerCell);
+		}
+		headerCell.setPhrase(new Phrase("Totals", fontStandardWhite));
+		dataTable.addCell(headerCell);
+
+
+		
+		/**
+		 * Report Details
+		 */
+		PdfPCell cell = new AnsiPCell();
+		cell.setVerticalAlignment(Element.ALIGN_TOP);
+//		detailCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+		cell.enableBorderSide(Rectangle.LEFT);
+		cell.enableBorderSide(Rectangle.BOTTOM);
+		cell.setBorderColor(BaseColor.BLACK);
+		cell.setBorderWidth(1F);
+		cell.setIndent(0F);
+		cell.setPaddingTop(1F);
+		cell.setPaddingBottom(2F);
+//		detailCell.setBackgroundColor(BaseColor.BLACK);	
+		for ( Object dataItem : getDataRows() ) {
+			BigDecimal rowTotal = BigDecimal.ZERO;
+			DataRow dataRow = (DataRow)dataItem;
+			cell.disableBorderSide(Rectangle.RIGHT);
+			
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPhrase(new Phrase(new Chunk(dataRow.getJobSiteName(), fontStandardBlack)));
+			dataTable.addCell(cell);
+			
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			cell.setPhrase(new Phrase(new Chunk(dataRow.getZip(), fontStandardBlack)));
+			dataTable.addCell(cell);
+			
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPhrase(new Phrase(new Chunk(dataRow.getAddress1(), fontStandardBlack)));
+			dataTable.addCell(cell);
+			
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			cell.setPhrase(new Phrase(new Chunk(String.valueOf(dataRow.getJobNbr()), fontStandardBlack)));
+			dataTable.addCell(cell);
+			
+			String value = dataRow.getLastRun() == null ? "" : detailCellDateFormat.format(dataRow.getLastRun());
+			cell.setPhrase(new Phrase(new Chunk(value, fontStandardBlack)));		
+			dataTable.addCell(cell);
+			
+			cell.setPhrase(new Phrase(new Chunk(String.valueOf(dataRow.getJobId()), fontStandardBlack)));
+			dataTable.addCell(cell);
+			
+			cell.setPhrase(new Phrase(new Chunk(dataRow.getJobFrequency().abbrev(), fontStandardBlack)));
+			dataTable.addCell(cell);
+			
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			for ( BigDecimal monthlyValue : new BigDecimal[] {dataRow.getPpcm01(), dataRow.getPpcm02(), dataRow.getPpcm03(),dataRow.getPpcm04(),dataRow.getPpcm05(),dataRow.getPpcm06()} ) {
+				if ( dataRow.getPpcm01() == null ) {
+					cell.setPhrase(new Phrase(""));
+				} else {
+					rowTotal = rowTotal.add(monthlyValue);
+					cell.setPhrase( new Phrase(new Chunk(detailCellNumberFormat.format(monthlyValue.doubleValue()), fontStandardBlack)));
+				}
+				dataTable.addCell(cell);
+				
+			}
+			
+			cell.enableBorderSide(Rectangle.RIGHT);
+			cell.setPhrase( new Phrase(new Chunk(detailCellNumberFormat.format(rowTotal.doubleValue()), fontStandardBlack)));
+			dataTable.addCell(cell);
+		}
+
+		
+		
+		
+		/**
+		 * Summary Row
+		 */
+		cell.setBorder(Rectangle.NO_BORDER);
+		cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+		cell.setPhrase( new Phrase(new Chunk("Job Count: " + jobCount, fontStandardBlack)));
+		dataTable.addCell(cell);
+		
+		cell.setPhrase(new Phrase(""));
+		dataTable.addCell(cell);  //empty column 
+		
+		cell.setPhrase(new Phrase(new Chunk("Contract Count: " + contractCount, fontStandardBlack)));
+		dataTable.addCell(cell);
+		
+		cell.setPhrase(new Phrase(""));
+		dataTable.addCell(cell);  //empty column Job #
+		dataTable.addCell(cell);  //empty column last run
+		dataTable.addCell(cell);  //empty column Job Id
+		dataTable.addCell(cell);  //empty column Freq
+		
+		cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+
+		double grandTotal = 0.0D;
+		for (int idx = 0; idx < this.monthlyTotal.length; idx++ ) {
+			cell.setPhrase(new Phrase(new Chunk(detailCellNumberFormat.format(this.monthlyTotal[idx]), fontStandardBlack)));
+			grandTotal = grandTotal + this.monthlyTotal[idx];
+			dataTable.addCell(cell);
+		}
+		cell.setPhrase(new Phrase(new Chunk(detailCellNumberFormat.format(grandTotal), fontStandardBlack)));
+		dataTable.addCell(cell);
+		
+		
+		/**
+		 * Do all the PDF stuff to finish up
+		 */
+		document.add(dataTable);
+		document.close();
+
+		return baos;
+	}
+
+
 
 	public class DataRow extends ApplicationObject {
 		private static final long serialVersionUID = 1L;

@@ -53,35 +53,9 @@ public class PDFReportBuilderUtils extends ReportBuilderUtils {
 		headerTable.setLockedWidth(true);
 
 		
-		PdfPCell headerLeftCell = new PdfPCell();
-		headerLeftCell.setVerticalAlignment(Element.ALIGN_TOP);
-		headerLeftCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        headerLeftCell.setBorder(Rectangle.NO_BORDER);
-//		headerLeft.setBorderColor(BaseColor.BLACK);
-//		headerLeft.setBorderWidth(1F);
-		headerLeftCell.setIndent(0F);
-		headerLeftCell.setPaddingTop(0F);
-		headerLeftCell.setPaddingBottom(0F);
-		
-		PdfPCell headerCenterCell = new PdfPCell();
-		headerCenterCell.setVerticalAlignment(Element.ALIGN_TOP);
-		headerCenterCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-		headerCenterCell.setBorder(Rectangle.NO_BORDER);
-//		headerCenter.setBorderColor(BaseColor.BLACK);
-//		headerCenter.setBorderWidth(1F);
-		headerCenterCell.setIndent(0F);
-		headerCenterCell.setPaddingTop(0F);
-		headerCenterCell.setPaddingBottom(0F);
-		
-		PdfPCell headerRightCell = new PdfPCell();
-		headerRightCell.setVerticalAlignment(Element.ALIGN_TOP);
-		headerRightCell.setHorizontalAlignment(Element.ALIGN_LEFT);  //Seems like it should be align:right, but this makes the tabbing work
-		headerRightCell.setBorder(Rectangle.NO_BORDER);
-//		headerRight.setBorderColor(BaseColor.BLACK);
-//		headerRight.setBorderWidth(1F);
-		headerRightCell.setIndent(0F);
-		headerRightCell.setPaddingTop(0F);
-		headerRightCell.setPaddingBottom(0F);
+		PdfPCell headerLeftCell = new AnsiPCell();
+		PdfPCell headerCenterCell = new AnsiPCell();		
+		PdfPCell headerRightCell = new AnsiPCell();
 
 		Phrase headerLeftContent = makeHeaderLeftContent(report, report.getHeaderLeft());		
 		headerLeftCell.setPhrase(headerLeftContent);
@@ -400,66 +374,16 @@ public class PDFReportBuilderUtils extends ReportBuilderUtils {
 		
 		for ( ColumnHeader columnHeader : report.getHeaderRow() ) {
 			Phrase columnHeaderContent = new Phrase( new Chunk(columnHeader.getLabel(), PDFReportFormatter.fontStandardWhiteBold));
-			PdfPCell headerCell = new PdfPCell();
-			headerCell.setVerticalAlignment(Element.ALIGN_TOP);
-			headerCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-	        headerCell.setBorder(Rectangle.NO_BORDER);
-//			headerLeft.setBorderColor(BaseColor.BLACK);
-//			headerLeft.setBorderWidth(1F);
-			headerCell.setIndent(0F);
-			headerCell.setPaddingTop(4F);
-			headerCell.setPaddingBottom(4F);
+			PdfPCell headerCell = new AnsiPCell();			
 			headerCell.setPhrase(columnHeaderContent);
 			headerCell.setBackgroundColor(BaseColor.BLACK);
 			dataTable.addCell(headerCell);
 		}
-		
-		/*
-		int rowNum = reportStartLoc.rowIndex + PDFReportBuilderUtils.makeHeaderRowCount(report) + 1;
-		int columnIndex = reportStartLoc.columnIndex + report.getFirstDetailColumn();
-		int startingColumn = reportStartLoc.columnIndex;
-		row = PDFReportBuilderUtils.makeRow(sheet, rowNum);  //sheet.createRow(rowNum);
-
-//		row.setHeight(rf.standardHeaderHeight);
-		short rowHeight = row.getHeight();
-		int maxLines = -1;
-		for ( ColumnHeader columnHeader : report.getHeaderRow() ) {
-			String[] pieces = StringUtils.split(columnHeader.getLabel(), "\n");
-			if ( pieces.length > maxLines ) {
-				maxLines = pieces.length;
-			}
-		}
-		row.setHeight((short)(rowHeight*maxLines));
-		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
-			ColumnHeader columnHeader = report.getHeaderRow()[i];
-			if ( columnHeader.getColspan() > 0 ) {
-				Integer firstColumn = columnIndex;
-				Integer lastColumn = firstColumn + columnHeader.getColspan() - 1;
-				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, firstColumn, lastColumn));
-			}
-//			if ( i == 1 ) {
-//				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn, startingColumn + 1));
-//				columnIndex++;
-//			}
-//			if ( i == report.getHeaderRow().length - 1 ) {
-//				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn + report.getHeaderRow().length, startingColumn + report.getHeaderRow().length+1));
-//			}
-			cell = row.createCell(columnIndex);
-			cell.setCellValue(columnHeader.getLabel());
-			cell.setCellStyle(rf.cellStyleColHdrLeft);
-//			columnIndex++;
-			columnIndex = columnIndex + columnHeader.getColspan();
-		}
-		
-		if ( report.getColumnWidths() != null ) {
-			for ( int i = 0; i < report.getColumnWidths().length; i++ ) {
-				if ( report.getColumnWidths()[i] != null && report.getColumnWidths()[i] > 0 ) {
-					sheet.setColumnWidth(i, report.getColumnWidths()[i]);
-				}
-			}
-		}
-		*/
 	}
+	
+	
+	
+	
 	
 	public enum HeaderPosition {
 		LEFT,

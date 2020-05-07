@@ -1,7 +1,6 @@
 package com.ansi.scilla.report.reportBuilder.pdfBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +17,6 @@ import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.TabSettings;
 import com.itextpdf.text.TabStop;
 import com.itextpdf.text.pdf.ColumnText;
@@ -63,35 +61,12 @@ public class PDFReportHeader extends PdfPageEventHelper {
 		headerTable.setLockedWidth(true);
 
 		
-		PdfPCell headerLeftCell = new PdfPCell();
-		headerLeftCell.setVerticalAlignment(Element.ALIGN_TOP);
+		PdfPCell headerLeftCell = new AnsiPCell();
 		headerLeftCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        headerLeftCell.setBorder(Rectangle.NO_BORDER);
-//		headerLeft.setBorderColor(BaseColor.BLACK);
-//		headerLeft.setBorderWidth(1F);
-		headerLeftCell.setIndent(0F);
-		headerLeftCell.setPaddingTop(0F);
-		headerLeftCell.setPaddingBottom(0F);
-		
-		PdfPCell headerCenterCell = new PdfPCell();
-		headerCenterCell.setVerticalAlignment(Element.ALIGN_TOP);
+		PdfPCell headerCenterCell = new AnsiPCell();
 		headerCenterCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-		headerCenterCell.setBorder(Rectangle.NO_BORDER);
-//		headerCenter.setBorderColor(BaseColor.BLACK);
-//		headerCenter.setBorderWidth(1F);
-		headerCenterCell.setIndent(0F);
-		headerCenterCell.setPaddingTop(0F);
-		headerCenterCell.setPaddingBottom(0F);
-		
-		PdfPCell headerRightCell = new PdfPCell();
-		headerRightCell.setVerticalAlignment(Element.ALIGN_TOP);
+		PdfPCell headerRightCell = new AnsiPCell();
 		headerRightCell.setHorizontalAlignment(Element.ALIGN_LEFT);  //Seems like it should be align:right, but this makes the tabbing work
-		headerRightCell.setBorder(Rectangle.NO_BORDER);
-//		headerRight.setBorderColor(BaseColor.BLACK);
-//		headerRight.setBorderWidth(1F);
-		headerRightCell.setIndent(0F);
-		headerRightCell.setPaddingTop(0F);
-		headerRightCell.setPaddingBottom(0F);
 
 		Phrase headerLeftContent = makeHeaderLeftContent(report, report.getHeaderLeft());		
 		headerLeftCell.setPhrase(headerLeftContent);
@@ -106,11 +81,8 @@ public class PDFReportHeader extends PdfPageEventHelper {
 		
 		if ( ! StringUtils.isBlank(report.getHeaderNotes()) ) {
 			Phrase headerNotes = new Phrase(new Chunk(report.getHeaderNotes(), PDFReportFormatter.fontReportNote));
-			PdfPCell notesCell = new PdfPCell(headerNotes);
+			PdfPCell notesCell = new AnsiPCell(headerNotes);
 			notesCell.setColspan(3);
-			notesCell.setVerticalAlignment(Element.ALIGN_TOP);
-			notesCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-			notesCell.setBorder(Rectangle.NO_BORDER);
 			headerTable.addCell(notesCell);
 		}	
 		
@@ -129,13 +101,7 @@ public class PDFReportHeader extends PdfPageEventHelper {
 	}
 
 	private static Phrase makeHeaderCenter(AbstractReport report) {
-		TabStop centerTab = new TabStop(standardHeaderCellWidth/2.0F, TabStop.Alignment.CENTER);
-		TabSettings tabSettings = new TabSettings(Arrays.asList(new TabStop[] { centerTab } ));
 		Phrase centerContent = new Phrase();
-		centerContent.setTabSettings(tabSettings);
-		
-		centerContent.setTabSettings(tabSettings);
-		centerContent.add(Chunk.TABBING);
 		centerContent.add(new Chunk(report.getBanner(), PDFReportFormatter.fontReportBanner));
 		centerContent.add(Chunk.NEWLINE);
 		centerContent.add(new Chunk(report.getTitle(), PDFReportFormatter.fontReportTitle));

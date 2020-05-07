@@ -1,8 +1,23 @@
 package com.ansi.scilla.report.reportBuilder.pdfBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.NoPreviousValue;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.reportType.PrintableReport;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardSummaryReport;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 
 
 public abstract class AbstractPDFBuilder extends PrintableReport {
@@ -24,9 +39,90 @@ public abstract class AbstractPDFBuilder extends PrintableReport {
 		makeHeaderDates();
 	}
 
+	protected void makeSubtotal(StandardReport report, Object row, PdfPTable dataTable) throws Exception {
+		List<String> fieldsToDisplay = new ArrayList<String>();
+		List<String> fieldsThatChanged = new ArrayList<String>();
+		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
+			ColumnHeader columnHeader = report.getHeaderRow()[i];	
+			String fieldName = columnHeader.getFieldName();
+			if (this.previousValues.containsKey(columnHeader.getFieldName())) {
+				// we need to check for changed values because this field is a trigger for a subtotal
+				Object previousValue = this.previousValues.get(fieldName);
+				Object newValue = makeDisplayData(columnHeader,row);
+				if ( ! previousValue.equals(new NoPreviousValue()) && ! previousValue.equals(newValue)) {
+					// we have a value change, so add a subtotal row
+					fieldsThatChanged.add(fieldName);
+				}
+				this.previousValues.put(fieldName,  newValue);
+			}			
+		}
+		
+		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
+			ColumnHeader columnHeader = report.getHeaderRow()[i];
+			String fieldName = columnHeader.getFieldName();
+			if ( fieldsThatChanged.contains(columnHeader.getSubTotalTrigger())) {
+				fieldsToDisplay.add(fieldName);
+			}
+		}
+		
+		if ( ! fieldsToDisplay.isEmpty() ) {
+			for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
+				ColumnHeader columnHeader = report.getHeaderRow()[i];
+				String fieldName = columnHeader.getFieldName();
+				if ( fieldsToDisplay.contains(fieldName)) {
+					String subtotal = super.makeSubtotalData(columnHeader);
+					PdfPCell cell = new AnsiPCell(new Phrase(new Chunk(subtotal, PDFReportFormatter.fontSubtotal)));
+					cell.setHorizontalAlignment(PDFReportFormatter.cellStyles.get(columnHeader.getFormatter()));
+					dataTable.addCell(cell);					
+				} else {
+					dataTable.addCell(new AnsiPCell(new Phrase("")));
+				}
+			}
+		}
+	}
 	
 	
-
+	protected void makeSummary(StandardReport report, PdfPTable dataTable) throws Exception {
+		boolean addASummary = false;		
+		List<PdfPCell> summaryRow = new ArrayList<PdfPCell>();
+		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
+			ColumnHeader columnHeader = report.getHeaderRow()[i];
+			PdfPCell cell = new AnsiPCell();			
+			if ( columnHeader.getSummaryType().equals(SummaryType.NONE)) {
+				cell.setPhrase(new Phrase(""));
+			} else {
+				addASummary = true;
+				String subtotal = makeSummaryData(columnHeader);
+				cell.setPhrase(new Phrase(new Chunk(subtotal, PDFReportFormatter.fontSubtotal)));
+				cell.setHorizontalAlignment(PDFReportFormatter.cellStyles.get(columnHeader.getFormatter()));
+			}
+			summaryRow.add(cell);
+		}
+		
+		if ( addASummary ) {
+			for ( PdfPCell cell : summaryRow ) {
+				dataTable.addCell(cell);
+			}
+		}
+	}
+	
+	
+	/**
+	 * Writes element to an arbitrary location on a page
+	 * @param canvas
+	 * @param rect
+	 * @param p
+	 * @param simulate
+	 * @return the position of the lower-right corner of the added element
+	 * @throws DocumentException
+	 */
+	protected TableSize drawColumnText(PdfContentByte canvas, Rectangle rect, Element p, boolean simulate) throws DocumentException {
+		ColumnText ct = new ColumnText(canvas);
+		ct.setSimpleColumn(rect);
+		ct.addElement(p);
+		ct.go(simulate);
+		return new TableSize(ct.getLastX(), ct.getYLine());
+	}
 	
 	
 	/*

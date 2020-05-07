@@ -11,7 +11,6 @@ import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.common.NoPreviousValue;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
-import com.ansi.scilla.report.reportBuilder.reportType.StandardSummaryReport;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.PageSize;
@@ -26,10 +25,6 @@ public class PDFBuilder extends AbstractPDFBuilder {
 	private Logger logger = LogManager.getLogger(PDFBuilder.class);
 	
 	public PDFBuilder(StandardReport report) {
-		super(report);
-	}
-	
-	public PDFBuilder(StandardSummaryReport report) {
 		super(report);
 	}
 	
@@ -52,7 +47,7 @@ public class PDFBuilder extends AbstractPDFBuilder {
 		PDFReportBuilderUtils.makeColumnHeader((StandardReport)report, dataTable);		
 		makeDetails((StandardReport)report, dataTable);
 		makeFinalSubtotal(dataTable);
-		makeSummary(dataTable);	
+		makeSummary((StandardReport)report, dataTable);	
 		document.add(dataTable);
 		document.close();
 
@@ -70,8 +65,7 @@ public class PDFBuilder extends AbstractPDFBuilder {
 				ColumnHeader columnHeader = report.getHeaderRow()[i];				
 				Object value = makeDisplayData(columnHeader, dataRow);
 				String display = makeFormattedDisplayData(columnHeader.getFormatter(), value);
-				Phrase content = new Phrase(new Chunk(display, PDFReportFormatter.fontStandardBlack));
-				PdfPCell cell = new PdfPCell(content);				
+				PdfPCell cell = new AnsiPCell(new Chunk(display, PDFReportFormatter.fontStandardBlack));	
 				/* If you're looking here because you got key error, you need to add a dataformat to the cell styles in PDFReportFormatter */
 				cell.setHorizontalAlignment(PDFReportFormatter.cellStyles.get(columnHeader.getFormatter()));
 				dataTable.addCell(cell);
@@ -85,47 +79,7 @@ public class PDFBuilder extends AbstractPDFBuilder {
 	}
 	
 	
-	private void makeSubtotal(StandardReport report, Object row, PdfPTable dataTable) throws Exception {
-		List<String> fieldsToDisplay = new ArrayList<String>();
-		List<String> fieldsThatChanged = new ArrayList<String>();
-		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
-			ColumnHeader columnHeader = report.getHeaderRow()[i];	
-			String fieldName = columnHeader.getFieldName();
-			if (this.previousValues.containsKey(columnHeader.getFieldName())) {
-				// we need to check for changed values because this field is a trigger for a subtotal
-				Object previousValue = this.previousValues.get(fieldName);
-				Object newValue = makeDisplayData(columnHeader,row);
-				if ( ! previousValue.equals(new NoPreviousValue()) && ! previousValue.equals(newValue)) {
-					// we have a value change, so add a subtotal row
-					fieldsThatChanged.add(fieldName);
-				}
-				this.previousValues.put(fieldName,  newValue);
-			}			
-		}
-		
-		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
-			ColumnHeader columnHeader = report.getHeaderRow()[i];
-			String fieldName = columnHeader.getFieldName();
-			if ( fieldsThatChanged.contains(columnHeader.getSubTotalTrigger())) {
-				fieldsToDisplay.add(fieldName);
-			}
-		}
-		
-		if ( ! fieldsToDisplay.isEmpty() ) {
-			for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
-				ColumnHeader columnHeader = report.getHeaderRow()[i];
-				String fieldName = columnHeader.getFieldName();
-				if ( fieldsToDisplay.contains(fieldName)) {
-					String subtotal = super.makeSubtotalData(columnHeader);
-					PdfPCell cell = new PdfPCell(new Phrase(new Chunk(subtotal, PDFReportFormatter.fontSubtotal)));
-					cell.setHorizontalAlignment(PDFReportFormatter.cellStyles.get(columnHeader.getFormatter()));
-					dataTable.addCell(cell);					
-				} else {
-					dataTable.addCell(new PdfPCell(new Phrase("")));
-				}
-			}
-		}
-	}
+	
 	
 	
 	private void makeFinalSubtotal(PdfPTable dataTable) throws Exception {
@@ -134,7 +88,7 @@ public class PDFBuilder extends AbstractPDFBuilder {
 		boolean addASub = false;
 		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
 			ColumnHeader columnHeader = report.getHeaderRow()[i];	
-			PdfPCell cell = new PdfPCell();
+			PdfPCell cell = new AnsiPCell();
 			if ( StringUtils.isBlank(columnHeader.getSubTotalTrigger())) {
 				cell.setPhrase(new Phrase(""));
 			} else {
@@ -157,30 +111,7 @@ public class PDFBuilder extends AbstractPDFBuilder {
 
 	
 	
-	private void makeSummary(PdfPTable dataTable) throws Exception {
-		StandardReport report = (StandardReport)this.report;
-		boolean addASummary = false;		
-		List<PdfPCell> summaryRow = new ArrayList<PdfPCell>();
-		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
-			ColumnHeader columnHeader = report.getHeaderRow()[i];
-			PdfPCell cell = new PdfPCell();			
-			if ( columnHeader.getSummaryType().equals(SummaryType.NONE)) {
-				cell.setPhrase(new Phrase(""));
-			} else {
-				addASummary = true;
-				String subtotal = makeSummaryData(columnHeader);
-				cell.setPhrase(new Phrase(new Chunk(subtotal, PDFReportFormatter.fontSubtotal)));
-				cell.setHorizontalAlignment(PDFReportFormatter.cellStyles.get(columnHeader.getFormatter()));
-			}
-			summaryRow.add(cell);
-		}
-		
-		if ( addASummary ) {
-			for ( PdfPCell cell : summaryRow ) {
-				dataTable.addCell(cell);
-			}
-		}
-	}
+	
 
 	public static ByteArrayOutputStream build(StandardReport report) throws Exception {
 		return new PDFBuilder(report).buildReport();

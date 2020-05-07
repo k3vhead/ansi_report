@@ -32,6 +32,7 @@ import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLReportFormatter;
+import com.ansi.scilla.report.reportBuilder.pdfBuilder.AnsiPCell;
 import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFReportBuilderUtils;
 import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFReportFormatter;
 import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFReportHeader;
@@ -462,11 +463,7 @@ public abstract class DataDumpReport extends CustomReport {
 //		dataTable.setLockedWidth(true);
 		
 		for ( int columnIndex = 0; columnIndex < this.columnHeaders.size(); columnIndex++ ) {
-			PdfPCell cell = new PdfPCell(new Phrase(new Chunk(this.columnHeaders.get(columnIndex), PDFReportFormatter.fontStandardWhiteBold)));
-			cell.setBorder(Rectangle.NO_BORDER);
-//			headerLeft.setBorderColor(BaseColor.BLACK);
-//			headerLeft.setBorderWidth(1F);
-			cell.setIndent(0F);
+			PdfPCell cell = new AnsiPCell(new Phrase(new Chunk(this.columnHeaders.get(columnIndex), PDFReportFormatter.fontStandardWhiteBold)));
 			cell.setPaddingTop(0F);
 			cell.setPaddingBottom(4F);
 			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -479,28 +476,14 @@ public abstract class DataDumpReport extends CustomReport {
 			for ( int columnIndex = 0; columnIndex < dataRow.size(); columnIndex++ ) {
 				Object value = dataRow.get(columnIndex);
 				if ( value == null ) {
-					PdfPCell cell = new PdfPCell(new Phrase(""));
-					cell.setBorder(Rectangle.NO_BORDER);
-//					headerLeft.setBorderColor(BaseColor.BLACK);
-//					headerLeft.setBorderWidth(1F);
-					cell.setIndent(0F);
-					cell.setPaddingTop(0F);
-					cell.setPaddingBottom(0F);
+					PdfPCell cell = new AnsiPCell(new Phrase(""));
 					dataTable.addCell(cell);
 				} else {
 					String dataClass = value.getClass().getSimpleName();
 					DataFormats dataFormats = dataFormatters.get(dataClass);					
 					String display = PDFReportBuilderUtils.formatValue(dataFormats, value);
 					Phrase content = new Phrase(new Chunk(display, PDFReportFormatter.fontStandardBlack));
-					PdfPCell cell = new PdfPCell(content);	
-					cell.setBorder(Rectangle.NO_BORDER);
-//					headerLeft.setBorderColor(BaseColor.BLACK);
-//					headerLeft.setBorderWidth(1F);
-					cell.setIndent(0F);
-					cell.setPaddingTop(0F);
-					cell.setPaddingBottom(0F);
-					cell.setHorizontalAlignment(pdfCellStyles.get(dataClass));
-					cell.setVerticalAlignment(Element.ALIGN_TOP);
+					PdfPCell cell = new AnsiPCell(content);
 					dataTable.addCell(cell);
 				}
 			}
