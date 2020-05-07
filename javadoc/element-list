@@ -9,6 +9,7 @@ com.ansi.scilla.report.monthlyServiceTaxReport
 com.ansi.scilla.report.pac
 com.ansi.scilla.report.pastDue
 com.ansi.scilla.report.quarterlyReport
+com.ansi.scilla.report.reportBuilder
 com.ansi.scilla.report.reportBuilder.common
 com.ansi.scilla.report.reportBuilder.formatter
 com.ansi.scilla.report.reportBuilder.htmlBuilder
