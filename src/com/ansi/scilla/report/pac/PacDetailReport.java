@@ -24,6 +24,7 @@ import com.ansi.scilla.common.jobticket.JobFrequency;
 import com.ansi.scilla.common.jobticket.JobStatus;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
@@ -31,7 +32,6 @@ import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
-import com.ansi.scilla.report.reportBuilder.xlsBuilder.ColumnWidth;
 
 public class PacDetailReport extends StandardReport implements ReportByDivStartEnd, ReportByDivision {
 
@@ -261,18 +261,18 @@ public class PacDetailReport extends StandardReport implements ReportByDivStartE
 		});
 		super.makeHeaderRight(headerRight);
 		
-		super.setColumnWidths(new Integer[] {
-				ColumnWidth.DATE.width(),
-				ColumnWidth.DATETIME.width(),
-				ColumnWidth.ADDRESS_NAME.width(),
-				ColumnWidth.ADDRESS_ADDRESS1.width(),
-				ColumnWidth.ADDRESS_CITY.width(),
-				ColumnWidth.ADDRESS_STATE.width(),
-				(Integer)null,
-				(Integer)null,
-				ColumnWidth.JOB_JOB_NBR.width(),
-				ColumnWidth.JOB_JOB_FREQUENCY.width(),
-				ColumnWidth.JOB_JOB_STATUS.width(),
+		super.setColumnWidths(new ColumnWidth[] {
+				ColumnWidth.DATE,
+				ColumnWidth.DATETIME,
+				ColumnWidth.ADDRESS_NAME,
+				ColumnWidth.ADDRESS_ADDRESS1,
+				ColumnWidth.ADDRESS_CITY,
+				ColumnWidth.ADDRESS_STATE,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				ColumnWidth.JOB_JOB_NBR,
+				ColumnWidth.JOB_JOB_FREQUENCY,
+				ColumnWidth.JOB_JOB_STATUS,
 		});
 	}
 	

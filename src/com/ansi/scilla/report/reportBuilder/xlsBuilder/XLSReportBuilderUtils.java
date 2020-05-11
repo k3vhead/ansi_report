@@ -12,6 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.ReportBuilderUtils;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderCol;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
@@ -278,8 +279,9 @@ public class XLSReportBuilderUtils extends ReportBuilderUtils {
 		
 		if ( report.getColumnWidths() != null ) {
 			for ( int i = 0; i < report.getColumnWidths().length; i++ ) {
-				if ( report.getColumnWidths()[i] != null && report.getColumnWidths()[i] > 0 ) {
-					sheet.setColumnWidth(i, report.getColumnWidths()[i]);
+				ColumnWidth columnWidth = report.getColumnWidths()[i];
+				if ( columnWidth != null && columnWidth.xlsWidth() > 0 ) {
+					sheet.setColumnWidth(i, columnWidth.xlsWidth());
 				}
 			}
 		}

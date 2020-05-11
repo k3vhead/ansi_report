@@ -25,6 +25,7 @@ import com.ansi.scilla.common.jobticket.TicketStatus;
 import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
@@ -32,7 +33,6 @@ import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivEnd;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
-import com.ansi.scilla.report.reportBuilder.xlsBuilder.ColumnWidth;
 
 public class DispatchedOutstandingTicketReport extends StandardReport implements ReportByDivEnd, ReportByDivision {
 	
@@ -321,19 +321,19 @@ public class DispatchedOutstandingTicketReport extends StandardReport implements
 		});
 		super.makeHeaderRight(headerRight);
 
-		super.setColumnWidths(new Integer[] {
-				(Integer)null,
-				ColumnWidth.DATETIME.width(),
-				ColumnWidth.ADDRESS_NAME.width() - ColumnWidth.DATETIME.width(),
-				ColumnWidth.ADDRESS_ADDRESS1.width(),
-				ColumnWidth.ADDRESS_CITY.width(),
-				ColumnWidth.DATE.width(),
-				ColumnWidth.DATE.width(),
-				ColumnWidth.JOB_PPC.width(),
-				ColumnWidth.JOB_JOB_NBR.width(),
-				ColumnWidth.JOB_JOB_FREQUENCY.width(),
-				ColumnWidth.HDR_RIGHT_NON_DISPATCHED.width(),
-				(Integer)null,
+		super.setColumnWidths(new ColumnWidth[] {
+				(ColumnWidth)null,
+				ColumnWidth.DATETIME,
+				ColumnWidth.DO_SITE_NAME,
+				ColumnWidth.ADDRESS_ADDRESS1,
+				ColumnWidth.ADDRESS_CITY,
+				ColumnWidth.DATE,
+				ColumnWidth.DATE,
+				ColumnWidth.JOB_PPC,
+				ColumnWidth.JOB_JOB_NBR,
+				ColumnWidth.JOB_JOB_FREQUENCY,
+				ColumnWidth.HDR_RIGHT_NON_DISPATCHED,
+				(ColumnWidth)null,
 		});
 		//Method getDispOutstanding = this.getClass().getMethod("getDispOutstanding", (Class<?>[])null);
 		//Method getFinished = this.getClass().getMethod("getFinished", (Class<?>[])null);

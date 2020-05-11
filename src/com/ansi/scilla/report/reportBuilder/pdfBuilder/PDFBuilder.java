@@ -36,11 +36,10 @@ public class PDFBuilder extends AbstractPDFBuilder {
 		float topMargin = header.getHeaderTable().getTotalHeight() + (PDFReportFormatter.shortSideSize - PDFReportFormatter.headerDefaultPositionY) + 4.0F;
 		Document document = new Document(PageSize.LETTER.rotate(), PDFReportFormatter.marginLeft, PDFReportFormatter.marginRight, topMargin, PDFReportFormatter.marginBottom);
 		PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
-		document.open();
 		pdfWriter.setPageEvent(header);
+		document.open();
 
 		//TODO : Column Widths
-		//TODO : Footer / page count
 		PdfPTable dataTable = new PdfPTable(((StandardReport)report).getHeaderRow().length);
 		dataTable.setHeaderRows(1);	// set column headers to repeat on each page
 		dataTable.setWidthPercentage(100F);

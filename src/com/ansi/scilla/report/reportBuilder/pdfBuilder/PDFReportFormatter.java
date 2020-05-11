@@ -29,6 +29,7 @@ public class PDFReportFormatter extends ApplicationObject {
 //	public short standardHeaderHeight = (short)400;    //this may be a good idea at some point, but we're not doing it now
 //	public short standardDetailHeight = (short)400;    //this may be a good idea at some point, but we're not doing it now
 	
+	public static final BaseFont calibri;
 	public static final Font fontStandardBlack;
 	public static final Font fontStandardBlackBold;
 	public static final Font fontStandardWhite;
@@ -98,7 +99,7 @@ public class PDFReportFormatter extends ApplicationObject {
 		;
 		try {
 			String calibriTTF = PDFReportFormatter.class.getClassLoader().getResource("resources/calibri.ttf").getFile();
-			BaseFont calibri = BaseFont.createFont(calibriTTF, BaseFont.WINANSI, true);
+			calibri = BaseFont.createFont(calibriTTF, BaseFont.WINANSI, true);
 			fontStandardBlack = new Font(calibri, fontHeight);
 			fontStandardBlackBold = new Font(calibri, fontHeight, Font.BOLD);
 			fontStandardWhite = new Font(calibri, fontHeight);

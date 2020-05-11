@@ -17,9 +17,10 @@ import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.TabSettings;
 import com.itextpdf.text.TabStop;
-import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
@@ -36,7 +37,7 @@ public class PDFReportHeader extends PdfPageEventHelper {
 
 	
 	protected PdfPTable headerTable;
-	protected PdfTemplate t;
+	protected PdfTemplate template;
 
 	public PDFReportHeader(AbstractReport report) throws Exception {
 		super();
@@ -207,14 +208,20 @@ public class PDFReportHeader extends PdfPageEventHelper {
 	
 	@Override
 	public void onOpenDocument(PdfWriter writer, Document document) {
-		t = writer.getDirectContent().createTemplate(30,16);
+		float width = 100f;
+		float height = 100f;
+		template = writer.getDirectContent().createTemplate(width, height);
+		template.setBoundingBox(new Rectangle(-20, -20, 100, 100));		
 	}
 
+	
 	@Override
 	public void onEndPage(PdfWriter writer, Document document) {
 		// add header
 		headerTable.writeSelectedRows(0, -1, PDFReportFormatter.headerDefaultPositionX, PDFReportFormatter.headerDefaultPositionY, writer.getDirectContent());
 		
+		/**
+		 * From memorynotfound
 		// add footer
 		Float center = (document.getPageSize().getRight() - document.getPageSize().getLeft())/2.0F;
 //		Float top = document.getPageSize().getHeight() - 50F;
@@ -222,15 +229,34 @@ public class PDFReportHeader extends PdfPageEventHelper {
 		Float noRotation = 0F;
 		Phrase footer = new Phrase(new Chunk("Page " + document.getPageNumber() + " of ", PDFReportFormatter.fontStandardBlack));		
 		ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, footer, center, bottom, noRotation);
+		 */
+		
+		/**
+		 * From pure-essence.net/2010/11/14/itext-page-number-page-x-of-y
+		 */
+		PdfContentByte cb = writer.getDirectContent();
+		cb.saveState();
+		String text = String.format("Page %s of ", writer.getPageNumber());
+		float textBase = document.bottom() - 20;
+		float textSize = PDFReportFormatter.calibri.getWidthPoint(text, PDFReportFormatter.fontHeight);
+		
+		cb.beginText();
+		cb.setFontAndSize(PDFReportFormatter.calibri, PDFReportFormatter.fontHeight);
+		cb.setTextMatrix((document.right() / 2), textBase);  // because page is centered on page width
+		cb.showText(text);
+		cb.endText();
+		cb.addTemplate(template, (document.right() / 2) + textSize, textBase);
+		cb.restoreState();
 	}
 
 	
 
 	@Override
 	public void onCloseDocument(PdfWriter writer, Document document) {
-		//TODO : Add "of total page count" to footer
-		Logger logger = LogManager.getLogger(this.getClass());
-		String lastPageNumber = String.valueOf(writer.getPageNumber());
-		logger.log(Level.DEBUG, "Last Page: " + lastPageNumber);
+		template.beginText();
+		template.setFontAndSize(PDFReportFormatter.calibri, PDFReportFormatter.fontHeight);
+		template.setTextMatrix(0,0);
+		template.showText(String.valueOf(writer.getPageNumber()));
+		template.endText();
 	}
 }

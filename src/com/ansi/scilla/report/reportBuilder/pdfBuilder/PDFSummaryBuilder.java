@@ -32,10 +32,9 @@ public class PDFSummaryBuilder extends AbstractPDFBuilder {
 		float topMargin = header.getHeaderTable().getTotalHeight() + (PDFReportFormatter.shortSideSize - PDFReportFormatter.headerDefaultPositionY) + 4.0F;
 		Document document = new Document(PageSize.LETTER.rotate(), PDFReportFormatter.marginLeft, PDFReportFormatter.marginRight, topMargin, PDFReportFormatter.marginBottom);
 		PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
-		document.open();
 		pdfWriter.setPageEvent(header);
+		document.open();
 
-		//TODO : Footer / page count
 		PdfContentByte pdfContentByte = pdfWriter.getDirectContent();
 		
 		TableSize companyTableSize = addCompanyTable(pdfContentByte, topMargin);

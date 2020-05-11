@@ -33,6 +33,7 @@ import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
@@ -40,7 +41,6 @@ import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivMonthYear;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
-import com.ansi.scilla.report.reportBuilder.xlsBuilder.ColumnWidth;
 
 public class InvoiceRegisterReport extends StandardReport implements ReportByDivMonthYear, ReportByDivision {
 
@@ -189,19 +189,19 @@ public class InvoiceRegisterReport extends StandardReport implements ReportByDiv
 		super.makeHeaderRight(headerRight);
 		
 		
-		super.setColumnWidths(new Integer[] {
-				ColumnWidth.HEADER_COL1.width(),
-				ColumnWidth.DATETIME.width(),
-				ColumnWidth.CONTACT_NAME.width() - ColumnWidth.DATETIME.width() - ColumnWidth.HEADER_COL1.width(),
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				ColumnWidth.ADDRESS_NAME.width() - ColumnWidth.HEADER_COL_RIGHT.width(),
-				ColumnWidth.HEADER_COL_RIGHT.width()
+		super.setColumnWidths(new ColumnWidth[] {
+				ColumnWidth.HEADER_COL1,
+				ColumnWidth.DATETIME,
+				ColumnWidth.IRR_TICKET_ID,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				ColumnWidth.IRR_INVOICE_AMT,
+				ColumnWidth.HEADER_COL_RIGHT
 		});
 		
 		PreparedStatement psData = conn.prepareStatement(sql + "\norder by bill_to.name, ticket.invoice_date");

@@ -19,6 +19,7 @@ import com.ansi.scilla.common.jobticket.JobFrequency;
 import com.ansi.scilla.common.jobticket.JobStatus;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
@@ -26,7 +27,6 @@ import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
-import com.ansi.scilla.report.reportBuilder.xlsBuilder.ColumnWidth;
 
 public class PacSummaryReport extends StandardReport implements ReportByDivStartEnd, ReportByDivision {
 
@@ -331,14 +331,14 @@ public class PacSummaryReport extends StandardReport implements ReportByDivStart
 		
 		super.setFirstDetailColumn(2);
 		
-		super.setColumnWidths(new Integer[] {
-				(Integer)null,
-				ColumnWidth.DATETIME.width(),
-				ColumnWidth.HEADER_ANSI.width()/3,
-				ColumnWidth.HEADER_ANSI.width()/3,
-				ColumnWidth.HEADER_ANSI.width()/3,
-				(Integer)null,
-				ColumnWidth.DATE.width(),
+		super.setColumnWidths(new ColumnWidth[] {
+				(ColumnWidth)null,
+				ColumnWidth.DATETIME,
+				ColumnWidth.PAC_SUMMARY_COLUMN,
+				ColumnWidth.PAC_SUMMARY_COLUMN,
+				ColumnWidth.PAC_SUMMARY_COLUMN,
+				(ColumnWidth)null,
+				ColumnWidth.DATE,
 		});
 	}
 	

@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.thewebthing.commons.lang.StringUtils;
 
@@ -20,7 +21,7 @@ public abstract class StandardReport extends AbstractReport {
 	private static final long serialVersionUID = 1L;
 
 	private ColumnHeader[] headerRow;
-	private Integer[] columnWidths;
+	private ColumnWidth[] columnWidths;
 	private String[] pageBreakFieldList;	
 	private List<Object> dataRows;
 	protected Logger logger = LogManager.getLogger(this.getClass());
@@ -39,11 +40,11 @@ public abstract class StandardReport extends AbstractReport {
 		this.headerRow = headerRow;		
 	}
 	
-	public Integer[] getColumnWidths() {
+	public ColumnWidth[] getColumnWidths() {
 		return columnWidths;
 	}
 
-	public void setColumnWidths(Integer[] columnWidths) {
+	public void setColumnWidths(ColumnWidth[] columnWidths) {
 		this.columnWidths = columnWidths;
 	}
 

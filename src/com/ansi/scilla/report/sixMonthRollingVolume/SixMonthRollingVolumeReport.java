@@ -1062,10 +1062,9 @@ public class SixMonthRollingVolumeReport extends CustomReport implements Compara
 		float topMargin = header.getHeaderTable().getTotalHeight() + (PDFReportFormatter.shortSideSize - PDFReportFormatter.headerDefaultPositionY) + 4.0F;
 		Document document = new Document(PageSize.LETTER.rotate(), PDFReportFormatter.marginLeft, PDFReportFormatter.marginRight, topMargin, PDFReportFormatter.marginBottom);
 		PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
-		document.open();
 		pdfWriter.setPageEvent(header);
+		document.open();
 
-		//TODO : Footer / page count
 		PdfPTable dataTable = new PdfPTable(14);
 		float[] colWidths = new float[14];
 		float tableWidth = PDFReportFormatter.longSideSize - (PDFReportFormatter.marginLeft + PDFReportFormatter.marginRight);

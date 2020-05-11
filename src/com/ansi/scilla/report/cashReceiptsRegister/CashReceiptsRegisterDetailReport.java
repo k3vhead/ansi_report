@@ -24,12 +24,12 @@ import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.xlsBuilder.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.ReportStartLoc;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
@@ -228,23 +228,23 @@ public class CashReceiptsRegisterDetailReport extends StandardReport implements 
 		});
 		super.makeHeaderRight(headerRight);
 		
-		super.setColumnWidths(new Integer[] {
-				(Integer)null,
-				ColumnWidth.DATETIME.width(),
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				Math.max(0, ColumnWidth.ADDRESS_NAME.width() - ColumnWidth.DATE.width()),
+		super.setColumnWidths(new ColumnWidth[] {
+				(ColumnWidth)null,
+				ColumnWidth.DATETIME,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				ColumnWidth.CRR_JOB_SITE_NAME,
 		});
 	}
 	

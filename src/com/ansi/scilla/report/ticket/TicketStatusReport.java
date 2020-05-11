@@ -20,6 +20,7 @@ import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.jobticket.TicketStatus;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
@@ -27,7 +28,6 @@ import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
-import com.ansi.scilla.report.reportBuilder.xlsBuilder.ColumnWidth;
 
 public class TicketStatusReport extends StandardReport implements ReportByDivStartEnd, ReportByDivision {
 
@@ -260,16 +260,16 @@ public class TicketStatusReport extends StandardReport implements ReportByDivSta
 		});
 		super.makeHeaderRight(headerRight);
 		
-		super.setColumnWidths(new Integer[] {
-				ColumnWidth.DATE.width(),
-				ColumnWidth.DATETIME.width(),
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				ColumnWidth.JOB_JOB_NBR.width(),
-				ColumnWidth.ADDRESS_NAME.width(),
-				ColumnWidth.ADDRESS_ADDRESS1.width(),				
+		super.setColumnWidths(new ColumnWidth[] {
+				ColumnWidth.DATE,
+				ColumnWidth.DATETIME,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				ColumnWidth.JOB_JOB_NBR,
+				ColumnWidth.ADDRESS_NAME,
+				ColumnWidth.ADDRESS_ADDRESS1,				
 		});
 	}
 	

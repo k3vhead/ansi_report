@@ -30,6 +30,7 @@ import com.ansi.scilla.common.jobticket.TicketStatus;
 import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
@@ -37,7 +38,6 @@ import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivMonthYear;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
-import com.ansi.scilla.report.reportBuilder.xlsBuilder.ColumnWidth;
 
 public class SmrvDetailReport extends StandardReport implements ReportByDivMonthYear, ReportByDivision {
 
@@ -376,22 +376,22 @@ public class SmrvDetailReport extends StandardReport implements ReportByDivMonth
 		});
 		super.makeHeaderRight(headerRight);
 
-		super.setColumnWidths(new Integer[] {
-				ColumnWidth.ADDRESS_NAME.width()-ColumnWidth.DATETIME.width()-ColumnWidth.DATE.width(),
-				ColumnWidth.DATETIME.width(),
-				(Integer)null,
-				ColumnWidth.ADDRESS_ADDRESS1.width()-ColumnWidth.DATE.width(),
-				ColumnWidth.JOB_JOB_NBR.width(),
-				ColumnWidth.DATE.width(),
-				(Integer)null,
-				ColumnWidth.JOB_JOB_FREQUENCY.width(),
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
+		super.setColumnWidths(new ColumnWidth[] {
+				ColumnWidth.SMRV_JOB_SITE_NAME,
+				ColumnWidth.DATETIME,
+				(ColumnWidth)null,
+				ColumnWidth.SMRV_ADDRESS1,
+				ColumnWidth.JOB_JOB_NBR,
+				ColumnWidth.DATE,
+				(ColumnWidth)null,
+				ColumnWidth.JOB_JOB_FREQUENCY,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
 		});
 }
 	
