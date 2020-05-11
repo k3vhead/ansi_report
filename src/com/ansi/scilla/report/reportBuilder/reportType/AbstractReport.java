@@ -116,6 +116,8 @@ public abstract class AbstractReport extends AnsiReport {
 
 	
 	public abstract Integer getReportWidth();
+	
+	public abstract String getFileName();
 
 	/**
 	 * Figure out how many rows are in the report banner.
