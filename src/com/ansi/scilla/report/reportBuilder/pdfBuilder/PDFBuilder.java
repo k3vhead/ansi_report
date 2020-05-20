@@ -8,8 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.common.NoPreviousValue;
-import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;

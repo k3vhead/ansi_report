@@ -8,6 +8,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.ApplicationObject;
+import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLBuilder;
 import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLSummaryBuilder;
 import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFBuilder;
@@ -172,6 +173,8 @@ public class AnsiReportBuilder extends ApplicationObject {
 	}
 	
 	
+	
+	
 	public static String buildHtml(StandardReport report) throws Exception {
 		return HTMLBuilder.build(report);
 	}
@@ -188,6 +191,20 @@ public class AnsiReportBuilder extends ApplicationObject {
 		return report.makeHTML();
 	}
 
+	public static String buildHTML(AbstractReport report) throws Exception {
+		String html = null;
+		if ( report instanceof StandardReport ) {
+			html = buildHTML((StandardReport)report);
+		} else if ( report instanceof StandardSummaryReport ) {
+			html = buildHTML((StandardSummaryReport)report);
+		} else if ( report instanceof CustomReport ) {
+			html = buildHTML((CustomReport)report);
+		} else {
+			throw new Exception("Unknown extension of AbstractReport: " + report.getClass().getName());
+		}
+		return html;
+	}
+	
 	public static void writeHTML(StandardReport report, String filePath) throws Exception {
 		FileUtils.write(new File(filePath), buildHtml(report));
 	}
@@ -200,7 +217,14 @@ public class AnsiReportBuilder extends ApplicationObject {
 		FileUtils.write(new File(filePath), buildHtml(report));
 	}
 
-	// TODO : AnsiReportBuilder Build HTML Compound Report
-	// TODO : AnsiReportBuilder Write HTML Compound Report
+	public static void writeHTML(AbstractReport report, String filePath) throws Exception {
+		FileUtils.write(new File(filePath), buildHTML(report));
+	}
+
+	public static void writeHTML(CompoundReport report, String filePath) throws Exception {
+		// TODO : AnsiReportBuilder Build HTML Compound Report
+		throw new Exception("not written yet");		
+	}
+
 
 }

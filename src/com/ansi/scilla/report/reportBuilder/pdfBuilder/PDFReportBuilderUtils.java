@@ -23,7 +23,6 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.TabSettings;
 import com.itextpdf.text.TabStop;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -215,64 +214,6 @@ public class PDFReportBuilderUtils extends ReportBuilderUtils {
 	
 
 
-	/**
-	 * Builds standard header for summary reports
-	 * @param report Any ANSI Summary Report
-	 * @param reportStartLoc	Where on the sheet we should put the report
-	 * @param sheet	The Excel worksheet we're working with
-	 * @return The number of rows in the report header
-	 * @throws Exception something bad happened
-	 */
-	//TODO: makeSummaryHeader
-	/*
-	public static Integer makeSummaryHeader(StandardSummaryReport report, ReportStartLoc reportStartLoc, XSSFSheet sheet) throws Exception {
-		int headerRowCount = makeHeaderRowCount(report);
-		XLSReportFormatter rf = new XLSReportFormatter(sheet.getWorkbook());
-		sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
-		sheet.getPrintSetup().setFitWidth((short)1);
-
-		XSSFRow row = null;
-		XSSFCell cell = null;
-		
-		makeHeaderRow(report, reportStartLoc, rf, 0, report.getHeaderLeft(), report.getBanner(), rf.cellStyleReportBanner, report.getHeaderRight(), sheet);
-		if ( headerRowCount > 1 ) {
-			makeHeaderRow(report, reportStartLoc, rf, 1, report.getHeaderLeft(), report.getTitle(), rf.cellStyleReportTitle, report.getHeaderRight(), sheet);	
-		}
-		if ( headerRowCount > 2 ) {
-			makeHeaderRow(report, reportStartLoc, rf, 2, report.getHeaderLeft(), report.getSubtitle(), rf.cellStyleReportSubTitle, report.getHeaderRight(), sheet);
-		}
-		if ( headerRowCount > 3 ) {
-			for ( int i=3;i<headerRowCount;i++) {
-				makeHeaderRow(report, reportStartLoc, rf, i, report.getHeaderLeft(), "", rf.cellStyleStandardCenter, report.getHeaderRight(), sheet);
-			}
-		}
-		
-		if ( ! StringUtils.isBlank(report.getHeaderNotes())) {			
-			row = makeRow(sheet, headerRowCount);
-//			sheet.addMergedRegion(new CellRangeAddress(headerRowCount, headerRowCount, 0, report.getHeaderRow().length + 1));
-			sheet.addMergedRegion(new CellRangeAddress(headerRowCount, headerRowCount, 0, 10));
-			cell = row.createCell(0);
-			cell.setCellStyle(rf.cellStyleReportNote);
-			cell.setCellValue(report.getHeaderNotes());
-		}
-		
-		int numberOfHeaderRows = Math.max(3, headerRowCount); // banner + title + subtitle is the minimum
-		numberOfHeaderRows++;  // need to include headers + column labels
-		sheet.setRepeatingRows(new CellRangeAddress(0,numberOfHeaderRows, 0, makeColumnCount(report)));
-	    
-		Footer footer = sheet.getFooter();
-		footer.setCenter("Page &P of &N");
-		
-		return numberOfHeaderRows;
-	}
-	 */
-	
-	
-	
-	
-	
-	
-//	public static void makeHeaderRow(AbstractReport report, ReportStartLoc reportStartLoc, XLSReportFormatter rf, Integer rowIndex, List<ReportHeaderCol> headerLeft, String text, CellStyle bannerStyle, List<ReportHeaderCol> headerRight, XSSFSheet sheet) throws Exception {
 	/**
 	 * 
 	 * @param report
