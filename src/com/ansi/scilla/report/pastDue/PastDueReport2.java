@@ -29,6 +29,7 @@ import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.invoice.InvoiceTerm;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
@@ -202,8 +203,23 @@ public class PastDueReport2 extends StandardReport implements ReportByDivEnd, Re
 				new ReportHeaderRow("Division: ", getDivMethod, 0, DataFormats.STRING_FORMAT)
 		});
 		super.makeHeaderRight(headerRight);
+	
 		
+		super.setColumnWidths(new ColumnWidth[] {
+				ColumnWidth.ADDRESS_NAME,			//Bill TO Name (colspan 2)
+				(ColumnWidth)null,
+				ColumnWidth.TICKET_NBR,		// Ticket Invoice
+				ColumnWidth.DATE,			// Completed Invoice
+				ColumnWidth.JOB_JOB_ID,	// Job
+				ColumnWidth.JOB_PPC,			// PPC
+				ColumnWidth.JOB_PPC,			// Paid
+				ColumnWidth.JOB_PPC,	// Due
+				ColumnWidth.JOB_PPC,	// Past Due
+				ColumnWidth.ADDRESS_ADDRESS1,	// Site Address (colspan 2)
+				(ColumnWidth)null,			// Site Address
+		});
 	}
+	
 		
 	
 	

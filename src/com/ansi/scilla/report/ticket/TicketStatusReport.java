@@ -261,15 +261,16 @@ public class TicketStatusReport extends StandardReport implements ReportByDivSta
 		super.makeHeaderRight(headerRight);
 		
 		super.setColumnWidths(new ColumnWidth[] {
-				ColumnWidth.DATE,
-				ColumnWidth.DATETIME,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				ColumnWidth.JOB_JOB_NBR,
-				ColumnWidth.ADDRESS_NAME,
-				ColumnWidth.ADDRESS_ADDRESS1,				
+				ColumnWidth.DATE,			//Completed
+				ColumnWidth.DATETIME,		// Job ID
+				ColumnWidth.TICKET_NBR,			// Ticket #
+				ColumnWidth.TICKET_STATUS,	// Status
+				ColumnWidth.JOB_PPC,			// PPC
+				ColumnWidth.TICKET_INVOICED,			// Invoiced
+				ColumnWidth.JOB_JOB_NBR,	// Job #
+				ColumnWidth.ADDRESS_NAME,	// Site Name
+				ColumnWidth.ADDRESS_ADDRESS1,	// Site Address (colspan 2)
+				(ColumnWidth)null,			// Site Address
 		});
 	}
 	

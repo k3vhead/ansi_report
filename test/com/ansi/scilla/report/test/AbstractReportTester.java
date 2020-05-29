@@ -269,7 +269,7 @@ public abstract class AbstractReportTester {
 		@Override
 		public void makeReport(Connection conn) throws Exception {
 			logger.info("PastDueReport");
-			String fileName = "PastDueDate.xlsx";
+			String fileName = "PastDueDate";
 			PastDueReport2 report = PastDueReport2.buildReport(conn, startDate, divisionId);
 			super.writeReport(report, fileName);
 		}

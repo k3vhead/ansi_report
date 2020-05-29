@@ -245,6 +245,7 @@ public class CashReceiptsRegisterDetailReport extends StandardReport implements 
 				(ColumnWidth)null,
 				(ColumnWidth)null,
 				ColumnWidth.CRR_JOB_SITE_NAME,
+				(ColumnWidth)null,
 		});
 	}
 	

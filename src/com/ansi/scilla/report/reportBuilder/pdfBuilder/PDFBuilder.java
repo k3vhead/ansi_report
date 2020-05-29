@@ -37,10 +37,14 @@ public class PDFBuilder extends AbstractPDFBuilder {
 		pdfWriter.setPageEvent(header);
 		document.open();
 
-		//TODO : Column Widths
+		float[] totalWidth = PDFReportBuilderUtils.makeColumnWidths((StandardReport)report);
+		
 		PdfPTable dataTable = new PdfPTable(((StandardReport)report).getHeaderRow().length);
 		dataTable.setHeaderRows(1);	// set column headers to repeat on each page
 		dataTable.setWidthPercentage(100F);
+		if ( totalWidth != null ) {
+			dataTable.setTotalWidth(totalWidth);
+		}
 		PDFReportBuilderUtils.makeColumnHeader((StandardReport)report, dataTable);		
 		makeDetails((StandardReport)report, dataTable);
 		makeFinalSubtotal(dataTable);

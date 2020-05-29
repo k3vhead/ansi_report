@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -34,6 +35,7 @@ public class PDFReportBuilderUtils extends ReportBuilderUtils {
 	private static final long serialVersionUID = 1L;
 	
 	private static final Float standardHeaderCellWidth = 252F;
+	private static final Logger logger = LogManager.getLogger(PDFReportBuilderUtils.class);
 	
 	/**
 	 * Builds standard header for standard reports. (Can't get much more generic than that)
@@ -43,7 +45,6 @@ public class PDFReportBuilderUtils extends ReportBuilderUtils {
 	 * @throws Exception Something bad happened
 	 */
 	public static Paragraph makeStandardHeader(StandardReport report, ReportStartLoc reportStartLoc, Document document, PdfWriter pdfWriter) throws Exception {
-		Logger logger = LogManager.getLogger(PDFReportBuilderUtils.class);
 		Paragraph header = new Paragraph();
 		
 		PdfPTable headerTable = new PdfPTable(3);
@@ -154,7 +155,6 @@ public class PDFReportBuilderUtils extends ReportBuilderUtils {
 
 
 	private static HeaderContent makeHeaderContent(StandardReport report, List<ReportHeaderCol> headerColumns) throws Exception {
-		Logger logger = LogManager.getLogger(PDFReportBuilderUtils.class);
 		HeaderDisplay[][] headerRows = new HeaderDisplay[50][50];  // if we have more than 50, we're in big trouble
 		for ( int rowIdx=0; rowIdx<50; rowIdx++ ) {
 			for ( int colIdx=0; colIdx<50; colIdx++ ) {
@@ -310,7 +310,7 @@ public class PDFReportBuilderUtils extends ReportBuilderUtils {
 	 * @param dataTable
 	 */
 	public static void makeColumnHeader(StandardReport report, PdfPTable dataTable) {
-		Logger logger = LogManager.getLogger(PDFReportBuilderUtils.class);
+		
 		
 		
 		for ( ColumnHeader columnHeader : report.getHeaderRow() ) {
@@ -326,6 +326,58 @@ public class PDFReportBuilderUtils extends ReportBuilderUtils {
 	
 	
 	
+	public static float[] makeColumnWidths(StandardReport report) {
+		float[] totalWidth = null;
+	
+		if ( report.getColumnWidths() != null ) {
+			float[] columnWidths = new float[report.getColumnWidths().length]; // working area for column widths
+	
+			float definedWidth = 0.0F;
+			float definedColumnCount = 0.0F;
+			for ( int i = 0; i < report.getColumnWidths().length; i++ ) {
+				if ( report.getColumnWidths()[i] != null && report.getColumnWidths()[i].pdfWidth() != null ) {
+					columnWidths[i] = report.getColumnWidths()[i].pdfWidth();
+					definedWidth = definedWidth + report.getColumnWidths()[i].pdfWidth();
+					definedColumnCount = definedColumnCount + 1;
+				}
+			}
+			float defaultWidth = (PDFReportFormatter.tableTotalWidth - definedWidth)/(columnWidths.length - definedColumnCount);
+			logger.log(Level.DEBUG, "Default Column Width: " + defaultWidth + " ("+report.getTitle() + ")");
+			for ( int i = 0; i < columnWidths.length; i++ ) {
+				if ( columnWidths[i] == 0.0F ) {
+					columnWidths[i] = defaultWidth;
+				}
+			}
+	
+			ColumnHeader[] headers = report.getHeaderRow();
+			totalWidth = new float[headers.length];
+			int idxC = 0;  // index into columnWidth
+			for ( int idxH = 0; idxH < headers.length; idxH ++ ) {
+				float width = 0.0F;
+				for ( int cCount=0; cCount < headers[idxH].getColspan(); cCount++ ) {
+					width = width + columnWidths[idxC];
+					idxC++;
+				}
+				totalWidth[idxH] = width;
+			}
+		}
+		
+		if ( totalWidth == null ) {
+			logger.log(Level.DEBUG, "No COlumn widths defined");
+		} else {
+			for (int i = 0; i < totalWidth.length; i++ ) {
+				logger.log(Level.DEBUG, "Column: " + i + "\t" + totalWidth[i]);
+			}
+		}
+		
+		
+		return totalWidth;
+	}
+
+
+
+
+
 	public enum HeaderPosition {
 		LEFT,
 		CENTER,
@@ -334,6 +386,4 @@ public class PDFReportBuilderUtils extends ReportBuilderUtils {
 		
 		
 	}
-	
-	
 }

@@ -25,6 +25,7 @@ public class PDFReportFormatter extends ApplicationObject {
 	public static final Integer reportSubTitleHeight = 10;
 	public static final Integer reportNoteHeight = 8;
 	public static final Integer reportHeaderBottomSpace = 9;
+	public static final float   tableTotalWidth = 732.000024F;  // when a PdfPTable is set to 100% width on a landscape page, this is the absolute width
 
 //	public short standardHeaderHeight = (short)400;    //this may be a good idea at some point, but we're not doing it now
 //	public short standardDetailHeight = (short)400;    //this may be a good idea at some point, but we're not doing it now
