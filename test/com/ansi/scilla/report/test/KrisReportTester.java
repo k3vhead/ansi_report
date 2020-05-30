@@ -45,6 +45,9 @@ public class KrisReportTester extends AbstractReportTester {
 //				new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report
 		};
 		super.makeMyReports(reportList);
+		
+		
+		
 	}
 	
 	public static void main(String[] args) {
