@@ -5,3 +5,4 @@ lib/ansi_common.jar
 .classpath
 .project
 .settings
+tmp

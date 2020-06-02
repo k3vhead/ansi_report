@@ -1,9 +1,14 @@
 package com.ansi.scilla.report.reportBuilder.pdfBuilder;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 
 import com.ansi.scilla.common.ApplicationObject;
@@ -99,8 +104,7 @@ public class PDFReportFormatter extends ApplicationObject {
 		
 		;
 		try {
-			String calibriTTF = PDFReportFormatter.class.getClassLoader().getResource("resources/calibri.ttf").getFile();
-			calibri = BaseFont.createFont(calibriTTF, BaseFont.WINANSI, true);
+			calibri = getCalibri();
 			fontStandardBlack = new Font(calibri, fontHeight);
 			fontStandardBlackBold = new Font(calibri, fontHeight, Font.BOLD);
 			fontStandardWhite = new Font(calibri, fontHeight);
@@ -141,11 +145,53 @@ public class PDFReportFormatter extends ApplicationObject {
 	}
 	
 	
+	/**
+	 * To create a BaseFont we need the name of a TTF file (there are options but we don't care). When the TTF file
+	 * is embedded in a JAR file as a resource, the iText utility can't read it, because there is no distinct file
+	 * in the OS file system. So, we dive into the morass. 
+	 * 
+	 * First, check the standard font installation directory for the run-time operating system. If the TTF file is
+	 * not in that directory, check the Java temp io directory. If the TTF file is not in that directory, copy the 
+	 * content of the resource file into the temp directory and provide iText with that filename.
+	 * 
+	 * @return BaseFont (not a Font -- they're different) for Calibri.ttf
+	 * @throws DocumentException
+	 * @throws IOException
+	 */
 	public static BaseFont getCalibri() throws DocumentException, IOException {
-		String calibriTTF = PDFReportFormatter.class.getClassLoader().getResource("resources/calibri.ttf").getFile();
-		BaseFont calibri = BaseFont.createFont(calibriTTF, BaseFont.WINANSI, true);
+		String fontFile = null;
+		if ( SystemUtils.IS_OS_LINUX ) {
+			File file = new File("/usr/share/fonts/calibri.ttf");
+			if ( file.exists() && file.canRead() ) {
+				fontFile = "/usr/share/fonts/calibri.ttf";
+			}
+		} else if ( SystemUtils.IS_OS_WINDOWS ) {
+			File file = new File("C:\\Windows\\fonts\\calibri.ttf");
+			if ( file.exists() && file.canRead() ) {
+				fontFile = "C:\\Windows\\fonts\\calibri.ttf";
+			}
+		}
+
+		if ( fontFile == null ) {
+			File tempDir = SystemUtils.getJavaIoTmpDir();
+			if ( ! tempDir.exists() ) {
+				tempDir.mkdirs();
+			}
+			File ttfFile = new File(tempDir.getName() + File.separator + "calibri.ttf");
+			if ( ! ttfFile.exists() ) {
+				InputStream is = PDFReportFormatter.class.getClassLoader().getResourceAsStream("resources/calibri.ttf");
+				byte[] data = IOUtils.toByteArray(is);
+				FileUtils.writeByteArrayToFile(ttfFile, data);
+			}
+			fontFile = ttfFile.getAbsolutePath();
+		}
+				
+		BaseFont calibri = BaseFont.createFont(fontFile, BaseFont.WINANSI, true);	
 		return calibri;
 	}
+
+
+	
 	
 	
 }
