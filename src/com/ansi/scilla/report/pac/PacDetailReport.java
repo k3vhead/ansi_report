@@ -186,7 +186,7 @@ public class PacDetailReport extends StandardReport implements ReportByDivStartE
 		
 		String sql = this.sql.replaceAll("\\$REPORT_DATE\\$", this.reportType.fieldName); //get the right date for this report
 		PreparedStatement ps = conn.prepareStatement(sql);
-		this.logger.debug(sql);
+//		this.logger.debug(sql);
 		ps.setInt(1, divisionId);
 		ps.setDate(2, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(3, new java.sql.Date(endDate.getTimeInMillis()));

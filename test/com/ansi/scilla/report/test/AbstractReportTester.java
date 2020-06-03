@@ -19,6 +19,7 @@ import com.ansi.scilla.report.datadumps.ClientContact;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
 import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
+import com.ansi.scilla.report.report.ReportDistribution;
 import com.ansi.scilla.report.reportBuilder.AnsiReportBuilder;
 import com.ansi.scilla.report.reportBuilder.reportType.AbstractReport;
 import com.ansi.scilla.report.reportBuilder.reportType.CompoundReport;
@@ -291,6 +292,22 @@ public abstract class AbstractReportTester {
 			PacReport report = PacReport.buildReport(conn, divisionId, startDate, endDate);
 			super.writeReport(report, fileName);
 			logger.info("End PAC Listing");			
+		}
+	}
+	
+	public class MakeReportDistribution extends ReportMaker {
+
+		public MakeReportDistribution(boolean makeXLS, boolean makePDF, boolean makeHTML) {
+			super(makeXLS, makePDF, makeHTML);
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start Report Distribution");
+			String fileName = ReportDistribution.FILENAME;
+			ReportDistribution report = ReportDistribution.buildReport(conn);
+			super.writeReport(report, fileName);
+			logger.info("End Report Distribution");			
 		}
 	}
 

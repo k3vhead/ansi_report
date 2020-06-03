@@ -59,24 +59,28 @@ public class PDFBuilder extends AbstractPDFBuilder {
 	
 
 	private void makeDetails(StandardReport report, PdfPTable dataTable) throws Exception {
-		
-		for ( Object dataRow : report.getDataRows() ) {
-			makeSubtotal(report, dataRow, dataTable);
-			for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
-				ColumnHeader columnHeader = report.getHeaderRow()[i];				
-				Object value = makeDisplayData(columnHeader, dataRow);
-				String display = makeFormattedDisplayData(columnHeader.getFormatter(), value);
-				PdfPCell cell = new AnsiPCell(new Chunk(display, PDFReportFormatter.fontStandardBlack));	
-				/* If you're looking here because you got key error, you need to add a dataformat to the cell styles in PDFReportFormatter */
-				cell.setHorizontalAlignment(PDFReportFormatter.cellStyles.get(columnHeader.getFormatter()));
-				dataTable.addCell(cell);
-				super.doSummaries(columnHeader, value);
-				
+
+		if ( report.getDataRows().isEmpty() ) {
+			PdfPCell cell = new AnsiPCell(new Chunk("This report contains no data", PDFReportFormatter.fontStandardBlack));
+			cell.setColspan(report.getHeaderRow().length);
+			dataTable.addCell(cell);
+			dataTable.completeRow();
+		} else {
+			for ( Object dataRow : report.getDataRows() ) {
+				makeSubtotal(report, dataRow, dataTable);
+				for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
+					ColumnHeader columnHeader = report.getHeaderRow()[i];				
+					Object value = makeDisplayData(columnHeader, dataRow);
+					String display = makeFormattedDisplayData(columnHeader.getFormatter(), value);
+					PdfPCell cell = new AnsiPCell(new Chunk(display, PDFReportFormatter.fontStandardBlack));	
+					/* If you're looking here because you got key error, you need to add a dataformat to the cell styles in PDFReportFormatter */
+					cell.setHorizontalAlignment(PDFReportFormatter.cellStyles.get(columnHeader.getFormatter()));
+					dataTable.addCell(cell);
+					super.doSummaries(columnHeader, value);
+					
+				}
 			}
 		}
-//		for ( int i = 0; i < report.getHeaderRow().length+4; i++ ) { // removed for performance issues 13 mins/column in CRR Detail
-//			sheet.autoSizeColumn(i);
-//		}
 	}
 	
 	
