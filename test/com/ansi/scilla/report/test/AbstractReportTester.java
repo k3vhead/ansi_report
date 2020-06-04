@@ -300,7 +300,7 @@ public abstract class AbstractReportTester {
 		public MakeReportDistribution(boolean makeXLS, boolean makePDF, boolean makeHTML) {
 			super(makeXLS, makePDF, makeHTML);
 		}
-
+		
 		@Override
 		public void makeReport(Connection conn) throws Exception {
 			logger.info("Start Report Distribution");
