@@ -42,6 +42,10 @@ public class DateFormatter extends ReportFormatter {
 		return this.sdf.format(date);
 	}
 
+	public String format(java.sql.Date date ) {
+		return this.sdf.format(date);
+	}
+		
 	public String format(Midnight date) {
 		return this.sdf.format(date.getTime());
 	}
