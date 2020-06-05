@@ -23,9 +23,9 @@ public class ReportDistributionByReport extends ReportDistributionDetail {
 	protected void makeColumnHeaders() {
 		super.setHeaderRow(new ColumnHeader[] {
 				new ColumnHeader("reportId", "Report", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("division","Div", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("userName", "Subscriber", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("email","Email", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("division","Div", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 		});
 		
 //		super.setColumnWidths(new ColumnWidth[] {
