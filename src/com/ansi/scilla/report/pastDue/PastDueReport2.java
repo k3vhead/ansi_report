@@ -206,16 +206,16 @@ public class PastDueReport2 extends StandardReport implements ReportByDivEnd, Re
 	
 		
 		super.setColumnWidths(new ColumnWidth[] {
-				ColumnWidth.ADDRESS_NAME,			//Bill TO Name (colspan 2)
+				new ColumnWidth(11000, 200.0F),			//Bill TO Name (colspan 2)
 				(ColumnWidth)null,
-				ColumnWidth.TICKET_NBR,		// Ticket Invoice
-				ColumnWidth.DATE,			// Completed Invoice
-				ColumnWidth.JOB_JOB_ID,	// Job
-				ColumnWidth.JOB_PPC,			// PPC
-				ColumnWidth.JOB_PPC,			// Paid
-				ColumnWidth.JOB_PPC,	// Due
-				ColumnWidth.JOB_PPC,	// Past Due
-				ColumnWidth.ADDRESS_ADDRESS1,	// Site Address (colspan 2)
+				new ColumnWidth(2500, 32.0F),		// Ticket Invoice
+				new ColumnWidth(2750, 57.0F),			// Completed Invoice
+				new ColumnWidth(2500, 32.0F),	// Job
+				new ColumnWidth(2500, 46.0F),			// PPC
+				new ColumnWidth(2500, 46.0F),			// Paid
+				new ColumnWidth(2500, 46.0F),	// Due
+				new ColumnWidth(2500, 46.0F),	// Past Due
+				new ColumnWidth(11000, 200.0F),	// Site Address (colspan 2)
 				(ColumnWidth)null,			// Site Address
 		});
 	}

@@ -323,16 +323,16 @@ public class DispatchedOutstandingTicketReport extends StandardReport implements
 
 		super.setColumnWidths(new ColumnWidth[] {
 				(ColumnWidth)null,
-				ColumnWidth.DATETIME,
-				ColumnWidth.DO_SITE_NAME,
-				ColumnWidth.ADDRESS_ADDRESS1,
-				ColumnWidth.ADDRESS_CITY,
-				ColumnWidth.DATE,
-				ColumnWidth.DATE,
-				ColumnWidth.JOB_PPC,
-				ColumnWidth.JOB_JOB_NBR,
-				ColumnWidth.JOB_JOB_FREQUENCY,
-				ColumnWidth.HDR_RIGHT_NON_DISPATCHED,
+				new ColumnWidth(3750, 45.0F),
+				new ColumnWidth(7250, 155.0F),
+				new ColumnWidth(11000, 200.0F),
+				new ColumnWidth(3500, (Float)null),
+				new ColumnWidth(2750, 57.0F),
+				new ColumnWidth(2750, 57.0F),
+				new ColumnWidth(2500, 46.0F),
+				new ColumnWidth(1400, 30.0F),
+				new ColumnWidth(1400, (Float)null),
+				new ColumnWidth(3500, (Float)null),
 				(ColumnWidth)null,
 		});
 		//Method getDispOutstanding = this.getClass().getMethod("getDispOutstanding", (Class<?>[])null);

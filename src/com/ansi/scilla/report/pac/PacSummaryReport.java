@@ -333,12 +333,12 @@ public class PacSummaryReport extends StandardReport implements ReportByDivStart
 		
 		super.setColumnWidths(new ColumnWidth[] {
 				(ColumnWidth)null,
-				ColumnWidth.DATETIME,
-				ColumnWidth.PAC_SUMMARY_COLUMN,
-				ColumnWidth.PAC_SUMMARY_COLUMN,
-				ColumnWidth.PAC_SUMMARY_COLUMN,
+				new ColumnWidth(3750, 45.0F),
+				new ColumnWidth(2866, (Float)null),
+				new ColumnWidth(2866, (Float)null),
+				new ColumnWidth(2866, (Float)null),
 				(ColumnWidth)null,
-				ColumnWidth.DATE,
+				new ColumnWidth(2750, 57.0F),
 		});
 	}
 	

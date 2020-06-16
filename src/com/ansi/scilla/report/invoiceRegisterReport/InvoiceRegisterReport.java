@@ -190,9 +190,9 @@ public class InvoiceRegisterReport extends StandardReport implements ReportByDiv
 		
 		
 		super.setColumnWidths(new ColumnWidth[] {
-				ColumnWidth.HEADER_COL1,
-				ColumnWidth.DATETIME,
-				ColumnWidth.IRR_TICKET_ID,
+				new ColumnWidth(2000, (Float)null),
+				new ColumnWidth(3750, 45.0F),
+				new ColumnWidth(5250, (Float)null),
 				(ColumnWidth)null,
 				(ColumnWidth)null,
 				(ColumnWidth)null,
@@ -200,8 +200,8 @@ public class InvoiceRegisterReport extends StandardReport implements ReportByDiv
 				(ColumnWidth)null,
 				(ColumnWidth)null,
 				(ColumnWidth)null,
-				ColumnWidth.IRR_INVOICE_AMT,
-				ColumnWidth.HEADER_COL_RIGHT
+				new ColumnWidth(9000, (Float)null),
+				new ColumnWidth(2000, (Float)null),
 		});
 		
 		PreparedStatement psData = conn.prepareStatement(sql + "\norder by bill_to.name, ticket.invoice_date");

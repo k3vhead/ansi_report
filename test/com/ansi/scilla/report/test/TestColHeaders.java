@@ -98,7 +98,7 @@ public class TestColHeaders {
 		
 		private ColumnWidth[] columnWidths = new ColumnWidth[] {
 				(ColumnWidth)null,
-				ColumnWidth.DATETIME,
+				new ColumnWidth(3750, 45.0F),
 				(ColumnWidth)null,
 				(ColumnWidth)null,
 				(ColumnWidth)null,
@@ -112,7 +112,7 @@ public class TestColHeaders {
 				(ColumnWidth)null,
 				(ColumnWidth)null,
 				(ColumnWidth)null,
-				ColumnWidth.CRR_JOB_SITE_NAME,
+				new ColumnWidth(7250, 155.0F),
 				(ColumnWidth)null,
 		};
 
