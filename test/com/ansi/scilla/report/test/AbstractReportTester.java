@@ -17,6 +17,7 @@ import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterSummaryRe
 import com.ansi.scilla.report.datadumps.AccountsReceivableTotalsOver60Detail;
 import com.ansi.scilla.report.datadumps.ClientContact;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
+import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieDivisionSummary;
 import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
 import com.ansi.scilla.report.report.ReportDistribution;
@@ -222,7 +223,25 @@ public abstract class AbstractReportTester {
 		}
 		
 	}
-	
+public class MakeLiftAndGenieDSum extends ReportMaker {
+		
+		public MakeLiftAndGenieDSum(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start Lift And Genie Summary");
+			String fileName = CashReceiptsRegisterSummaryReport.FILENAME;			
+//			AbstractReport report = LiftAndGenieDivisionSummary.buildReport(conn, startDate, endDate);
+//			super.writeReport(report, fileName);
+			logger.info("End Lift And Genie Summary");			
+		}
+		
+	}
+
 	
 	public class MakeDO extends ReportMaker {
 		public MakeDO(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Calendar endDate) {

@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;;
 
 public class KrisReportTester extends AbstractReportTester {
 
-	private final String testResultDirectory = "/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_pdf/";
+	private final String testResultDirectory = "/home/klandeck/Documents/testr/";
 	
 	protected ReportType reportType;
 	protected Calendar startDate;
@@ -22,7 +22,7 @@ public class KrisReportTester extends AbstractReportTester {
 
 	
 	public void go() throws Exception {
-		boolean makePDF = true;
+		boolean makePDF = false;
 		boolean makeHTML = false;
 		boolean makeXLS = true;
 
@@ -38,11 +38,12 @@ public class KrisReportTester extends AbstractReportTester {
 //				new MakeClientContact(makeXLS, makePDF, makeHTML),						// this is a datadump
 //				new MakeCRRDetail(makeXLS, makePDF, makeHTML, startDate, endDate),		// this is a standard report with subtotals
 //				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
-				new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
+//				new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
 //				new MakeInvoiceRegister(makeXLS, makePDF, makeHTML, divisionId, month, year),   	// this is a standard report with totals
 //				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
 //				new makePastDue2(makeXLS, makePDF, makeHTML, divisionId, startDate),					// this is a standard report
 //				new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report
+				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
 		};
 		super.makeMyReports(reportList);
 		
