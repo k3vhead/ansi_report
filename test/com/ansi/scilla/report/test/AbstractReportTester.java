@@ -223,8 +223,8 @@ public abstract class AbstractReportTester {
 		}
 		
 	}
-public class MakeLiftAndGenieDSum extends ReportMaker {
-		
+	public class MakeLiftAndGenieDSum extends ReportMaker {
+
 		public MakeLiftAndGenieDSum(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
 			super(makeXLS, makePDF, makeHTML);
 			this.startDate = startDate;
@@ -234,12 +234,12 @@ public class MakeLiftAndGenieDSum extends ReportMaker {
 		@Override
 		public void makeReport(Connection conn) throws Exception {
 			logger.info("Start Lift And Genie Summary");
-			String fileName = CashReceiptsRegisterSummaryReport.FILENAME;			
-//			AbstractReport report = LiftAndGenieDivisionSummary.buildReport(conn, startDate, endDate);
-//			super.writeReport(report, fileName);
+			String fileName = LiftAndGenieDivisionSummary.FILENAME;			
+			LiftAndGenieDivisionSummary report = LiftAndGenieDivisionSummary.buildReport(conn, startDate, endDate);
+			super.writeReport(report, fileName);
 			logger.info("End Lift And Genie Summary");			
 		}
-		
+
 	}
 
 	

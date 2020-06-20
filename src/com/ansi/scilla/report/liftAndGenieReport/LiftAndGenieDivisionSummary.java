@@ -15,17 +15,20 @@ import org.apache.logging.log4j.Logger;
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.utils.ObjectTransformer;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 
 public class LiftAndGenieDivisionSummary extends StandardReport implements ReportByStartEnd {
 
 	private static final long serialVersionUID = 1L;
+	public static final String FILENAME = "LiftAndGenieDivisionSummary";
+	
 
 	private final String DIVISION_SUMMARY_SQL = "select concat(division.division_nbr,'-',division.division_code) as name " +
 				"\n, isnull(div.amount,'0.00') as amount " +
@@ -132,8 +135,8 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 		super.setHeaderNotes(REPORT_NOTES);
 
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("name", "Div", DataFormats.STRING_FORMAT, SummaryType.NONE,null),
-				new ColumnHeader("amount", "Lift_DL", DataFormats.DECIMAL_FORMAT, SummaryType.SUM,null),
+				new ColumnHeader("name", "Div", 1, DataFormats.STRING_FORMAT, SummaryType.NONE,null),
+				new ColumnHeader("amount", "Lift_DL", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM,null),
 //				new ColumnHeader("taxAmt", "Taxes\nPaid\nAmount", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
 //				new ColumnHeader("total", "Total\nPayment\nAmount", 2, DataFormats.DECIMAL_FORMAT, SummaryType.SUM)//,
 //				new ColumnHeader("excess", "Excess Cash Amount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM)
@@ -151,6 +154,25 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 	
 	
 	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, null, startDate, endDate);
+	}
+
+
+
+	public static LiftAndGenieDivisionSummary buildReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
+		return new LiftAndGenieDivisionSummary(conn, startDate, endDate);
+	}
+
+
+
+	public static LiftAndGenieDivisionSummary buildReport(Connection conn) throws Exception {
+		return new LiftAndGenieDivisionSummary(conn);
+	}
+
+
+
 	public class RowData extends ApplicationObject {
 		private static final long serialVersionUID = 1L;
 		private String name;
@@ -198,14 +220,6 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 //		public void setExcess(Double excess) {
 //			this.excess = excess;
 //		}		
-	}
-	
-	public static LiftAndGenieDivisionSummary buildReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
-		return new LiftAndGenieDivisionSummary(conn, startDate, endDate);
-	}
-	
-	public static LiftAndGenieDivisionSummary buildReport(Connection conn) throws Exception {
-		return new LiftAndGenieDivisionSummary(conn);
 	}
 
 }
