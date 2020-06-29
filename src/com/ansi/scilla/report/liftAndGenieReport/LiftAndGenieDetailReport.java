@@ -236,7 +236,7 @@ public class LiftAndGenieDetailReport extends StandardReport {
 //				(Integer)null,
 //				Math.max(0, ColumnWidth.ADDRESS_NAME.width() - ColumnWidth.DATE.width()),
 //		});
-	}
+}
 	
 	public void makeXLS(XSSFWorkbook workbook) throws Exception {
 		XSSFSheet sheet = workbook.createSheet();

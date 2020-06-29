@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
@@ -145,6 +147,8 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
 		super.setDataRows(oData);
 		
+		List<ReportHeaderRow> headerLeft = Arrays.asList(new ReportHeaderRow[] {
+				new ReportHeaderRow("Created:", getRunDateMethod, 0, DataFormats.DATE_TIME_FORMAT)
 //		List<ReportHeaderRow> headerLeft = new ArrayList<ReportHeaderRow>();
 //		super.makeHeaderLeft(headerLeft);
 		
