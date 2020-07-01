@@ -1,5 +1,6 @@
 package com.ansi.scilla.report.liftAndGenieReport;
 
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,6 +20,7 @@ import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
@@ -147,13 +149,26 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
 		super.setDataRows(oData);
 		
+		Method getRunDateMethod = this.getClass().getMethod("getRunDate", (Class<?>[])null);
+		
 		List<ReportHeaderRow> headerLeft = Arrays.asList(new ReportHeaderRow[] {
-				new ReportHeaderRow("Created:", getRunDateMethod, 0, DataFormats.DATE_TIME_FORMAT)
+				new ReportHeaderRow("Created:", getRunDateMethod, 0, DataFormats.DATE_TIME_FORMAT)});
 //		List<ReportHeaderRow> headerLeft = new ArrayList<ReportHeaderRow>();
 //		super.makeHeaderLeft(headerLeft);
 		
 //		List<ReportHeaderRow> headerRight = new ArrayList<ReportHeaderRow>();
 //		super.makeHeaderRight(headerRight);
+		super.makeHeaderLeft(headerLeft);
+		
+		super.setColumnWidths(new ColumnWidth[] {
+				(ColumnWidth)null,
+				new ColumnWidth(3750, 45.0F),
+//				new ColumnWidth(2866, (Float)null),
+//				new ColumnWidth(2866, (Float)null),
+//				new ColumnWidth(2866, (Float)null),
+				(ColumnWidth)null,
+				new ColumnWidth(2750, 57.0F),
+		});
 	}
 	
 	
