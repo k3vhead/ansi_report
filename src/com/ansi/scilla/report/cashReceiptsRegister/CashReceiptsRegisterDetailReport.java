@@ -229,23 +229,23 @@ public class CashReceiptsRegisterDetailReport extends StandardReport implements 
 		super.makeHeaderRight(headerRight);
 		
 		super.setColumnWidths(new ColumnWidth[] {
-				(ColumnWidth)null,
-				new ColumnWidth(3750, 45.0F),
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				new ColumnWidth(7250, 155.0F),
-				(ColumnWidth)null,
+				new ColumnWidth(null, 44.33F),	// client name 1
+				new ColumnWidth(3750, 44.33F),	// client name 2
+				new ColumnWidth(null, 44.33F),	// client name 3
+				new ColumnWidth(null, 32.0F),	// job code
+				new ColumnWidth(null, 35.0F),	// ticket
+				new ColumnWidth(null, 49.0F),	// invoicedate
+				new ColumnWidth(null, 32.8F),	// invoice
+				new ColumnWidth(null, 32.8F),	// div
+				new ColumnWidth(null, 46.0F),	// pmt notes
+				new ColumnWidth(null, 49.0F),	// payment date
+				new ColumnWidth(null, 66.0F),	// check number
+				new ColumnWidth(null, 49.0F),	// check date
+				new ColumnWidth(null, 43.0F),	// ppc paid
+				new ColumnWidth(null, 43.0F),	// taxes paid
+				new ColumnWidth(null, 43.0F),	// total paid
+				new ColumnWidth(7250, 57.0F),	// site name 1
+				new ColumnWidth(null, 57.0F),	// site name 2
 		});
 	}
 	

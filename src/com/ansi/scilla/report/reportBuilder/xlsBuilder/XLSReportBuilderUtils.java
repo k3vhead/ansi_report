@@ -280,7 +280,7 @@ public class XLSReportBuilderUtils extends ReportBuilderUtils {
 		if ( report.getColumnWidths() != null ) {
 			for ( int i = 0; i < report.getColumnWidths().length; i++ ) {
 				ColumnWidth columnWidth = report.getColumnWidths()[i];
-				if ( columnWidth != null && columnWidth.xlsWidth() > 0 ) {
+				if ( columnWidth != null && columnWidth.xlsWidth() != null && columnWidth.xlsWidth() > 0 ) {
 					sheet.setColumnWidth(i, columnWidth.xlsWidth());
 				}
 			}

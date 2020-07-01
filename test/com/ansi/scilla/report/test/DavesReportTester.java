@@ -35,18 +35,19 @@ public class DavesReportTester extends AbstractReportTester {
 		Calendar endDate = new GregorianCalendar(2020, Calendar.FEBRUARY, 28);
 
 		ReportMaker[] reportList = new ReportMaker[] {				
-//				new Make6MRV(makeXLS, makePDF, makeHTML, divisionId, month, year),		// this is a custom report
+				new Make6MRV(makeXLS, makePDF, makeHTML, divisionId, month, year),		// this is a custom report
 //				new MakeAROver60(makeXLS, makePDF, makeHTML),							// this is a datadump
 //				new MakeClientContact(makeXLS, makePDF, makeHTML),						// this is a datadump
-//				new MakeCRRDetail(makeXLS, makePDF, makeHTML, startDate, endDate),		// this is a standard report with subtotals
+				new MakeCRRDetail(makeXLS, makePDF, makeHTML, startDate, endDate),		// this is a standard report with subtotals
 //				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
-//				new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
-//				new MakeInvoiceRegister(makeXLS, makePDF, makeHTML, divisionId, month, year),   	// this is a standard report with totals
-//				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
-//				new makePastDue2(makeXLS, makePDF, makeHTML, divisionId, startDate),					// this is a standard report
+				new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
+				new MakeInvoiceRegister(makeXLS, makePDF, makeHTML, divisionId, month, year),   	// this is a standard report with totals
+				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
+				new MakePACSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report (includd in PAC Listing)
+				new makePastDue2(makeXLS, makePDF, makeHTML, divisionId, startDate),					// this is a standard report
 //				new MakeReportDistribution(makeXLS, makePDF, makeHTML),					// this is a standard report
-//				new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report
-				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
+				new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report
+//				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
 		};
 		super.makeMyReports(reportList);
 	}

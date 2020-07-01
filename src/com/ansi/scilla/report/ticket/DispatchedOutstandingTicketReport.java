@@ -322,19 +322,20 @@ public class DispatchedOutstandingTicketReport extends StandardReport implements
 		super.makeHeaderRight(headerRight);
 
 		super.setColumnWidths(new ColumnWidth[] {
-				(ColumnWidth)null,
-				new ColumnWidth(3750, 45.0F),
-				new ColumnWidth(7250, 155.0F),
-				new ColumnWidth(11000, 200.0F),
-				new ColumnWidth(3500, (Float)null),
-				new ColumnWidth(2750, 57.0F),
-				new ColumnWidth(2750, 57.0F),
-				new ColumnWidth(2500, 46.0F),
-				new ColumnWidth(1400, 30.0F),
-				new ColumnWidth(1400, (Float)null),
-				new ColumnWidth(3500, (Float)null),
-				(ColumnWidth)null,
+				new ColumnWidth(null, 35.0F),			// ticket
+				new ColumnWidth(3750, 50.0F),			// site 1
+				new ColumnWidth(7250, 135.0F),			// site 2
+				new ColumnWidth(11000, 185.0F),			// street
+				new ColumnWidth(3500, 100.0F),			// city
+				new ColumnWidth(2750, 57.0F),			// last run
+				new ColumnWidth(2750, 57.0F),			// run date
+				new ColumnWidth(2500, 49.0F),			// ppc
+				new ColumnWidth(1400, 30.0F),			// j#
+				new ColumnWidth(1400, 35.0F),			// Freq
+				new ColumnWidth(3500, 50.0F),			// status
+				new ColumnWidth(null, 50.0F),			// style
 		});
+		
 		//Method getDispOutstanding = this.getClass().getMethod("getDispOutstanding", (Class<?>[])null);
 		//Method getFinished = this.getClass().getMethod("getFinished", (Class<?>[])null);
 		

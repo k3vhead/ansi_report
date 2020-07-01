@@ -24,7 +24,7 @@ public class PDFReportFormatter extends ApplicationObject {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final Integer fontHeight = 9;
+	public static final Integer fontHeight = 8;
 	public static final Integer reportBannerHeight = 14;
 	public static final Integer reportTitleHeight = 12;
 	public static final Integer reportSubTitleHeight = 10;
