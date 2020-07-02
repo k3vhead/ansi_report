@@ -148,7 +148,10 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 		super.setDataRows(oData);
 		
 		List<ReportHeaderRow> headerLeft = Arrays.asList(new ReportHeaderRow[] {
-				new ReportHeaderRow("Created:", getRunDateMethod, 0, DataFormats.DATE_TIME_FORMAT)
+				//TODO: Replace the "null" row with the "getRunDateMethod" row, after you create a "getRunDateMethod"
+//				new ReportHeaderRow("Created:", getRunDateMethod, 0, DataFormats.DATE_TIME_FORMAT)
+				new ReportHeaderRow("Created:", null, 0, DataFormats.DATE_TIME_FORMAT)
+		});
 //		List<ReportHeaderRow> headerLeft = new ArrayList<ReportHeaderRow>();
 //		super.makeHeaderLeft(headerLeft);
 		
@@ -225,5 +228,6 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 //			this.excess = excess;
 //		}		
 	}
+	
 
 }

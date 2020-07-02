@@ -6,9 +6,6 @@ import java.util.HashMap;
 
 import org.apache.logging.log4j.Logger;
 
-import com.ansi.scilla.report.test.AbstractReportTester.MakeLiftAndGenieDSum;;
-
-
 public class DavesReportTester extends AbstractReportTester {
 
 	private final String testResultDirectory = "/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_pdf/";
@@ -52,6 +49,11 @@ public class DavesReportTester extends AbstractReportTester {
 		super.makeMyReports(reportList);
 	}
 	
+	@Override
+	protected String getTestDirectory() {
+		return testResultDirectory;
+	}
+
 	public static void main(String[] args) {
 		try {			
 			new DavesReportTester().go();
@@ -63,11 +65,4 @@ public class DavesReportTester extends AbstractReportTester {
 	
 	
 
-
-	@Override
-	protected String getTestDirectory() {
-		return testResultDirectory;
-	}
-
-	
 }
