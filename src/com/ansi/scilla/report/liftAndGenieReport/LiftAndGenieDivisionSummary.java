@@ -151,34 +151,27 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 		
 		Method getRunDateMethod = this.getClass().getMethod("getRunDate", (Class<?>[])null);
 		
-		List<ReportHeaderRow> headerLeft = Arrays.asList(new ReportHeaderRow[] {
-<<<<<<< HEAD
-				new ReportHeaderRow("Created:", getRunDateMethod, 0, DataFormats.DATE_TIME_FORMAT)});
-=======
-				//TODO: Replace the "null" row with the "getRunDateMethod" row, after you create a "getRunDateMethod"
-//				new ReportHeaderRow("Created:", getRunDateMethod, 0, DataFormats.DATE_TIME_FORMAT)
-				new ReportHeaderRow("Created:", null, 0, DataFormats.DATE_TIME_FORMAT)
-		});
->>>>>>> e765c74ac07dc9d078fc143b7ae6856c04d58f13
-//		List<ReportHeaderRow> headerLeft = new ArrayList<ReportHeaderRow>();
-//		super.makeHeaderLeft(headerLeft);
 		
+		List<ReportHeaderRow> headerLeft = Arrays.asList(new ReportHeaderRow[] {
+				new ReportHeaderRow("Created:", getRunDateMethod, 0, DataFormats.DATE_TIME_FORMAT)
+		});
 //		List<ReportHeaderRow> headerRight = new ArrayList<ReportHeaderRow>();
 //		super.makeHeaderRight(headerRight);
 		super.makeHeaderLeft(headerLeft);
 		
+		super.setFirstDetailColumn(2);
+		super.setPdfWidthPercentage(40.0F);
+		
 		super.setColumnWidths(new ColumnWidth[] {
 				(ColumnWidth)null,
-				new ColumnWidth(3750, 45.0F),
-//				new ColumnWidth(2866, (Float)null),
-//				new ColumnWidth(2866, (Float)null),
-//				new ColumnWidth(2866, (Float)null),
+				new ColumnWidth(3950, 45.0F),
+				new ColumnWidth(3250, (Float)null),
+				new ColumnWidth(3250, (Float)null),
+				new ColumnWidth(3250, (Float)null),
 				(ColumnWidth)null,
 				new ColumnWidth(2750, 57.0F),
 		});
 	}
-	
-	
 	
 	@Override
 	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
