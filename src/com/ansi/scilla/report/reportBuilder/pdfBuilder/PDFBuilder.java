@@ -41,7 +41,7 @@ public class PDFBuilder extends AbstractPDFBuilder {
 		
 		PdfPTable dataTable = new PdfPTable(((StandardReport)report).getHeaderRow().length);
 		dataTable.setHeaderRows(1);	// set column headers to repeat on each page
-		dataTable.setWidthPercentage(100F);
+		dataTable.setWidthPercentage(((StandardReport)report).getPdfWidthPercentage());
 		if ( totalWidth != null ) {
 			dataTable.setTotalWidth(totalWidth);
 		}

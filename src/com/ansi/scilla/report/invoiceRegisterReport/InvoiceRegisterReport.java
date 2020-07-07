@@ -190,18 +190,18 @@ public class InvoiceRegisterReport extends StandardReport implements ReportByDiv
 		
 		
 		super.setColumnWidths(new ColumnWidth[] {
-				new ColumnWidth(2000, (Float)null),
-				new ColumnWidth(3750, 45.0F),
-				new ColumnWidth(5250, (Float)null),
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				(ColumnWidth)null,
-				new ColumnWidth(9000, (Float)null),
-				new ColumnWidth(2000, (Float)null),
+				new ColumnWidth(2000, 55.0F),				// client 1
+				new ColumnWidth(3750, 45.0F),				// client 2
+				new ColumnWidth(5250, 55.0F),				// client 3
+				new ColumnWidth(null, 35.0F),				// job id
+				new ColumnWidth(null, 40.0F),				// ticket id
+				new ColumnWidth(null, 35.0F),				// type
+				new ColumnWidth(null, 50.0F),				// complete
+				new ColumnWidth(null, 35.0F),				// invoice
+				new ColumnWidth(null, 50.0F),				// date
+				new ColumnWidth(null, 50.0F),				// amount
+				new ColumnWidth(9000, 75.0F),				// name 1
+				new ColumnWidth(2000, 75.0F),				// name 2
 		});
 		
 		PreparedStatement psData = conn.prepareStatement(sql + "\norder by bill_to.name, ticket.invoice_date");

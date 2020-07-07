@@ -330,15 +330,16 @@ public class PacSummaryReport extends StandardReport implements ReportByDivStart
 		super.makeHeaderRight(headerRight);
 		
 		super.setFirstDetailColumn(2);
+		super.setPdfWidthPercentage(40.0F);
 		
 		super.setColumnWidths(new ColumnWidth[] {
-				(ColumnWidth)null,
-				new ColumnWidth(3750, 45.0F),
-				new ColumnWidth(2866, (Float)null),
-				new ColumnWidth(2866, (Float)null),
-				new ColumnWidth(2866, (Float)null),
-				(ColumnWidth)null,
-				new ColumnWidth(2750, 57.0F),
+				(ColumnWidth)null,						// left header "created"
+				new ColumnWidth(3750, 45.0F),			// left header date
+				new ColumnWidth(2866, (Float)null),		// job status
+				new ColumnWidth(2866, (Float)null),		// jobs
+				new ColumnWidth(2866, (Float)null),		// ppc
+				new ColumnWidth(2866, (Float)null),		// volume
+				new ColumnWidth(2750, 57.0F),			// right header date
 		});
 	}
 	

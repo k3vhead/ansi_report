@@ -197,6 +197,13 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 			} else if ( dataClass.equals("Double")) {
 				Double cellValue = (Double)value;						
 				cell.setCellValue(cellValue.doubleValue());	
+			} else if ( dataClass.equals("Date")) {
+				Date cellValue = (Date)value;
+				if ( value.getClass().getName().equals("java.sql.Date")) {
+					// there's no POI method for java.sql.Date, so convert the date to java.util.Date
+					cellValue = new Date( ((java.sql.Date)cellValue).getTime());
+				}
+				cell.setCellValue(cellValue);		
 			} else {
 				// if you're looking here because you're reading a stack trace and found a "method not found error"
 				// you need to add another "else if" in the lines right above

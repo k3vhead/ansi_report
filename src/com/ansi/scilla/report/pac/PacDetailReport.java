@@ -262,19 +262,19 @@ public class PacDetailReport extends StandardReport implements ReportByDivStartE
 		super.makeHeaderRight(headerRight);
 		
 		super.setColumnWidths(new ColumnWidth[] {
-				new ColumnWidth(2750, 57.0F), //Proposed Date
-				new ColumnWidth(3750, 45.0F),		// Job Code
-				new ColumnWidth(11000, 200.0F),	// Site name
-				new ColumnWidth(11000, 200.0F),	// Street 1
-				new ColumnWidth(3500, (Float)null),		// City
-				new ColumnWidth(1500, (Float)null),		// State
-				new ColumnWidth(2500, 46.0F),				// Budget
-				new ColumnWidth(2500, 46.0F),				// PPC
+				new ColumnWidth(2750, 57.0F), 			//Proposed Date
+				new ColumnWidth(3750, 45.0F),			// Job Code
+				new ColumnWidth(11000, 145.0F),			// Site name
+				new ColumnWidth(11000, 145.0F),			// Street 1
+				new ColumnWidth(3500, 60.0F),			// City
+				new ColumnWidth(1500, 22.0F),			// State
+				new ColumnWidth(2500, 46.0F),			// Budget
+				new ColumnWidth(2500, 46.0F),			// PPC
 				new ColumnWidth(1400, 30.0F),			// Job #
-				new ColumnWidth(1400, (Float)null),	// Freq
-				new ColumnWidth(1600, (Float)null),		// Status
-				(ColumnWidth)null,				// Lead Type
-				(ColumnWidth)null,				// volume
+				new ColumnWidth(1400, 27.0F),			// Freq
+				new ColumnWidth(1600, 27.0F),			// Status
+				new ColumnWidth(null, 31.5F),			// Lead Type
+				new ColumnWidth(null, 57.5F),			// volume
 		});
 	}
 	

@@ -21,20 +21,21 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.utils.ObjectTransformer;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
-import com.ansi.scilla.report.reportBuilder.ReportOrientation;
-import com.ansi.scilla.report.reportBuilder.ReportStartLoc;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
-import com.ansi.scilla.report.reportBuilder.XLSBuilder;
-import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.ReportStartLoc;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 import com.thewebthing.commons.lang.StringUtils;
 
-public class LiftAndGenieDetailReport extends StandardReport {
+public class LiftAndGenieDetailReport extends StandardReport implements ReportByDivStartEnd {
 
 	private static final long serialVersionUID = 1L;
 
@@ -66,6 +67,7 @@ public class LiftAndGenieDetailReport extends StandardReport {
 			"order by division_nbr, bill_to_name";
 	
 	public static final String REPORT_TITLE = "Lift And Genie Detail";
+	public static final String FILENAME = "LiftAndGenieDetail";
 //	private final String REPORT_NOTES = "notes go here";
 	
 	private Calendar startDate;
@@ -182,20 +184,21 @@ public class LiftAndGenieDetailReport extends StandardReport {
 //		super.setHeaderNotes(REPORT_NOTES);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-//				new ColumnHeader("divisionDisplay", "Div", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
-//				new ColumnHeader("jobId", "Job Code", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("billToName","Client Name", 3, DataFormats.STRING_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("ticketId", "Ticket", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("invoiceDate", "Invoice Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("invoiceId", "Invoice", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("paymentNote","Payment Notes", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("paymentDate", "Payment Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("checkNbr", "Check Number", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("checkDate", "Check Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("amount","PPC\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-//				new ColumnHeader("taxAmt","Taxes\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-//				new ColumnHeader("total","Total\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-//				new ColumnHeader("jobSiteName","Site Name", 2, DataFormats.STRING_FORMAT, SummaryType.NONE),
+
+				new ColumnHeader("divisionDisplay", "Div", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("jobId", "Job Code", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("billToName","Client Name", 3, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("ticketId", "Ticket", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("invoiceDate", "Invoice Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("invoiceId", "Invoice", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("paymentNote","Payment Notes", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("paymentDate", "Payment Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("checkNbr", "Check Number", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("checkDate", "Check Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("amount","PPC\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
+				new ColumnHeader("taxAmt","Taxes\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
+				new ColumnHeader("total","Total\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
+				new ColumnHeader("jobSiteName","Site Name", 2, DataFormats.STRING_FORMAT, SummaryType.NONE),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
@@ -236,7 +239,8 @@ public class LiftAndGenieDetailReport extends StandardReport {
 //				(Integer)null,
 //				Math.max(0, ColumnWidth.ADDRESS_NAME.width() - ColumnWidth.DATE.width()),
 //		});
-}
+
+	}
 	
 	public void makeXLS(XSSFWorkbook workbook) throws Exception {
 		XSSFSheet sheet = workbook.createSheet();
@@ -361,6 +365,12 @@ public class LiftAndGenieDetailReport extends StandardReport {
 		public Date getCheckDate(){
 			return checkDate;
 		}
+	}
+
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
 	}
 
 }

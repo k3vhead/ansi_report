@@ -377,15 +377,15 @@ public class SmrvDetailReport extends StandardReport implements ReportByDivMonth
 		super.makeHeaderRight(headerRight);
 
 		super.setColumnWidths(new ColumnWidth[] {
-				new ColumnWidth(4500, (Float)null),
-				new ColumnWidth(3750, 45.0F),
-				(ColumnWidth)null,
-				new ColumnWidth(8250, (Float)null),
-				new ColumnWidth(1400, 30.0F),
-				new ColumnWidth(2750, 57.0F),
-				(ColumnWidth)null,
-				new ColumnWidth(1400, (Float)null),
-				(ColumnWidth)null,
+				new ColumnWidth(4500, 80.0F),	// building name (1)
+				new ColumnWidth(3750, 60.0F),	// building name (2)
+				(ColumnWidth)null,				//zip
+				new ColumnWidth(8250, 115.0F),	// street 1
+				new ColumnWidth(1400, 25.0F),	// job #
+				new ColumnWidth(2750, 55.0F),	// last run
+				(ColumnWidth)null,				// job
+				new ColumnWidth(1400, 30.0F),	//freq
+				(ColumnWidth)null,				// months
 				(ColumnWidth)null,
 				(ColumnWidth)null,
 				(ColumnWidth)null,

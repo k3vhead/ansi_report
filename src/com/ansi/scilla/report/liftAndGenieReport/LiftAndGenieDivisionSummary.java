@@ -152,7 +152,14 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 		Method getRunDateMethod = this.getClass().getMethod("getRunDate", (Class<?>[])null);
 		
 		List<ReportHeaderRow> headerLeft = Arrays.asList(new ReportHeaderRow[] {
+<<<<<<< HEAD
 				new ReportHeaderRow("Created:", getRunDateMethod, 0, DataFormats.DATE_TIME_FORMAT)});
+=======
+				//TODO: Replace the "null" row with the "getRunDateMethod" row, after you create a "getRunDateMethod"
+//				new ReportHeaderRow("Created:", getRunDateMethod, 0, DataFormats.DATE_TIME_FORMAT)
+				new ReportHeaderRow("Created:", null, 0, DataFormats.DATE_TIME_FORMAT)
+		});
+>>>>>>> e765c74ac07dc9d078fc143b7ae6856c04d58f13
 //		List<ReportHeaderRow> headerLeft = new ArrayList<ReportHeaderRow>();
 //		super.makeHeaderLeft(headerLeft);
 		
@@ -240,5 +247,6 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 //			this.excess = excess;
 //		}		
 	}
+	
 
 }

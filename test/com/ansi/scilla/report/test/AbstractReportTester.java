@@ -19,12 +19,13 @@ import com.ansi.scilla.report.datadumps.ClientContact;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
 import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieDivisionSummary;
 import com.ansi.scilla.report.pac.PacReport;
+import com.ansi.scilla.report.pac.PacSummaryReport;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
 import com.ansi.scilla.report.report.ReportDistribution;
 import com.ansi.scilla.report.reportBuilder.AnsiReportBuilder;
 import com.ansi.scilla.report.reportBuilder.reportType.AbstractReport;
 import com.ansi.scilla.report.reportBuilder.reportType.CompoundReport;
-import com.ansi.scilla.report.sixMonthRollingVolume.SixMonthRollingVolumeReport;
+import com.ansi.scilla.report.sixMonthRollingVolume.SmrvReport;
 import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
 import com.ansi.scilla.report.ticket.TicketStatusReport;;
 
@@ -149,8 +150,9 @@ public abstract class AbstractReportTester {
 
 		@Override
 		public void makeReport(Connection conn) throws Exception {
-			String fileName = "6MRV";
-			SixMonthRollingVolumeReport report = SixMonthRollingVolumeReport.buildReport(conn, divisionId, month, year);
+			String fileName = SmrvReport.FILENAME;
+//			SixMonthRollingVolumeReport report = SixMonthRollingVolumeReport.buildReport(conn, divisionId, month, year);
+			SmrvReport report = SmrvReport.buildReport(conn, divisionId, month, year);
 			super.writeReport(report, fileName);
 		}
 	}
@@ -313,6 +315,29 @@ public abstract class AbstractReportTester {
 			logger.info("End PAC Listing");			
 		}
 	}
+	
+	
+	
+	public class MakePACSummary extends ReportMaker {
+
+		public MakePACSummary(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.divisionId = divisionId;
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start PAC Summary");
+			String fileName = PacSummaryReport.FILENAME;
+			PacSummaryReport report = new PacSummaryReport(conn, divisionId, startDate, endDate);
+			super.writeReport(report, fileName);
+			logger.info("End PAC Summary");			
+		}
+	}
+	
+	
 	
 	public class MakeReportDistribution extends ReportMaker {
 
