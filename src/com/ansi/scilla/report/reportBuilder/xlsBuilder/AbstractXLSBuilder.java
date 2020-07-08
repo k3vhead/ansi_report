@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -274,6 +275,7 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 //					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, report.getHeaderRow().length, report.getHeaderRow().length+1));
 //				}
 				
+				columnIndex = columnIndex + report.getFirstDetailColumn();
 				String fieldName = columnHeader.getFieldName();
 				if ( fieldsToDisplay.contains(fieldName)) {
 					String subtotal = super.makeSubtotalData(columnHeader);
@@ -291,6 +293,7 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 	}
 
 	protected void makeFinalSubtotal(XSSFSheet sheet) throws Exception {
+		logger.log(Level.DEBUG, "makeFinalSubTotal");
 		boolean addASub = false;
 		StandardReport report = (StandardReport)this.report;
 		String[] subtotalValues = new String[report.getHeaderRow().length];
@@ -304,6 +307,7 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 			}
 		}
 
+		logger.log(Level.DEBUG, addASub);
 		if ( addASub ) {
 			//subtract 1 because getReportHeight includes this row that we're getting ready to add
 			//subtract another 1 because the rownumbers are zero-based
@@ -326,8 +330,10 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 //					sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, report.getHeaderRow().length, report.getHeaderRow().length+1));
 //				}
 				if ( ! StringUtils.isBlank(subtotalValues[i]) ) {
-					// we're doing a subtotal for this field				
-					XSSFCell reportCell = reportRow.createCell(columnIndex);
+					// we're doing a subtotal for this field	
+					logger.log(Level.DEBUG, columnIndex + "\t" + report.getFirstDetailColumn());
+					Integer reportIndex = columnIndex + report.getFirstDetailColumn();
+					XSSFCell reportCell = reportRow.createCell(reportIndex);
 					reportCell.setCellValue(subtotalValues[i]);
 					reportCell.setCellStyle(rf.cellStyleSubtotalDecimal);
 				}
@@ -365,7 +371,8 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 //				Integer endMerge = this.reportStartLoc.columnIndex + report.getHeaderRow().length + 1;
 //				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startMerge, endMerge));
 //			}
-			cell = row.createCell(columnIndex);
+			Integer reportIndex = columnIndex + report.getFirstDetailColumn();
+			cell = row.createCell(reportIndex);
 			if ( !columnHeader.getSummaryType().equals(SummaryType.NONE)) {
 				addASummary = true;
 				//makeSummaryData(columnHeader);
