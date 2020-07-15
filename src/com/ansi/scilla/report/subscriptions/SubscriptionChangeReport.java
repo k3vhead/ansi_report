@@ -67,7 +67,7 @@ public class SubscriptionChangeReport extends StandardReport implements ReportBy
 			"		trx_date";
 	
 	
-	public static final String REPORT_TITLE = "Expiring Document Report";
+	public static final String REPORT_TITLE = "Subscription Change Report";
 	private Calendar startDate;
 	private Calendar endDate;
 	private Calendar runDate;
