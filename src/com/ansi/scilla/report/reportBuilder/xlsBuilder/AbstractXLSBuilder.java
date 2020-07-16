@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -60,8 +61,8 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 		this.cellStyles = new HashMap<DataFormats, CellStyle>();
 		
 		this.cellStyles.put(DataFormats.DATE_FORMAT, rf.cellStyleDateLeft);
-		this.cellStyles.put(DataFormats.DATE_TIME_FORMAT, rf.cellStyleDateLeft);
-		this.cellStyles.put(DataFormats.DETAIL_TIME_FORMAT, rf.cellStyleDateLeft);
+		this.cellStyles.put(DataFormats.DATE_TIME_FORMAT, rf.cellStyleDateTimeLeft);
+		this.cellStyles.put(DataFormats.DETAIL_TIME_FORMAT, rf.cellStyleDateTimeLeft);
 		
 		this.cellStyles.put(DataFormats.INTEGER_FORMAT, rf.cellStyleStandardInteger);
 		this.cellStyles.put(DataFormats.NUMBER_FORMAT, rf.cellStyleStandardNumber);
@@ -217,7 +218,6 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 	public void populateCell(ColumnHeader columnHeader, Object value, int columnIndex, Object dataRow, XSSFRow row) throws Exception {
 		
 		XSSFCell cell = row.createCell(columnIndex);
-
 		setCellValue(cell, value);
 		if ( this.cellStyles.containsKey(columnHeader.getFormatter())) {					
 			cell.setCellStyle(this.cellStyles.get(columnHeader.getFormatter()));

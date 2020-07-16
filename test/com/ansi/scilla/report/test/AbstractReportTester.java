@@ -26,6 +26,7 @@ import com.ansi.scilla.report.reportBuilder.AnsiReportBuilder;
 import com.ansi.scilla.report.reportBuilder.reportType.AbstractReport;
 import com.ansi.scilla.report.reportBuilder.reportType.CompoundReport;
 import com.ansi.scilla.report.sixMonthRollingVolume.SmrvReport;
+import com.ansi.scilla.report.subscriptions.SubscriptionChangeReport;
 import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
 import com.ansi.scilla.report.ticket.TicketStatusReport;;
 
@@ -225,24 +226,7 @@ public abstract class AbstractReportTester {
 		}
 		
 	}
-	public class MakeLiftAndGenieDSum extends ReportMaker {
-
-		public MakeLiftAndGenieDSum(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
-			super(makeXLS, makePDF, makeHTML);
-			this.startDate = startDate;
-			this.endDate = endDate;
-		}
-
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			logger.info("Start Lift And Genie Summary");
-			String fileName = LiftAndGenieDivisionSummary.FILENAME;			
-			LiftAndGenieDivisionSummary report = LiftAndGenieDivisionSummary.buildReport(conn, startDate, endDate);
-			super.writeReport(report, fileName);
-			logger.info("End Lift And Genie Summary");			
-		}
-
-	}
+	
 
 	
 	public class MakeDO extends ReportMaker {
@@ -281,8 +265,29 @@ public abstract class AbstractReportTester {
 		}		
 	}
 
-	public class makePastDue2 extends ReportMaker {
-		public makePastDue2(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Calendar startDate) {
+	
+	public class MakeLiftAndGenieDSum extends ReportMaker {
+
+		public MakeLiftAndGenieDSum(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start Lift And Genie Summary");
+			String fileName = LiftAndGenieDivisionSummary.FILENAME;			
+			LiftAndGenieDivisionSummary report = LiftAndGenieDivisionSummary.buildReport(conn, startDate, endDate);
+			super.writeReport(report, fileName);
+			logger.info("End Lift And Genie Summary");			
+		}
+
+	}
+	
+	
+	public class MakePastDue2 extends ReportMaker {
+		public MakePastDue2(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Calendar startDate) {
 			super(makeXLS, makePDF, makeHTML);
 			this.divisionId = divisionId;
 			this.startDate = startDate;
@@ -355,6 +360,27 @@ public abstract class AbstractReportTester {
 		}
 	}
 
+	
+	public class MakeSubscriptionChangeReport extends ReportMaker {
+
+		public MakeSubscriptionChangeReport(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start Subscription Change Report");
+			String fileName = SubscriptionChangeReport.FILENAME;			
+			SubscriptionChangeReport report = SubscriptionChangeReport.buildReport(conn, startDate, endDate);
+			super.writeReport(report, fileName);
+			logger.info("Subscription Change Report");			
+		}
+
+	}
+	
+	
 	public class MakeTicketStatus extends ReportMaker {
 
 		public MakeTicketStatus(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Calendar startDate, Calendar endDate) {
