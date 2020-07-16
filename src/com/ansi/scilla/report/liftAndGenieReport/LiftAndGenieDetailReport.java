@@ -186,19 +186,19 @@ public class LiftAndGenieDetailReport extends StandardReport implements ReportBy
 		super.setHeaderRow(new ColumnHeader[] {
 
 				new ColumnHeader("divisionDisplay", "Div", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("jobId", "Job Code", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("billToName","Client Name", 3, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("ticketId", "Ticket", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("invoiceDate", "Invoice Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("invoiceId", "Invoice", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("paymentNote","Payment Notes", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("paymentDate", "Payment Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("checkNbr", "Check Number", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("checkDate", "Check Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("amount","PPC\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-				new ColumnHeader("taxAmt","Taxes\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-				new ColumnHeader("total","Total\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-				new ColumnHeader("jobSiteName","Site Name", 2, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobId", "Job", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("serviceDescription","Service Description", 3, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("equipment", "Job Equipment", 3, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("directLaborPct", "Direct Labor", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("invoiceId", "Completed Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("paymentNote","Client Name", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+//				new ColumnHeader("paymentDate", "Payment Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+//				new ColumnHeader("checkNbr", "Check Number", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+//				new ColumnHeader("checkDate", "Check Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+//				new ColumnHeader("amount","PPC\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
+//				new ColumnHeader("taxAmt","Taxes\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
+//				new ColumnHeader("total","Total\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
+//				new ColumnHeader("jobSiteName","Site Name", 2, DataFormats.STRING_FORMAT, SummaryType.NONE),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
