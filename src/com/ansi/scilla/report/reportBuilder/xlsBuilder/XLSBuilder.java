@@ -11,6 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.ansi.scilla.report.common.ReportUtils;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
@@ -65,7 +66,8 @@ public class XLSBuilder extends AbstractXLSBuilder {
 	@Deprecated
 	protected void makeHeader(XSSFSheet sheet) throws Exception {
 		StandardReport report = (StandardReport)this.report; 
-		int headerRowCount = makeHeaderRowCount();
+//		int headerRowCount = makeHeaderRowCount();
+		int headerRowCount = ReportUtils.makeHeaderRowCount(report);
 		sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
 		sheet.getPrintSetup().setLandscape(report.getReportOrientation().equals(ReportOrientation.LANDSCAPE));
 		sheet.getPrintSetup().setFitWidth((short)1);

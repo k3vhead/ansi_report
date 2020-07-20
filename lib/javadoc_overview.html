@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <title>ANSI Scheduling - Report Overview</title>
+        <style type="text/css">
+            table { width:95%; }
+            td { border:solid 1px #000000; text-align:center;}
+            .sample { text-align:left; padding-left:1%; font-style:italic; font-size:90%; }
+        </style>
+    </head>
+    <body>
+        <h2>Report Type Hierarchy</h2>
+        <pre>
+                                                  AnsiReport
+                                                      |
+                            --------------------------------------------------------------------------
+                            |                                                                         |
+                     AbstractReport                                                            CompoundReport
+                            |                                                                         |
+                   --------------------------------------------                                    reports
+                   |                     |                    |
+              CustomReport         StandardReport       StandardSummary
+                   |                     |                    |
+            ---------------           reports              reports
+            |             |
+        DataDump       reports
+            |
+         reports
+        </pre>
+               
+        <h2>Report Builders</h2>
+        <pre>
+                                       ReportBuilder
+                                            |
+                     -------------------------------------------------------
+                     |                                                     |
+            AbstractHTMLBuilder                                     PrintableReport
+                     |                                                     |
+            --------------------                          ----------------------------------
+            |                  |                          |                                |
+        HTMLBuilder     HTMLSummaryBuilder        AbstractPDFBuilder              AbstractXLSBuilder
+                                                          |                                |
+                                                ---------------------             -------------------
+                                                |                   |             |                 |
+                                            PDFBuilder     PDFSummaryBuilder  XLSBuilder     XLSSummaryBuilder
+        </pre>
+    </body>
+</html>

@@ -14,6 +14,11 @@ import com.ansi.scilla.report.reportBuilder.reportType.CompoundReport;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 
+/**
+ * 
+ * A compound report consisting of two SmrvDetailReports, with start dates separated by 6 months, giving a full-year of data
+ *
+ */
 public class SmrvReport extends CompoundReport implements ReportByDivMonthYear, ReportByDivision {
 
 	private static final long serialVersionUID = 1L;

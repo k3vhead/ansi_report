@@ -11,6 +11,12 @@ import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
 import com.ansi.scilla.report.reportBuilder.reportType.AbstractReport;
 import com.ansi.scilla.report.reportBuilder.reportType.CompoundReport;
 
+/**
+ * 
+ * Compound Report consisting of CashReceiptsRegisterSumaryReport and CashReceiptsRegisterDetailReport.
+ * The CashReceiptsRegisterSummaryReport, in turn, consists of a Company Summary, Division Summary and Region Summary
+ * 
+ */
 public class CashReceiptsRegisterReport extends CompoundReport implements ReportByStartEnd {
 
 	private static final long serialVersionUID = 1L;

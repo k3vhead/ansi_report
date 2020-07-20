@@ -8,6 +8,11 @@ import com.ansi.scilla.report.reportBuilder.reportBy.ReportByNoInput;
 import com.ansi.scilla.report.reportBuilder.reportType.AbstractReport;
 import com.ansi.scilla.report.reportBuilder.reportType.CompoundReport;
 
+/**
+ * 
+ * A compound report consisting a detail by report and a detail by subscriber
+ *
+ */
 public class ReportDistribution extends CompoundReport implements ReportByNoInput {
 
 	private static final long serialVersionUID = 1L;

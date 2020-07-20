@@ -89,26 +89,26 @@ public abstract class ReportBuilder extends ApplicationObject {
 	 * @return Number of rows in the header
 	 */
 	@Deprecated
-	protected int makeHeaderRowCount() {
-		int headerRowCount = 1;  // we've always got a banner
-		if ( ! StringUtils.isBlank(report.getTitle())) {
-			headerRowCount++;
-		}
-		if ( ! StringUtils.isBlank(report.getSubtitle())) {
-			headerRowCount++;
-		}
-		for ( ReportHeaderCol col : report.getHeaderLeft()) {
-			if ( col.getRowList().size() > headerRowCount ) {
-				headerRowCount = col.getRowList().size(); 
-			}
-		}
-		for ( ReportHeaderCol col : report.getHeaderRight()) {
-			if ( col.getRowList().size() > headerRowCount ) {
-				headerRowCount = col.getRowList().size(); 
-			}
-		}
-		return headerRowCount;
-	}
+//	protected int makeHeaderRowCount() {
+//		int headerRowCount = 1;  // we've always got a banner
+//		if ( ! StringUtils.isBlank(report.getTitle())) {
+//			headerRowCount++;
+//		}
+//		if ( ! StringUtils.isBlank(report.getSubtitle())) {
+//			headerRowCount++;
+//		}
+//		for ( ReportHeaderCol col : report.getHeaderLeft()) {
+//			if ( col.getRowList().size() > headerRowCount ) {
+//				headerRowCount = col.getRowList().size(); 
+//			}
+//		}
+//		for ( ReportHeaderCol col : report.getHeaderRight()) {
+//			if ( col.getRowList().size() > headerRowCount ) {
+//				headerRowCount = col.getRowList().size(); 
+//			}
+//		}
+//		return headerRowCount;
+//	}
 
 	/**
 	 * Format arbitrary value according to the standard report formats
