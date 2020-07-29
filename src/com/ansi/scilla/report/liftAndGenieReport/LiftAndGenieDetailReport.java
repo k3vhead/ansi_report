@@ -33,38 +33,34 @@ import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.ReportStartLoc;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
-import com.thewebthing.commons.lang.StringUtils;
 
 public class LiftAndGenieDetailReport extends StandardReport implements ReportByDivStartEnd {
 
 	private static final long serialVersionUID = 1L;
 
-	private final String sql = "select bill_to.name as 'bill_to_name'\r\n" + 
-			", ticket.job_id\r\n" + 
-			", ticket.ticket_id\r\n" + 
-			", ticket.invoice_id\r\n" + 
-			", invoice_date\r\n" + 
-			", division.division_nbr\r\n" + 
-			", division.division_code\r\n" +
-			", payment.payment_note\r\n" + 
-			", payment.payment_date\r\n" + 
-			", ticket_payment.amount\r\n" + 
-			", ticket_payment.tax_amt\r\n" + 
-			", ticket_payment.amount + ticket_payment.tax_amt as total\r\n" + 
-			", job_site.name as job_site_name\r\n" + 
-			", payment.check_nbr\r\n" +
-			", payment.check_date\r\n" +
-			"from ticket \r\n" + 
-			"join job on job.job_id = ticket.job_id\r\n" + 
-			"join division on division.division_id = job.division_id\r\n" + 
-			"join quote on quote.quote_id = job.quote_id\r\n" + 
-			"join address as job_site on job_site.address_id = quote.job_site_address_id\r\n" + 
-			"join address as bill_to on bill_to.address_id = quote.bill_to_address_id\r\n" + 
-			"join ticket_payment on ticket_payment.ticket_id = ticket.ticket_id\r\n" + 
-			"join payment on payment.payment_id = ticket_payment.payment_id\r\n" + 
-			"where payment_date >= ?\r\n" + 
-			"and payment_date <= ?\r\n" + 
-			"order by division_nbr, bill_to_name";
+	private final String sql = "select concat(division_nbr,'-',division_code) as div\n" + 
+			", ticket.ticket_id as job\n" + 
+			", job.service_description as 'service_description'\n" + 
+			", job.equipment as 'job_equipment'\n" + 
+			", act_dl_amt as 'direct_labor'\n" + 
+			", process_date as 'completed_date'\n" + 
+			", bill_to.name as 'client_name'\n" + 
+			"\n" + 
+			"from division\n" + 
+			"	join ticket on division.division_id = act_division_id\n" + 
+			"	join job on job.job_id = ticket.job_id\n" + 
+			"	join quote on quote.quote_id = job.quote_id\n" + 
+			"	join address bill_to on bill_to.address_id = bill_to_address_id\n" + 
+			"where (service_description like '%lift%'\n" + 
+			"	or service_description like '%genie%'\n" + 
+			"	or equipment like '%lift%'\n" + 
+			"	or equipment like '%genie%')\n" + 
+			"	and ticket_status in ('c','i','p')\n" + 
+			"	and ticket_type in ('run','job')\n" + 
+			"	and process_date >= ? and process_date < ?\n" +  
+			"order by division_nbr, bill_to.name, ticket.ticket_id" ;
+			
+
 	
 	public static final String REPORT_TITLE = "Lift And Genie Detail";
 	public static final String FILENAME = "LiftAndGenieDetail";
@@ -185,20 +181,14 @@ public class LiftAndGenieDetailReport extends StandardReport implements ReportBy
 		
 		super.setHeaderRow(new ColumnHeader[] {
 
-				new ColumnHeader("divisionDisplay", "Div", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("jobId", "Job", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("serviceDescription","Service Description", 3, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("equipment", "Job Equipment", 3, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("directLaborPct", "Direct Labor", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("invoiceId", "Completed Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("paymentNote","Client Name", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("paymentDate", "Payment Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("checkNbr", "Check Number", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("checkDate", "Check Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("amount","PPC\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-//				new ColumnHeader("taxAmt","Taxes\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-//				new ColumnHeader("total","Total\nPaid", 1, DataFormats.CURRENCY_FORMAT, SummaryType.SUM, "divisionDisplay"),
-//				new ColumnHeader("jobSiteName","Site Name", 2, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("div", "Div", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("job", "Job", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("serviceDescription","Service Description", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobEquipment", "Job Equipment", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("directLabor", "Direct Labor", 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),
+				new ColumnHeader("completedDate", "Completed Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("clientName","Client Name", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
@@ -258,113 +248,86 @@ public class LiftAndGenieDetailReport extends StandardReport implements ReportBy
 	public class RowData extends ApplicationObject {
 		private static final long serialVersionUID = 1L;
 
-		public Integer divisionNbr;
-		public Integer jobId;
-		public String billToName;
-		public Integer ticketId;
-		public Integer invoiceId;
-		public Date invoiceDate;
-		public String divisionCode;
-		public String paymentNote;
-		public Date paymentDate;
-		public Double amount;
-		public Double taxAmt;
-		public Double total;
-		public String jobSiteName;
-		public String checkNbr;
-		public Date checkDate;
-		
-//		", payment.check_nbr\r\n" +
-//		", payment.check_date\r\n" +
-
+		public String div;
+		public Integer job;
+		public String serviceDescription;
+		public String jobEquipment;
+		public Double directLabor;
+		public Date completedDate;
+		public String clientName;
+	
 		public RowData(ResultSet rs, LiftAndGenieDetailReport report) throws SQLException {
-			this.billToName = StringUtils.substring(rs.getString("bill_to_name"), 0, 25);
-//			this.billToName = this.billToName.substring(0, Math.min(this.billToName.length(), 25));
-			this.jobId = rs.getInt("job_id");
-			this.ticketId = rs.getInt("ticket_id");
-			this.invoiceId = rs.getInt("invoice_id");
-			this.invoiceDate = new Date( rs.getDate("invoice_date").getTime());
-			this.divisionNbr = rs.getInt("division_nbr");
-			this.paymentNote = StringUtils.substring(rs.getString("payment_note"), 0, 15);
-//			this.paymentNote = this.paymentNote.substring(0, Math.min(this.paymentNote.length(), 15));
-			this.paymentDate = new Date( rs.getDate("payment_date").getTime());
-			this.checkNbr = rs.getString("check_nbr");
-			this.checkDate = new Date(rs.getDate("check_date").getTime());
-			this.amount = rs.getBigDecimal("amount").doubleValue();
-			this.taxAmt = rs.getBigDecimal("tax_amt").doubleValue();
-			this.total = rs.getBigDecimal("total").doubleValue();
-			this.jobSiteName = StringUtils.substring(rs.getString("job_site_name"), 0, 20);
-//			this.jobSiteName = this.jobSiteName.substring(0, Math.min(this.jobSiteName.length(), 20));
-			this.divisionCode = rs.getString("division_code");
+			this.div = rs.getString("div");
+			this.job = rs.getInt("job");
+			this.serviceDescription = rs.getString("service_description");
+			this.jobEquipment = rs.getString("job_equipment");
+			this.directLabor = rs.getDouble("direct_labor");
+			this.completedDate = rs.getDate("completed_date");
+			this.clientName = rs.getString("client_name");
+
 		}
 
 		public RowData() {
 			super();
 		}
 
-		public String getBillToName() {
-			return billToName;
+		public String getDiv() {
+			return div;
 		}
-		public Integer getJobId() {
-			return jobId;
+
+		public void setDiv(String div) {
+			this.div = div;
 		}
-		public Integer getTicketId() {
-			return ticketId;
+
+		public Integer getJob() {
+			return job;
 		}
-		public Integer getInvoiceId() {
-			return invoiceId;
+
+		public void setJob(Integer job) {
+			this.job = job;
 		}
-		public Date getInvoiceDate() {
-			return invoiceDate;
+
+		public String getServiceDescription() {
+			return serviceDescription;
 		}
-		public Integer getDivisionNbr() {
-			return divisionNbr;
+
+		public void setServiceDescription(String serviceDescription) {
+			this.serviceDescription = serviceDescription;
 		}
-		public void setDivisionNbr(Integer divisionNbr) {
-			this.divisionNbr = divisionNbr;
+
+		public String getJobEquipment() {
+			return jobEquipment;
 		}
-		public String getPaymentNote() {
-			return paymentNote;
+
+		public void setJobEquipment(String jobEquipment) {
+			this.jobEquipment = jobEquipment;
 		}
-		public void setPaymentNote(String paymentNote) {
-			this.paymentNote = paymentNote;
+
+		public Double getDirectLabor() {
+			return directLabor;
 		}
-		public Date getPaymentDate() {
-			return paymentDate;
+
+		public void setDirectLabor(Double directLabor) {
+			this.directLabor = directLabor;
 		}
-		public Double getAmount() {
-			return amount;
+
+		public Date getCompletedDate() {
+			return completedDate;
 		}
-		public void setAmount(Double amount) {
-			this.amount = amount;
+
+		public void setCompletedDate(Date completedDate) {
+			this.completedDate = completedDate;
 		}
-		public Double getTaxAmt() {
-			return taxAmt;
+
+		public String getClientName() {
+			return clientName;
 		}
-		public void setTaxAmt(Double taxAmt) {
-			this.taxAmt = taxAmt;
+
+		public void setClientName(String clientName) {
+			this.clientName = clientName;
 		}
-		public Double getTotal() {
-			return total;
-		}
-		public void setTotal(Double total) {
-			this.total = total;
-		}
-		public String getJobSiteName() {
-			return jobSiteName;
-		}
-		public String getDivisionCode() {
-			return divisionCode;
-		}
-		public String getDivisionDisplay() {
-			return this.getDivisionNbr() + "-" + this.getDivisionCode();
-		}
-		public String getCheckNbr(){
-			return checkNbr;
-		}
-		public Date getCheckDate(){
-			return checkDate;
-		}
+
+		
 	}
 
 	

@@ -17,7 +17,9 @@ import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterSummaryRe
 import com.ansi.scilla.report.datadumps.AccountsReceivableTotalsOver60Detail;
 import com.ansi.scilla.report.datadumps.ClientContact;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
+import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieDetailReport;
 import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieDivisionSummary;
+import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieReport;
 import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.pac.PacSummaryReport;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
@@ -281,6 +283,42 @@ public abstract class AbstractReportTester {
 			LiftAndGenieDivisionSummary report = LiftAndGenieDivisionSummary.buildReport(conn, startDate, endDate);
 			super.writeReport(report, fileName);
 			logger.info("End Lift And Genie Summary");			
+		}
+
+	}
+	public class MakeLiftAndGenie extends ReportMaker {
+
+		public MakeLiftAndGenie(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start Lift And Genie");
+			String fileName = LiftAndGenieReport.FILENAME;			
+			LiftAndGenieReport report = LiftAndGenieReport.buildReport(conn, startDate, endDate);
+			super.writeReport(report, fileName);
+			logger.info("End Lift And Genie");			
+		}
+
+	}
+	public class MakeLiftAndGenieDetailReport extends ReportMaker {
+
+		public MakeLiftAndGenieDetailReport(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start Lift And Genie Detail");
+			String fileName = LiftAndGenieDetailReport.FILENAME;			
+			LiftAndGenieDetailReport report = LiftAndGenieDetailReport.buildReport(conn, startDate, endDate);
+			super.writeReport(report, fileName);
+			logger.info("End Lift And Genie Detail");			
 		}
 
 	}

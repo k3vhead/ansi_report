@@ -22,7 +22,7 @@ public class KrisReportTester extends AbstractReportTester {
 
 	
 	public void go() throws Exception {
-		boolean makePDF = true;
+		boolean makePDF = false;
 		boolean makeHTML = false;
 		boolean makeXLS = true;
 
@@ -43,7 +43,9 @@ public class KrisReportTester extends AbstractReportTester {
 //				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
 //				new makePastDue2(makeXLS, makePDF, makeHTML, divisionId, startDate),					// this is a standard report
 //				new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report
-				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeLiftAndGenieDetailReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
 		};
 		super.makeMyReports(reportList);
 		
