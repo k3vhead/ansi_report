@@ -34,24 +34,20 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 	public static final String FILENAME = "LiftAndGenieDivisionSummary";
 	
 
-	private final String DIVISION_SUMMARY_SQL = "select concat(division.division_nbr,'-',division.division_code) as name " +
-				"\n, isnull(div.amount,'0.00') as amount " +
-				"\n, isnull(div.tax_amt,'0.00') as tax_amt " +
-				"\n, isnull(div.total,'0.00') as total " +
-				"\nfrom division " +
-				"\nleft outer join (select " +
-				"\n division_id " +
-				"\n	, isnull(sum(ticket_payment.amount),'0.00') as amount " +
-				"\n	, isnull(sum(ticket_payment.tax_amt),'0.00') as tax_amt " +
-				"\n	, isnull(sum(ticket_payment.amount+ticket_payment.tax_amt),'0.00') as total " +
-				"\n	from division " +
-				"\n	join ticket on division.division_id = ticket.act_division_id " +
-				"\n	join ticket_payment on ticket_payment.ticket_id = ticket.ticket_id " +
-				"\n	join payment on payment.payment_id = ticket_payment.payment_id " +
-				"\n	where payment_date >= ? and payment_date <= ? " +
-				"\n	group by division_id) as div on div.division_id = division.division_id " +
-				"\norder by concat(division.division_nbr,'-',division.division_code)";
-	
+	private final String sql = "select concat(division_nbr,'-',division_code) as Div" +
+			"isnull(sum(act_dl_amt),0.00) as Lift_DL\n" +
+				"from division\n " +
+				"join ticket on division.division_id = act_division_id\n" +
+				"join job on job.job_id = ticket.job_id\n" +
+			"where (service_description like '%lift%'\n" +
+			"	or service_description like '%genie%'\n" +
+			"	or equipment like '%lift%'\n" +
+			"	or equipment like '%genie%')\n" +
+			"	and ticket_status in ('c','i','p')\n" +
+			"	and ticket_type in ('run','job')\n" +
+			"	and process_date >= @start_m1 and process_date < @start_m2\n" +
+			"group by division_nbr, division_code\n" +
+			"order by division_nbr";
 
 	
 	public static final String REPORT_TITLE = "Lift And Genie";
@@ -117,7 +113,7 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 		endDate.set(Calendar.MILLISECOND, 0);
 
 		List<RowData> data = new ArrayList<RowData>();
-		PreparedStatement ps = conn.prepareStatement(DIVISION_SUMMARY_SQL);
+		PreparedStatement ps = conn.prepareStatement(sql);
 		ps.setDate(1, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(2, new java.sql.Date(endDate.getTimeInMillis()));
 
@@ -139,8 +135,8 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 		super.setHeaderNotes(REPORT_NOTES);
 
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("name", "Div", 1, DataFormats.STRING_FORMAT, SummaryType.NONE,null),
-				new ColumnHeader("amount", "Lift_DL", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM,null),
+				new ColumnHeader("div", "Div", 1, DataFormats.STRING_FORMAT, SummaryType.NONE,null),
+				new ColumnHeader("liftDl", "Lift_DL", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM,null),
 //				new ColumnHeader("taxAmt", "Taxes\nPaid\nAmount", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
 //				new ColumnHeader("total", "Total\nPayment\nAmount", 2, DataFormats.DECIMAL_FORMAT, SummaryType.SUM)//,
 //				new ColumnHeader("excess", "Excess Cash Amount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM)
@@ -194,32 +190,32 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 
 	public class RowData extends ApplicationObject {
 		private static final long serialVersionUID = 1L;
-		private String name;
-		private Double amount;
+		private String div;
+		private Double liftDl;
 //		private Double taxAmt;
 //		private Double total;
 //		private Double excess;
 		
 		public RowData(ResultSet rs) throws SQLException {
 			super();
-			this.name = rs.getString("name");
-			this.amount = rs.getDouble("amount");
+			this.div = rs.getString("div");
+			this.liftDl = rs.getDouble("liftDl");
 //			this.taxAmt = rs.getDouble("tax_amt");
 //			this.total = rs.getDouble("total");
 //			this.excess = -1.0;
 		}
 
-		public String getName() {
-			return name;
+		public String getDiv() {
+			return div;
 		}
-		public void setName(String name) {
-			this.name = name;
+		public void setDiv(String div) {
+			this.div = div;
 		}
-		public Double getAmount() {
-			return amount;
+		public Double getLiftDl() {
+			return liftDl;
 		}
-		public void setAmount(Double amount) {
-			this.amount = amount;
+		public void setLiftDl(Double liftDl) {
+			this.liftDl = liftDl;
 		}
 //		public Double getTaxAmt() {
 //			return taxAmt;

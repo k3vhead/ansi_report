@@ -24,6 +24,7 @@ import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
@@ -210,6 +211,16 @@ public class LiftAndGenieDetailReport extends StandardReport implements ReportBy
 				new ReportHeaderRow("To:", getEndDateMethod, 3, DataFormats.DATE_FORMAT)
 		});
 		super.makeHeaderRight(headerRight);
+		
+		super.setColumnWidths(new ColumnWidth[] {
+				(ColumnWidth)null,
+				new ColumnWidth(3950, 45.0F),
+				new ColumnWidth(11000, (Float)null),
+				new ColumnWidth(11000, (Float)null),
+				new ColumnWidth(3250, (Float)null),
+				(ColumnWidth)null,
+				new ColumnWidth(6000, 57.0F),
+		});
 		
 //		super.setColumnWidths(new Integer[] {
 //				(Integer)null,
