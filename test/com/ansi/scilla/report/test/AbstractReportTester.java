@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.common.utils.AppUtils;
+import com.ansi.scilla.report.accountsReceivable.AccountsReceivableTotalsSummary;
 import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
 import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterSummaryReport;
 import com.ansi.scilla.report.datadumps.AccountsReceivableTotalsOver60Detail;
@@ -176,6 +177,22 @@ public abstract class AbstractReportTester {
 		
 	}
 
+	public class MakeARTotalsSummary extends ReportMaker {
+		public MakeARTotalsSummary(boolean makeXLS, boolean makePDF, boolean makeHTML) {
+			super(makeXLS, makePDF, makeHTML);
+		}
+	
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start MakeARTotalsSummary");
+			String fileName = AccountsReceivableTotalsSummary.FILENAME;
+			AccountsReceivableTotalsSummary report = AccountsReceivableTotalsSummary.buildReport(conn);
+			super.writeReport(report, fileName);
+			logger.info("End MakeARTotalsSummary");			
+		}
+		
+	}
+
 	public class MakeClientContact extends ReportMaker {		
 		public MakeClientContact(boolean makeXLS, boolean makePDF, boolean makeHTML) {
 			super(makeXLS, makePDF, makeHTML);
@@ -286,24 +303,7 @@ public abstract class AbstractReportTester {
 		}
 
 	}
-	public class MakeLiftAndGenie extends ReportMaker {
-
-		public MakeLiftAndGenie(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
-			super(makeXLS, makePDF, makeHTML);
-			this.startDate = startDate;
-			this.endDate = endDate;
-		}
-
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			logger.info("Start Lift And Genie");
-			String fileName = LiftAndGenieReport.FILENAME;			
-			LiftAndGenieReport report = LiftAndGenieReport.buildReport(conn, startDate, endDate);
-			super.writeReport(report, fileName);
-			logger.info("End Lift And Genie");			
-		}
-
-	}
+	
 	public class MakeLiftAndGenieDetailReport extends ReportMaker {
 
 		public MakeLiftAndGenieDetailReport(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
@@ -314,11 +314,30 @@ public abstract class AbstractReportTester {
 
 		@Override
 		public void makeReport(Connection conn) throws Exception {
-			logger.info("Start Lift And Genie Detail");
+			logger.info("Start Lift And Genie Summary");
 			String fileName = LiftAndGenieDetailReport.FILENAME;			
 			LiftAndGenieDetailReport report = LiftAndGenieDetailReport.buildReport(conn, startDate, endDate);
 			super.writeReport(report, fileName);
-			logger.info("End Lift And Genie Detail");			
+			logger.info("End Lift And Genie Summary");			
+		}
+
+	}
+	
+	public class MakeLiftAndGenie extends ReportMaker {
+
+		public MakeLiftAndGenie(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start Lift And Genie Summary");
+			String fileName = LiftAndGenieReport.FILENAME;			
+			LiftAndGenieReport report = LiftAndGenieReport.buildReport(conn, startDate, endDate);
+			super.writeReport(report, fileName);
+			logger.info("End Lift And Genie Summary");			
 		}
 
 	}

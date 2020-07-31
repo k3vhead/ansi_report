@@ -1,8 +1,11 @@
 package com.ansi.scilla.report.reportBuilder.xlsBuilder;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.poi.ss.usermodel.Footer;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -13,6 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.report.common.ReportUtils;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.CustomCell;
 import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardSummaryReport;
@@ -49,7 +53,15 @@ public class XLSBuilder extends AbstractXLSBuilder {
 		makeColumnHeader(sheet);		
 		makeDetails(sheet);
 		makeFinalSubtotal(sheet);
-		super.makeSummary(sheet);	
+		super.makeSummary(sheet);
+		if ( this.report instanceof StandardReport ) {
+			StandardReport myReport = (StandardReport)report;
+			if ( myReport.getAddendum() != null ) {
+				logger.log(Level.DEBUG, "Recap");
+				makeRecap(sheet);
+			}
+			
+		}
 		sheet.setFitToPage(true);
 		sheet.getPrintSetup().setFitWidth((short)1);		
 		sheet.getPrintSetup().setFitHeight((short)0);
@@ -207,6 +219,24 @@ public class XLSBuilder extends AbstractXLSBuilder {
 
 
 	
+
+	private void makeRecap(XSSFSheet sheet) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		XSSFWorkbook workbook = sheet.getWorkbook();
+		StandardReport report = (StandardReport)this.report;
+		int rowNum = sheet.getLastRowNum();
+		for ( List<CustomCell> dataRow : report.getAddendum() ) {
+			XSSFRow row = XLSReportBuilderUtils.makeRow(sheet, rowNum);
+			int columnIndex = 0;
+			for ( CustomCell dataCell : dataRow ) {
+				XSSFCell cell = row.createCell(columnIndex);
+				setCellValue(cell, dataCell.getValue());
+				cell.setCellStyle(dataCell.makeXlsStyle(workbook));
+				columnIndex++;
+			}
+			rowNum++;
+		}
+		
+	}
 
 	/**
 	 * Add a report as a new tab to an existing spreadsheet

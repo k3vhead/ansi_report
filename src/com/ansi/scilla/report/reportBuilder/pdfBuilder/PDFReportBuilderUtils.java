@@ -364,10 +364,6 @@ public class PDFReportBuilderUtils extends ReportBuilderUtils {
 		
 		if ( totalWidth == null ) {
 			logger.log(Level.DEBUG, "No COlumn widths defined");
-		} else {
-			for (int i = 0; i < totalWidth.length; i++ ) {
-				logger.log(Level.DEBUG, "Column: " + i + "\t" + totalWidth[i]);
-			}
 		}
 		
 		

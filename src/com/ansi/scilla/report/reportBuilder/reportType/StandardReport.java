@@ -12,8 +12,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
+import com.ansi.scilla.report.reportBuilder.common.CustomCell;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
-import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFReportFormatter;
 import com.thewebthing.commons.lang.StringUtils;
 
 
@@ -25,6 +25,7 @@ public abstract class StandardReport extends AbstractReport {
 	private ColumnWidth[] columnWidths;
 	private String[] pageBreakFieldList;	
 	private List<Object> dataRows;
+	protected List<List<CustomCell>> addendum;
 	protected Logger logger = LogManager.getLogger(this.getClass());
 	private Integer firstDetailColumn = 0; //column number for the first data detail column (XLS)
 	private Float pdfWidthPercentage = 100F; // percentage of page to be filled by report
@@ -80,6 +81,14 @@ public abstract class StandardReport extends AbstractReport {
 
 	public void setPdfWidthPercentage(Float pdfWidthPercentage) {
 		this.pdfWidthPercentage = pdfWidthPercentage;
+	}
+
+	public List<List<CustomCell>> getAddendum() {
+		return addendum;
+	}
+
+	public void setAddendum(List<List<CustomCell>> addendum) {
+		this.addendum = addendum;
 	}
 
 	@Override
