@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,20 +35,26 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 	public static final String FILENAME = "LiftAndGenieDivisionSummary";
 	
 
-	private final String sql = "select concat(division_nbr,'-',division_code) as Div" +
-			"isnull(sum(act_dl_amt),0.00) as Lift_DL\n" +
-				"from division\n " +
-				"join ticket on division.division_id = act_division_id\n" +
-				"join job on job.job_id = ticket.job_id\n" +
-			"where (service_description like '%lift%'\n" +
-			"	or service_description like '%genie%'\n" +
-			"	or equipment like '%lift%'\n" +
-			"	or equipment like '%genie%')\n" +
-			"	and ticket_status in ('c','i','p')\n" +
-			"	and ticket_type in ('run','job')\n" +
-			"	and process_date >= @start_m1 and process_date < @start_m2\n" +
-			"group by division_nbr, division_code\n" +
-			"order by division_nbr";
+	private final String sql = "select concat(division.division_nbr,'-',division.division_code) as div,\n" + 
+			"case \n" + 
+			"when lift.lift_dl is null then 0\n" + 
+			"else lift.lift_dl\n" + 
+			"end as lift_dl \n" + 
+			"from division \n" + 
+			"left outer join (select division.division_id,\n" + 
+			"isnull(sum(act_dl_amt),0.00) as lift_dl\n" + 
+			"from division\n" + 
+			"join ticket on division.division_id = act_division_id\n" + 
+			"join job on job.job_id = ticket.job_id\n" + 
+			"where (service_description like '%lift%'\n" + 
+			"	or service_description like '%genie%'\n" + 
+			"	or equipment like '%lift%'\n" + 
+			"	or equipment like '%genie%')\n" + 
+			"	and ticket_status in ('c','i','p')\n" + 
+			"	and ticket_type in ('run','job')\n" + 
+			"	and process_date >= ? and process_date < ?\n" + 
+			"group by division.division_id) lift on lift.division_id = division.division_id\n" + 
+			"order by division_nbr, division_code";
 
 	
 	public static final String REPORT_TITLE = "Lift And Genie";
@@ -116,7 +123,7 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 		PreparedStatement ps = conn.prepareStatement(sql);
 		ps.setDate(1, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(2, new java.sql.Date(endDate.getTimeInMillis()));
-
+		logger.log(Level.DEBUG,sql);
 		ResultSet rs = ps.executeQuery();
 		while ( rs.next() ) {
 			data.add(new RowData(rs));
@@ -136,7 +143,7 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 
 		super.setHeaderRow(new ColumnHeader[] {
 				new ColumnHeader("div", "Div", 1, DataFormats.STRING_FORMAT, SummaryType.NONE,null),
-				new ColumnHeader("liftDl", "Lift_DL", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM,null),
+				new ColumnHeader("liftDl", "Lift DL", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM,null),
 //				new ColumnHeader("taxAmt", "Taxes\nPaid\nAmount", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
 //				new ColumnHeader("total", "Total\nPayment\nAmount", 2, DataFormats.DECIMAL_FORMAT, SummaryType.SUM)//,
 //				new ColumnHeader("excess", "Excess Cash Amount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM)
@@ -199,7 +206,7 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 		public RowData(ResultSet rs) throws SQLException {
 			super();
 			this.div = rs.getString("div");
-			this.liftDl = rs.getDouble("liftDl");
+			this.liftDl = rs.getDouble("lift_dl");
 //			this.taxAmt = rs.getDouble("tax_amt");
 //			this.total = rs.getDouble("total");
 //			this.excess = -1.0;
