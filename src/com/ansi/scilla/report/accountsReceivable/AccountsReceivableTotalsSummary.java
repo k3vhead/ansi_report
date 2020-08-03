@@ -13,8 +13,6 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.IndexedColors;
 
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.db.Division;
@@ -182,7 +180,11 @@ public class AccountsReceivableTotalsSummary extends StandardReport implements R
 		
 		CustomCellFormat recapLabelStyle = CustomCellFormat.defaultFormat();
 		recapLabelStyle.setBold(true);
+		recapLabelStyle.setUnderline(true);
+		CustomCellFormat emptyCell = recapLabelStyle.clone();
+		emptyCell.setBorder(true);
 		CustomCellFormat totalDueStyle = new CustomCellFormat(CustomCellColor.BLACK,CustomCellColor.WHITE, CustomCellAlignment.RIGHT, "#,##0.00");
+		totalDueStyle.setBorder(true);
 		CustomCellFormat currentStyle = totalDueStyle.clone();
 		currentStyle.setBackground(CustomCellColor.BRIGHT_GREEN);
 		CustomCellFormat over30Style = totalDueStyle.clone();
@@ -214,7 +216,7 @@ public class AccountsReceivableTotalsSummary extends StandardReport implements R
 		
 		List<CustomCell> totalPct = new ArrayList<CustomCell>();
 		totalPct.add(new CustomCell("", recapLabelStyle));
-		totalPct.add(new CustomCell("", recapLabelStyle));
+		totalPct.add(new CustomCell("", emptyCell));
 		totalPct.add(new CustomCell(pctCurrent, currentPctStyle));
 		totalPct.add(new CustomCell(pct30, over30PctStyle));
 		totalPct.add(new CustomCell(pct60, over60PctStyle));

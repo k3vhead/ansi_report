@@ -7,12 +7,19 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.FontUnderline;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.ApplicationObject;
 
+/**
+ * A generic table cell formatting object that we can use to create a formatter for XLS, PDF or HTML.
+ * 
+ * @author dclewis
+ *
+ */
 public class CustomCellFormat extends ApplicationObject {
 
 	private static final long serialVersionUID = 1L;
@@ -22,8 +29,12 @@ public class CustomCellFormat extends ApplicationObject {
 	private CustomCellColor background;
 	private CustomCellColor foreground;
 	private Double fontHeight = 9.0D;
-	private Boolean bold = false;
-	
+	private Boolean bold = false;	
+	private Boolean borderTop = false;
+	private Boolean borderRight = false;
+	private Boolean borderBottom = false;
+	private Boolean borderLeft = false;
+	private Boolean underline = false;
 	
 	public CustomCellFormat() {
 		super();
@@ -103,6 +114,53 @@ public class CustomCellFormat extends ApplicationObject {
 		this.bold = bold;
 	}
 
+	public Boolean getBorderTop() {
+		return borderTop;
+	}
+
+	public void setBorderTop(Boolean borderTop) {
+		this.borderTop = borderTop;
+	}
+
+	public Boolean getBorderRight() {
+		return borderRight;
+	}
+
+	public void setBorderRight(Boolean borderRight) {
+		this.borderRight = borderRight;
+	}
+
+	public Boolean getBorderBottom() {
+		return borderBottom;
+	}
+
+	public void setBorderBottom(Boolean borderBottom) {
+		this.borderBottom = borderBottom;
+	}
+
+	public Boolean getBorderLeft() {
+		return borderLeft;
+	}
+
+	public void setBorderLeft(Boolean borderLeft) {
+		this.borderLeft = borderLeft;
+	}
+
+	public Boolean getUnderline() {
+		return underline;
+	}
+
+	public void setUnderline(Boolean underline) {
+		this.underline = underline;
+	}
+
+	public void setBorder(Boolean border) {
+		this.borderTop = border;
+		this.borderRight = border;
+		this.borderBottom = border;
+		this.borderLeft = border;
+	}
+	
 	public CellStyle makeXlsStyle(XSSFWorkbook workbook) {
 		CellStyle cellStyle = workbook.createCellStyle();
 		if ( this.background == null ) {
@@ -131,7 +189,23 @@ public class CustomCellFormat extends ApplicationObject {
 		if ( this.bold ) {
 			font.setBold(true);
 		}
+		if ( this.underline ) {
+			font.setUnderline(FontUnderline.SINGLE);
+		}
 		cellStyle.setFont(font);
+		if ( this.borderTop ) {
+			cellStyle.setBorderTop(CellStyle.BORDER_THIN);
+		}
+		if ( this.borderRight ) {
+			cellStyle.setBorderRight(CellStyle.BORDER_THIN);
+		}
+		if ( this.borderBottom ) {
+			cellStyle.setBorderBottom(CellStyle.BORDER_THIN);
+		}
+		if ( this.borderLeft ) {
+			cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
+		}
+
 		if ( ! StringUtils.isBlank(this.dataFormat) ) {
 			CreationHelper createHelper = workbook.getCreationHelper();	
 			short dataFormat = createHelper.createDataFormat().getFormat(this.dataFormat);
@@ -139,6 +213,9 @@ public class CustomCellFormat extends ApplicationObject {
 		}
 	    return cellStyle;
 	}
+	
+	// TODO: Add make pdf style
+	// TODO: Add make HTML style
 	
 	
 	public static CustomCellFormat defaultFormat() {

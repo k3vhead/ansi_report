@@ -1,5 +1,6 @@
 package com.ansi.scilla.report.test;
 
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -81,6 +82,8 @@ public abstract class AbstractReportTester {
 
 	
 	public abstract class ReportMaker implements Runnable {
+		private ReportConn reportConn = ReportConn.DEV;
+
 		protected boolean makeXLS;
 		protected boolean makePDF;
 		protected boolean makeHTML;
@@ -92,16 +95,27 @@ public abstract class AbstractReportTester {
 		protected Calendar endDate;
 
 		public ReportMaker(boolean makeXLS, boolean makePDF, boolean makeHTML) {
+			super();
 			this.makeXLS = makeXLS;
 			this.makePDF = makePDF;
 			this.makeHTML = makeHTML;
 		}
+		
+		public ReportConn getReportConn() {
+			return reportConn;
+		}
+
+		public void setReportConn(ReportConn reportConn) {
+			this.reportConn = reportConn;
+		}
+
 		@Override		
 		public void run() {
 			Connection conn = null;
 
 			try {
-				conn = AppUtils.getDevConn();
+//				conn = AppUtils.getDevConn();
+				conn = this.reportConn.getConn();
 				conn.setAutoCommit(false);
 				makeReport(conn);
 			} catch ( Exception e ) {
@@ -462,7 +476,19 @@ public abstract class AbstractReportTester {
 
 	
 
-	
+	public enum ReportConn {
+		DEV("getDevConn"),
+		PROD("getProdConn"),
+		;
+		private String methodName;
+		private ReportConn(String methodName) { this.methodName = methodName; }
+		public Connection getConn() throws Exception {
+			Method method = AppUtils.class.getMethod(this.methodName, (Class<?>[])null);
+			Object o = method.invoke(null, (Object[])null);
+			return (Connection)o;
+		}
+		
+	}
 
 
 

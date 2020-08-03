@@ -16,6 +16,9 @@ public enum DataFormats {
 	STRING_CENTERED(new StringFormatter(TextAlignment.CENTER)),
 	STRING_TRUNCATE(new StringTruncateFormatter(100)),
 	STRING_ABBREVIATE(new StringAbbreviateFormatter(100)),
+	STRING_WRAP_LEFT(new StringWrapFormatter(TextAlignment.LEFT)),
+	STRING_WRAP_CENTERED(new StringWrapFormatter(TextAlignment.CENTER)),
+	STRING_WRAP_RIGHT(new StringWrapFormatter(TextAlignment.RIGHT)),
 	;
 	
 	private ReportFormatter reportFormatter;

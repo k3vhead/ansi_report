@@ -6,8 +6,6 @@ import java.util.HashMap;
 
 import org.apache.logging.log4j.Logger;
 
-import com.ansi.scilla.report.subscriptions.SubscriptionChangeReport;
-
 public class DavesReportTester extends AbstractReportTester {
 
 	private final String testResultDirectory = "/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_pdf/";
@@ -23,20 +21,23 @@ public class DavesReportTester extends AbstractReportTester {
 
 	
 	public void go() throws Exception {
-		boolean makePDF = true;
+		boolean makePDF = false;
 		boolean makeHTML = false;
 		boolean makeXLS = true;
 
 		Integer divisionId = 101;
 		Integer month = Calendar.JULY;
 		Integer year = 2019;
-		Calendar startDate = new GregorianCalendar(2020, Calendar.JUNE, 1);
-		Calendar endDate = new GregorianCalendar(2020, Calendar.JULY, 15);
+		Calendar startDate = new GregorianCalendar(2020, Calendar.JANUARY, 1);
+		Calendar endDate = new GregorianCalendar(2020, Calendar.FEBRUARY, 28);
 
+//		MakeLiftAndGenie prodLiftAndGenie = new MakeLiftAndGenie( makeXLS, makePDF, makeHTML, startDate, endDate);
+//		prodLiftAndGenie.setReportConn(ReportConn.PROD);
+		
 		ReportMaker[] reportList = new ReportMaker[] {				
 //				new Make6MRV(makeXLS, makePDF, makeHTML, divisionId, month, year),		// this is a custom report
 //				new MakeAROver60(makeXLS, makePDF, makeHTML),							// this is a datadump
-				new MakeARTotalsSummary(makeXLS, makePDF, makeHTML),
+//				new MakeARTotalsSummary(makeXLS, makePDF, makeHTML),
 //				new MakeClientContact(makeXLS, makePDF, makeHTML),						// this is a datadump
 //				new MakeCRRDetail(makeXLS, makePDF, makeHTML, startDate, endDate),		// this is a standard report with subtotals
 //				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
@@ -49,6 +50,9 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeSubscriptionChangeReport(makeXLS, makePDF, makeHTML, startDate, endDate),			// this is a standard report
 //				new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report
 //				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
+				new MakeLiftAndGenieDetailReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				prodLiftAndGenie,
 		};
 		super.makeMyReports(reportList);
 	}

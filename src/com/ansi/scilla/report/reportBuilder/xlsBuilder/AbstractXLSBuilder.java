@@ -75,6 +75,10 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 		this.cellStyles.put(DataFormats.STRING_CENTERED, rf.cellStyleStandardCenter);
 		this.cellStyles.put(DataFormats.STRING_TRUNCATE, rf.cellStyleStandardLeft);
 		this.cellStyles.put(DataFormats.STRING_ABBREVIATE, rf.cellStyleStandardLeft);
+		
+		this.cellStyles.put(DataFormats.STRING_WRAP_LEFT, rf.cellStyleTextWrapLeft);
+		this.cellStyles.put(DataFormats.STRING_WRAP_CENTERED, rf.cellStyleTextWrapCenter);
+		this.cellStyles.put(DataFormats.STRING_WRAP_RIGHT, rf.cellStyleTextWrapRight);
 	}
 	
 
@@ -216,11 +220,15 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 	}
 
 	public void populateCell(ColumnHeader columnHeader, Object value, int columnIndex, Object dataRow, XSSFRow row) throws Exception {
-		
+		logger.log(Level.DEBUG, "populating cell. columnIndex: " + columnIndex);
 		XSSFCell cell = row.createCell(columnIndex);
 		setCellValue(cell, value);
-		if ( this.cellStyles.containsKey(columnHeader.getFormatter())) {					
+		if ( this.cellStyles.containsKey(columnHeader.getFormatter())) {		
+			logger.log(Level.DEBUG, "\t" + columnHeader.getFormatter().name());
+			CellStyle cellStyle = this.cellStyles.get(columnHeader.getFormatter());
+			logger.log(Level.DEBUG, "\t" + cellStyle.getWrapText());
 			cell.setCellStyle(this.cellStyles.get(columnHeader.getFormatter()));
+			
 		} else {
 			throw new Exception("Missing cell style for " + columnHeader.getFormatter());
 		}

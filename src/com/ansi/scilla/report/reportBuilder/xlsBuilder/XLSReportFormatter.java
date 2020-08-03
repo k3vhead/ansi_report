@@ -44,6 +44,9 @@ public class XLSReportFormatter {
 	public CellStyle cellStyleStandardLeft;
 	public CellStyle cellStyleStandardCenter;
 	public CellStyle cellStyleStandardRight;
+	public CellStyle cellStyleTextWrapLeft;
+	public CellStyle cellStyleTextWrapCenter;
+	public CellStyle cellStyleTextWrapRight;
 	public CellStyle cellStyleStandardDecimal;
 	public CellStyle cellStyleStandardNumber;
 	public CellStyle cellStyleStandardCurrency;
@@ -164,9 +167,29 @@ public class XLSReportFormatter {
 	    cellStyleStandardRight.setFont(fontStandardBlack);
 
 	    cellStyleStandardCenter = workbook.createCellStyle();
-	    cellStyleStandardCenter.setFillBackgroundColor(IndexedColors.WHITE.getIndex());
+	    cellStyleStandardCenter.setFillForegroundColor(IndexedColors.WHITE.getIndex());
 	    cellStyleStandardCenter.setAlignment(CellStyle.ALIGN_CENTER);
 	    cellStyleStandardCenter.setFont(fontStandardBlack);
+	    
+	    cellStyleTextWrapLeft = workbook.createCellStyle();
+//	    cellStyleTextWrapLeft.setFillBackgroundColor(IndexedColors.WHITE.getIndex());
+//	    cellStyleTextWrapLeft.setFillPattern(CellStyle.ALIGN_FILL);
+	    cellStyleTextWrapLeft.setAlignment(CellStyle.ALIGN_LEFT);
+	    cellStyleTextWrapLeft.setWrapText(true);
+	    cellStyleTextWrapLeft.setFont(fontStandardBlack);
+
+	    cellStyleTextWrapRight = workbook.createCellStyle();
+	    //cellStyleTextWrapRight.setFillBackgroundColor(IndexedColors.WHITE.getIndex());
+	    //cellStyleTextWrapRight.setFillPattern(CellStyle.ALIGN_FILL);
+	    cellStyleTextWrapRight.setAlignment(CellStyle.ALIGN_RIGHT);
+	    cellStyleTextWrapLeft.setWrapText(true);
+	    cellStyleTextWrapRight.setFont(fontStandardBlack);
+
+	    cellStyleTextWrapCenter = workbook.createCellStyle();
+	    cellStyleTextWrapCenter.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+	    cellStyleTextWrapCenter.setAlignment(CellStyle.ALIGN_CENTER);
+	    cellStyleTextWrapLeft.setWrapText(true);
+	    cellStyleTextWrapCenter.setFont(fontStandardBlack);
 	    
 	    cellStyleDateCenter = workbook.createCellStyle();
 	    cellStyleDateCenter.setDataFormat(dataFormatDate);
