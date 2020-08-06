@@ -22,6 +22,7 @@ import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
 import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieDetailReport;
 import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieDivisionSummary;
 import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieReport;
+import com.ansi.scilla.report.monthlyServiceTaxReport.MonthlyServiceTaxReport;
 import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.pac.PacSummaryReport;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
@@ -357,6 +358,25 @@ public abstract class AbstractReportTester {
 	}
 	
 	
+	public class MakeMonthlyServiceTaxReport extends ReportMaker {
+	
+		public MakeMonthlyServiceTaxReport(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+	
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start Monthly Service Tax Report");
+			String fileName = MonthlyServiceTaxReport.FILENAME;			
+			MonthlyServiceTaxReport report = MonthlyServiceTaxReport.buildReport(conn, startDate, endDate);
+			super.writeReport(report, fileName);
+			logger.info("Monthly Service Tax Report");			
+		}
+	
+	}
+
 	public class MakePastDue2 extends ReportMaker {
 		public MakePastDue2(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Calendar startDate) {
 			super(makeXLS, makePDF, makeHTML);

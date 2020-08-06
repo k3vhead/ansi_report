@@ -1,6 +1,7 @@
 package com.ansi.scilla.report.reportBuilder.reportType;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -456,6 +457,22 @@ public abstract class DataDumpReport extends CustomReport {
 		pdfWriter.setPageEvent(new PDFReportHeader(this));
 		document.open();
 
+		if ( dataRows == null || dataRows.size() == 0 ) {
+			makeEmptyReport(document);
+		} else {
+			makeDetailRows(document);
+		}
+		document.close();
+
+		return baos;
+	}
+	
+	private void makeEmptyReport(Document document) throws DocumentException {
+		document.add(new Chunk("This report contains no data", PDFReportFormatter.fontStandardBlack));
+	}
+
+
+	private void makeDetailRows(Document document) throws DocumentException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		PdfPTable dataTable = new PdfPTable(dataRows.get(0).size());
 		dataTable.setWidthPercentage(100F);
 //		dataTable.setLockedWidth(true);
@@ -488,9 +505,7 @@ public abstract class DataDumpReport extends CustomReport {
 		}
 		dataTable.setHeaderRows(1);
 		document.add(dataTable);
-		document.close();
 
-		return baos;
 	}
 	
 	private String makeCreatedDate() {

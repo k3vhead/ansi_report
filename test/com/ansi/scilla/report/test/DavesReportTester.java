@@ -21,15 +21,15 @@ public class DavesReportTester extends AbstractReportTester {
 
 	
 	public void go() throws Exception {
-		boolean makePDF = false;
+		boolean makePDF = true;
 		boolean makeHTML = false;
 		boolean makeXLS = true;
 
 		Integer divisionId = 101;
 		Integer month = Calendar.JULY;
 		Integer year = 2019;
-		Calendar startDate = new GregorianCalendar(2020, Calendar.JANUARY, 1);
-		Calendar endDate = new GregorianCalendar(2020, Calendar.FEBRUARY, 28);
+		Calendar startDate = new GregorianCalendar(2021, Calendar.JULY, 1);
+		Calendar endDate = new GregorianCalendar(2021, Calendar.JULY, 31);
 
 //		MakeLiftAndGenie prodLiftAndGenie = new MakeLiftAndGenie( makeXLS, makePDF, makeHTML, startDate, endDate);
 //		prodLiftAndGenie.setReportConn(ReportConn.PROD);
@@ -50,8 +50,9 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeSubscriptionChangeReport(makeXLS, makePDF, makeHTML, startDate, endDate),			// this is a standard report
 //				new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report
 //				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
-				new MakeLiftAndGenieDetailReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeLiftAndGenieDetailReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
+				new MakeMonthlyServiceTaxReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				prodLiftAndGenie,
 		};
 		super.makeMyReports(reportList);
