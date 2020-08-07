@@ -184,11 +184,11 @@ public class LiftAndGenieDetailReport extends StandardReport implements ReportBy
 
 				new ColumnHeader("div", "Div", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("job", "Job", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("serviceDescription","Service Description", 1, DataFormats.STRING_WRAP_LEFT, SummaryType.NONE),
-				new ColumnHeader("jobEquipment", "Job Equipment", 1, DataFormats.STRING_WRAP_LEFT, SummaryType.NONE),
+				new ColumnHeader("serviceDescription","Service Description", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobEquipment", "Job Equipment", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("directLabor", "Direct Labor", 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),
 				new ColumnHeader("completedDate", "Completed Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("clientName","Client Name", 1, DataFormats.STRING_WRAP_LEFT, SummaryType.NONE),
+				new ColumnHeader("clientName","Client Name", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 
 		});
 		
@@ -213,11 +213,11 @@ public class LiftAndGenieDetailReport extends StandardReport implements ReportBy
 		super.makeHeaderRight(headerRight);
 		
 		super.setColumnWidths(new ColumnWidth[] {
-				(ColumnWidth)null,
+				new ColumnWidth(null, 15.0F),
 				new ColumnWidth(3950, 45.0F),
 				new ColumnWidth(11000, (Float)null),
 				new ColumnWidth(11000, (Float)null),
-				new ColumnWidth(3250, (Float)null),
+				new ColumnWidth(3250, 15.0F),
 				(ColumnWidth)null,
 				new ColumnWidth(6000, 57.0F),
 		});
