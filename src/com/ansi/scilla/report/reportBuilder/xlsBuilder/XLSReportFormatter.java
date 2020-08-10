@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -86,6 +87,31 @@ public class XLSReportFormatter {
 		return newHeight;
 	}
 
+	
+	
+	public static short calculateCellHeight(XSSFSheet sheet, XSSFRow row, int columnIndex, String text) {
+		Logger logger = LogManager.getLogger(XLSReportFormatter.class);
+		XSSFCell cell = row.getCell(columnIndex);
+		XSSFFont myFont = cell.getCellStyle().getFont();
+		short rowHeight = row.getHeight();
+		float cellWidth = sheet.getColumnWidth(columnIndex); // in units of 1/256 character width
+		logger.log(Level.DEBUG, "CellWidth: " + cellWidth);
+		float charactersThatWillFit = cellWidth / 256 * myFont.getFontHeightInPoints();
+		logger.log(Level.DEBUG, "charactersThatWillFit: " + charactersThatWillFit);
+		float charactersThatWeHave = text.length();
+		logger.log(Level.DEBUG, "charactersThatWeHave: " + charactersThatWeHave);
+		Float linesWeNeed = charactersThatWeHave / charactersThatWillFit;
+		logger.log(Level.DEBUG, "linesWeNeed: " + linesWeNeed);
+		int lineCount = linesWeNeed.intValue() + 1;  // round up for partial lines
+		logger.log(Level.DEBUG, "lineCount: " + lineCount);
+		short newHeight = (short)(rowHeight * lineCount * 1.55);  // include a fudge factor
+		
+		return newHeight;
+	}
+	
+	
+	
+	
 
 	//public Calendar runDate;
 	

@@ -81,34 +81,7 @@ public abstract class ReportBuilder extends ApplicationObject {
 	}
 
 
-	/**
-	 * Figure out how many rows of titles and/or header data we have. There is always at least 
-	 * a single row for the banner. Count is incremented for title and subtitle, and for each row
-	 * of header data (right/left columns) beyond the banner/title/subtitle.
-	 * @deprecated Use ReportUtils.makeHeaderRowCount()
-	 * @return Number of rows in the header
-	 */
-	@Deprecated
-//	protected int makeHeaderRowCount() {
-//		int headerRowCount = 1;  // we've always got a banner
-//		if ( ! StringUtils.isBlank(report.getTitle())) {
-//			headerRowCount++;
-//		}
-//		if ( ! StringUtils.isBlank(report.getSubtitle())) {
-//			headerRowCount++;
-//		}
-//		for ( ReportHeaderCol col : report.getHeaderLeft()) {
-//			if ( col.getRowList().size() > headerRowCount ) {
-//				headerRowCount = col.getRowList().size(); 
-//			}
-//		}
-//		for ( ReportHeaderCol col : report.getHeaderRight()) {
-//			if ( col.getRowList().size() > headerRowCount ) {
-//				headerRowCount = col.getRowList().size(); 
-//			}
-//		}
-//		return headerRowCount;
-//	}
+	
 
 	/**
 	 * Format arbitrary value according to the standard report formats

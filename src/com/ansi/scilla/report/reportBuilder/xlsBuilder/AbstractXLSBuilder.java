@@ -16,7 +16,6 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -101,34 +100,7 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 	
 	
 
-	/**
-	 * Make banner data display
-	 * @param headerData What type of data to display
-	 * @param index where to display it
-	 * @return the formatted display
-	 * @throws Exception Something bad happened
-	 * @deprecated Use makeBannerData() instead
-	 */
-	@Deprecated
-	protected String[] makeHeaderData(List<ReportHeaderCol> headerData, Integer index) throws Exception {
-		String[] data = new String[2];
-		if ( ! headerData.isEmpty() ) {
-			for ( ReportHeaderCol col : headerData ) {
-				if ( index < col.getRowList().size() ) {
-					ReportHeaderRow row = col.getRowList().get(index);
-					
-					Object value = row.getValue().invoke(this.report, (Object[])null); 
-					String display = formatValue(row.getFormatter(), value);
-					
-					data[0] = row.getLabel();
-					data[1] = display;
-					
-				}
-			}
-			
-		}
-		return data;
-	}
+	
 	
 	
 	protected void makeHeaderRow(Integer rowIndex, List<ReportHeaderCol> headerLeft, String text, CellStyle bannerStyle, List<ReportHeaderCol> headerRight, XSSFSheet sheet) throws Exception {
@@ -225,9 +197,8 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 		if ( this.cellStyles.containsKey(columnHeader.getFormatter())) {		
 			logger.log(Level.DEBUG, "\t" + columnHeader.getFormatter().name());
 			CellStyle cellStyle = this.cellStyles.get(columnHeader.getFormatter());
-			logger.log(Level.DEBUG, "\t" + cellStyle.getWrapText());
-			cell.setCellStyle(this.cellStyles.get(columnHeader.getFormatter()));
-			
+			logger.log(Level.DEBUG, "\t" + cellStyle.getWrapText() + "\t" + row.getHeight());
+			cell.setCellStyle(this.cellStyles.get(columnHeader.getFormatter()));			
 		} else {
 			throw new Exception("Missing cell style for " + columnHeader.getFormatter());
 		}
@@ -235,6 +206,8 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 
 		columnIndex++;		
 	}
+	
+	
 	
 	protected int makeSubtotal(StandardReport report, XSSFSheet sheet, Object dataRow, int rowNum) throws Exception {
 		List<String> fieldsToDisplay = new ArrayList<String>();
@@ -363,7 +336,7 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 		int columnIndex = this.reportStartLoc.columnIndex;
 		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
 			ColumnHeader columnHeader = report.getHeaderRow()[i];
-			if ( columnHeader.getColspan() > 0 ) {
+			if ( columnHeader.getColspan() > 1 ) {
 				Integer firstColumn = columnIndex;
 				Integer lastColumn = firstColumn + columnHeader.getColspan() - 1;
 				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, firstColumn, lastColumn));
