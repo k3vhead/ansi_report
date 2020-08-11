@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -142,14 +143,18 @@ public class XLSBuilder extends AbstractXLSBuilder {
 				short currentHeight = reportRow.getHeight();
 				short requiredHeight = -1;
 				for ( Integer columnIndex : columnsToCheck ) {					
-					XSSFCell cell = row.getCell(columnIndex);
-					requiredHeight = XLSReportFormatter.calculateCellHeight(sheet, reportRow, columnIndex, cell.getStringCellValue());
+					XSSFCell cell = reportRow.getCell(columnIndex);
+					String text = StringUtils.strip(StringUtils.trim(StringUtils.strip(cell.getStringCellValue())));
+					Integer columnWidth = sheet.getColumnWidth(columnIndex);
+					XSSFFont font = cell.getCellStyle().getFont();
+					requiredHeight = XLSReportFormatter.calculateRequiredRowHeight(columnWidth, font, text);
+//					logger.log(Level.DEBUG, "Checking: " + rowIdx+","+columnIndex + "\t" + currentHeight + "\t" + requiredHeight + "\t" + cell.getStringCellValue());
 					if ( requiredHeight > currentHeight ) {
 						reportRow.setHeight(requiredHeight);
 						currentHeight = requiredHeight;
 					}
 				}
-				logger.log(Level.DEBUG, "Row: " + rowIdx + "\t" + currentHeight + "\t" + requiredHeight);
+//				logger.log(Level.DEBUG, "Row: " + rowIdx + "\t" + firstHeight + "\t" + currentHeight + "\t" + requiredHeight);
 			}
 		}
 		

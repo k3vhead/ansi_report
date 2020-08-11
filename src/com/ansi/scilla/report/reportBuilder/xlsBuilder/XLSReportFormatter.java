@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -67,6 +68,14 @@ public class XLSReportFormatter {
 	
 	public CellStyle cellStyleSubtotalDecimal;
 	
+	/**
+	 * Use XLSReportFormatter.calculateRequiredRowHeight for a better value
+	 * @param sheet
+	 * @param endCell
+	 * @param text
+	 * @return
+	 */
+	@Deprecated 
 	public static short calculateRowHeight(XSSFSheet sheet, int endCell, String text) {
 		Logger logger = LogManager.getLogger(XLSReportFormatter.class);
 		XSSFCell cell = sheet.getRow(1).getCell(0);
@@ -89,29 +98,21 @@ public class XLSReportFormatter {
 
 	
 	
-	public static short calculateCellHeight(XSSFSheet sheet, XSSFRow row, int columnIndex, String text) {
-		Logger logger = LogManager.getLogger(XLSReportFormatter.class);
-		XSSFCell cell = row.getCell(columnIndex);
-		XSSFFont myFont = cell.getCellStyle().getFont();
-		short rowHeight = row.getHeight();
-		float cellWidth = sheet.getColumnWidth(columnIndex); // in units of 1/256 character width
-		logger.log(Level.DEBUG, "CellWidth: " + cellWidth);
-		float charactersThatWillFit = cellWidth / 256 * myFont.getFontHeightInPoints();
-		logger.log(Level.DEBUG, "charactersThatWillFit: " + charactersThatWillFit);
+	
+	
+
+	public static short calculateRequiredRowHeight(int cellWidth, XSSFFont font, String text) {
+//		Logger logger = LogManager.getLogger(XLSReportFormatter.class);
+		short fontHeight = font.getFontHeight();   // calibri 9 makes this value 180
+		float charactersThatWillFit = ((float)cellWidth)/fontHeight; // 11000/180 = 61.1 (Experiment shows 55)
 		float charactersThatWeHave = text.length();
-		logger.log(Level.DEBUG, "charactersThatWeHave: " + charactersThatWeHave);
-		Float linesWeNeed = charactersThatWeHave / charactersThatWillFit;
-		logger.log(Level.DEBUG, "linesWeNeed: " + linesWeNeed);
-		int lineCount = linesWeNeed.intValue() + 1;  // round up for partial lines
-		logger.log(Level.DEBUG, "lineCount: " + lineCount);
-		short newHeight = (short)(rowHeight * lineCount * 1.55);  // include a fudge factor
-		
-		return newHeight;
+		float linesWeNeed = charactersThatWeHave/charactersThatWillFit;
+		float newRowHeight = (linesWeNeed * fontHeight * 1.1F) + 1.0F;   // add 1 for partial lines
+//		logger.log(Level.DEBUG, fontHeight + " | " + charactersThatWillFit + " | " + charactersThatWeHave + " | " + linesWeNeed + " | " + newRowHeight);
+		return (short)Math.ceil(newRowHeight * 2.0F); // include a fudge factor, because they seem to come up short most of the time
 	}
-	
-	
-	
-	
+
+
 
 	//public Calendar runDate;
 	
