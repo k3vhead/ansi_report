@@ -28,7 +28,7 @@ public class DavesReportTester extends AbstractReportTester {
 		Integer divisionId = 101;
 		Integer month = Calendar.JULY;
 		Integer year = 2019;
-		Calendar startDate = new GregorianCalendar(2020, Calendar.JANUARY, 1);
+		Calendar startDate = new GregorianCalendar(2020, Calendar.JULY, 1);
 		Calendar endDate = new GregorianCalendar(2020, Calendar.JULY, 31);
 
 //		MakeLiftAndGenie prodLiftAndGenie = new MakeLiftAndGenie( makeXLS, makePDF, makeHTML, startDate, endDate);
@@ -40,7 +40,7 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeARTotalsSummary(makeXLS, makePDF, makeHTML),
 //				new MakeClientContact(makeXLS, makePDF, makeHTML),						// this is a datadump
 //				new MakeCRRDetail(makeXLS, makePDF, makeHTML, startDate, endDate),		// this is a standard report with subtotals
-//				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
+				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
 //				new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
 //				new MakeInvoiceRegister(makeXLS, makePDF, makeHTML, divisionId, month, year),   	// this is a standard report with totals
 //				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
@@ -51,7 +51,7 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report
 //				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenieDetailReport(makeXLS, makePDF, makeHTML, startDate, endDate),
-				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeMonthlyServiceTaxReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				prodLiftAndGenie,
 		};

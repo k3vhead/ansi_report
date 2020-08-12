@@ -46,7 +46,7 @@ public abstract class ReportBuilder extends ApplicationObject {
 	protected HashMap<String, List<Object>> subtotalCountDistinct = new HashMap<String, List<Object>>();
 	
 	protected AbstractReport report;
-	protected Logger logger;
+	protected Logger logger  = LogManager.getLogger(this.getClass());
 
 
 
