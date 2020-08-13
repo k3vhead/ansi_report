@@ -213,12 +213,12 @@ public class LiftAndGenieDetailReport extends StandardReport implements ReportBy
 		super.makeHeaderRight(headerRight);
 		
 		super.setColumnWidths(new ColumnWidth[] {
-				new ColumnWidth(null, 15.0F),
-				new ColumnWidth(3950, 45.0F),
+				new ColumnWidth(null, 30.0F),
+				new ColumnWidth(3950, 40.0F),
 				new ColumnWidth(11000, (Float)null),
-				new ColumnWidth(11000, (Float)null),
-				new ColumnWidth(3250, 15.0F),
-				(ColumnWidth)null,
+				new ColumnWidth(11000, 120.0F),
+				new ColumnWidth(3250, 30.0F),
+				new ColumnWidth(null, 45.0F),
 				new ColumnWidth(6000, 57.0F),
 		});
 		

@@ -22,7 +22,7 @@ public class KrisReportTester extends AbstractReportTester {
 
 	
 	public void go() throws Exception {
-		boolean makePDF = false;
+		boolean makePDF = true;
 		boolean makeHTML = false;
 		boolean makeXLS = true;
 
