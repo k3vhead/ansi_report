@@ -22,8 +22,8 @@ public class DavesReportTester extends AbstractReportTester {
 	
 	public void go() throws Exception {
 		boolean makePDF = false;
-		boolean makeHTML = false;
-		boolean makeXLS = true;
+		boolean makeHTML = true;
+		boolean makeXLS = false;
 
 		Integer divisionId = 101;
 		Integer month = Calendar.JULY;
@@ -37,10 +37,10 @@ public class DavesReportTester extends AbstractReportTester {
 		ReportMaker[] reportList = new ReportMaker[] {				
 //				new Make6MRV(makeXLS, makePDF, makeHTML, divisionId, month, year),		// this is a custom report
 //				new MakeAROver60(makeXLS, makePDF, makeHTML),							// this is a datadump
-//				new MakeARTotalsSummary(makeXLS, makePDF, makeHTML),
+				new MakeARTotalsSummary(makeXLS, makePDF, makeHTML),
 //				new MakeClientContact(makeXLS, makePDF, makeHTML),						// this is a datadump
 //				new MakeCRRDetail(makeXLS, makePDF, makeHTML, startDate, endDate),		// this is a standard report with subtotals
-				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
+//				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
 //				new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
 //				new MakeInvoiceRegister(makeXLS, makePDF, makeHTML, divisionId, month, year),   	// this is a standard report with totals
 //				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report

@@ -174,30 +174,30 @@ public class AnsiReportBuilder extends ApplicationObject {
 	
 	
 	
-	public static String buildHtml(StandardReport report) throws Exception {
+	public static String buildStandardReportHtml(StandardReport report) throws Exception {
 		return HTMLBuilder.build(report);
 	}
 	
-	public static String buildHtml(StandardSummaryReport report) throws Exception {
+	public static String buildSummaryReportHtml(StandardSummaryReport report) throws Exception {
 		return HTMLSummaryBuilder.build(report);
 	}
 
-	public static String buildHtml(DataDumpReport report) throws Exception {
+	public static String buildDataDumpHtml(DataDumpReport report) throws Exception {
 		return report.makeHTML();
 	}
 
-	public static String buildHtml(CustomReport report) throws Exception {
+	public static String buildCustomReportHtml(CustomReport report) throws Exception {
 		return report.makeHTML();
 	}
 
 	public static String buildHTML(AbstractReport report) throws Exception {
 		String html = null;
 		if ( report instanceof StandardReport ) {
-			html = buildHTML((StandardReport)report);
+			html = buildStandardReportHtml((StandardReport)report);
 		} else if ( report instanceof StandardSummaryReport ) {
-			html = buildHTML((StandardSummaryReport)report);
+			html = buildSummaryReportHtml((StandardSummaryReport)report);
 		} else if ( report instanceof CustomReport ) {
-			html = buildHTML((CustomReport)report);
+			html = buildCustomReportHtml((CustomReport)report);
 		} else {
 			throw new Exception("Unknown extension of AbstractReport: " + report.getClass().getName());
 		}
@@ -205,15 +205,15 @@ public class AnsiReportBuilder extends ApplicationObject {
 	}
 	
 	public static void writeHTML(StandardReport report, String filePath) throws Exception {
-		FileUtils.write(new File(filePath), buildHtml(report));
+		FileUtils.write(new File(filePath), buildStandardReportHtml(report));
 	}
 	
 	public static void writeHTML(DataDumpReport report, String filePath) throws Exception {
-		FileUtils.write(new File(filePath), buildHtml(report));
+		FileUtils.write(new File(filePath), buildDataDumpHtml(report));
 	}
 	
 	public static void writeHTML(CustomReport report, String filePath) throws Exception {
-		FileUtils.write(new File(filePath), buildHtml(report));
+		FileUtils.write(new File(filePath), buildCustomReportHtml(report));
 	}
 
 	public static void writeHTML(AbstractReport report, String filePath) throws Exception {

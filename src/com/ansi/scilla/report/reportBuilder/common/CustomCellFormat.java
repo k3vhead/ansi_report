@@ -1,9 +1,16 @@
 package com.ansi.scilla.report.reportBuilder.common;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -24,7 +31,8 @@ public class CustomCellFormat extends ApplicationObject {
 
 	private static final long serialVersionUID = 1L;
 
-	private String dataFormat;
+	private String xlsDataFormat;
+	private String htmlDataFormat;
 	private CustomCellAlignment alignment;
 	private CustomCellColor background;
 	private CustomCellColor foreground;
@@ -51,27 +59,36 @@ public class CustomCellFormat extends ApplicationObject {
 		this.foreground = foreground;
 	}
 	
-	public CustomCellFormat(CustomCellColor foreground, CustomCellColor background, CustomCellAlignment alignment, String dataFormat) {
+	public CustomCellFormat(CustomCellColor foreground, CustomCellColor background, CustomCellAlignment alignment, String xlsDataFormat, String htmlDataFormat) {
 		this(foreground, background, alignment);
-		this.dataFormat = dataFormat;
+		this.xlsDataFormat = xlsDataFormat;
+		this.htmlDataFormat = htmlDataFormat;
 	}
 
 	public CustomCellFormat(CellStyle cellStyle) {
 		this();
 		this.alignment = CustomCellAlignment.fromXlsStyle(cellStyle);
 		if ( ! StringUtils.isBlank(cellStyle.getDataFormatString()) ) {
-			this.dataFormat = cellStyle.getDataFormatString();
+			this.xlsDataFormat = cellStyle.getDataFormatString();
 		}
 		this.background = CustomCellColor.fromIndexedColor(cellStyle.getFillBackgroundColor());
 		this.foreground = CustomCellColor.fromHssfColor(cellStyle.getFillForegroundColor());
 	}
 	
-	public String getDataFormat() {
-		return dataFormat;
+	public String getXlsDataFormat() {
+		return xlsDataFormat;
 	}
 
-	public void setDataFormat(String dataFormat) {
-		this.dataFormat = dataFormat;
+	public void setXlsDataFormat(String xlsDataFormat) {
+		this.xlsDataFormat = xlsDataFormat;
+	}
+
+	public String getHtmlDataFormat() {
+		return htmlDataFormat;
+	}
+
+	public void setHtmlDataFormat(String htmlDataFormat) {
+		this.htmlDataFormat = htmlDataFormat;
 	}
 
 	public CustomCellAlignment getAlignment() {
@@ -206,16 +223,105 @@ public class CustomCellFormat extends ApplicationObject {
 			cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
 		}
 
-		if ( ! StringUtils.isBlank(this.dataFormat) ) {
+		if ( ! StringUtils.isBlank(this.xlsDataFormat) ) {
 			CreationHelper createHelper = workbook.getCreationHelper();	
-			short dataFormat = createHelper.createDataFormat().getFormat(this.dataFormat);
+			short dataFormat = createHelper.createDataFormat().getFormat(this.xlsDataFormat);
 			cellStyle.setDataFormat(dataFormat);
 		}
 	    return cellStyle;
 	}
 	
+	public String makeHtmlTextStyle() {
+		StringBuffer cellStyle = new StringBuffer();
+	
+		if ( foreground == null ) {
+			cellStyle.append("color:" + CustomCellColor.BLACK.htmlColor() + ";");
+		} else {
+			cellStyle.append("color:" + foreground.htmlColor() + ";");
+		}
+		if ( fontHeight != null ) {
+			Double htmlFontHeight = fontHeight * 1.77D;
+			cellStyle.append("font-size:" + htmlFontHeight.intValue() + ";");
+		}
+		if ( this.bold ) {
+			cellStyle.append("font-weight:bold;");
+		}
+		if ( this.underline ) {
+			cellStyle.append("text-decoration:underline;");
+		}
+	
+	    return cellStyle.toString();
+	}
+
+	public String makeHtmlCellStyle() {
+		StringBuffer cellStyle = new StringBuffer();
+		
+		if ( this.background == null ) {
+			cellStyle.append("background-color:transparent;");
+		} else {
+			cellStyle.append("background-color:" + background.htmlColor() + ";");
+		}
+		if ( this.alignment == null ) {
+			cellStyle.append("text-align:left;");
+		} else {
+			cellStyle.append("text-align:" + alignment.htmlAlignment() + ";");
+		}		
+		if ( this.borderTop ) {
+			cellStyle.append("border-top:1px solid #000000;");
+		}
+		if ( this.borderRight ) {
+			cellStyle.append("border-right:1px solid #000000;");
+		}
+		if ( this.borderBottom ) {
+			cellStyle.append("border-bottom:1px solid #000000;");
+		}
+		if ( this.borderLeft ) {
+			cellStyle.append("border-left:1px solid #000000;");
+		}
+	
+		
+	    return cellStyle.toString();
+	}
+
+	public String formatHtmlValue(Object value) throws Exception {
+		String formattedValue = null;
+		Logger logger = LogManager.getLogger(this.getClass());
+		if ( value instanceof String ) {
+			formattedValue = (String)value;
+//			logger.log(Level.DEBUG, "String: " + value + "\t" + value.getClass().getName() + "\t" + formattedValue);
+		} else if ( value instanceof Date ) {
+			SimpleDateFormat sdf = new SimpleDateFormat(this.htmlDataFormat);
+			formattedValue = sdf.format((Date)value);
+//			logger.log(Level.DEBUG, "Date: " + value + "\t" + value.getClass().getName() + "\t" + formattedValue);
+		} else if ( value instanceof Calendar ) {
+			SimpleDateFormat sdf = new SimpleDateFormat(this.htmlDataFormat);
+			formattedValue = sdf.format(((Calendar)value).getTime());
+//			logger.log(Level.DEBUG, "Calendar: " + value + "\t" + value.getClass().getName() + "\t" + formattedValue);
+		} else if ( value instanceof Integer ) {
+			DecimalFormat df = new DecimalFormat(this.htmlDataFormat);
+			formattedValue = df.format((Integer)value);
+//			logger.log(Level.DEBUG, "Integer: " + value + "\t" + value.getClass().getName() + "\t" + formattedValue);
+		} else if ( value instanceof Double ) {
+			DecimalFormat df = new DecimalFormat(this.htmlDataFormat);
+			formattedValue = df.format((Double)value);
+//			logger.log(Level.DEBUG, "Double: " + value + "\t" + value.getClass().getName() + "\t" + formattedValue);
+		} else if ( value instanceof Float ) {
+			DecimalFormat df = new DecimalFormat(this.htmlDataFormat);
+			formattedValue = df.format((Float)value);
+//			logger.log(Level.DEBUG, "Float: " + value + "\t" + value.getClass().getName() + "\t" + formattedValue);
+		} else if ( value instanceof Long ) {
+			DecimalFormat df = new DecimalFormat(this.htmlDataFormat);
+			formattedValue = df.format((Long)value);
+//			logger.log(Level.DEBUG, "Long: " + value + "\t" + value.getClass().getName() + "\t" + formattedValue);
+		} else {
+			/* If you're here because you got a "Need formatter" exception, you need to add another else */
+			logger.log(Level.INFO, "Uncoded html formatter for class " + value.getClass().getName());
+			throw new Exception("Need a formatter for " + value.getClass().getName());
+		}
+		return formattedValue;
+	}
+
 	// TODO: Add make pdf style
-	// TODO: Add make HTML style
 	
 	
 	public static CustomCellFormat defaultFormat() {
@@ -226,9 +332,7 @@ public class CustomCellFormat extends ApplicationObject {
 		format.setFontHeight(9.0D);
 		return format;
 	}
-	
-	
-	
+
 	@Override
 	public CustomCellFormat clone() throws CloneNotSupportedException {
 		CustomCellFormat format = new CustomCellFormat();
@@ -242,15 +346,21 @@ public class CustomCellFormat extends ApplicationObject {
 
 
 	public enum CustomCellAlignment { 
-		LEFT(CellStyle.ALIGN_LEFT), 
-		CENTER(CellStyle.ALIGN_CENTER), 
-		RIGHT(CellStyle.ALIGN_RIGHT),
+		LEFT(CellStyle.ALIGN_LEFT, "left"), 
+		CENTER(CellStyle.ALIGN_CENTER, "center"), 
+		RIGHT(CellStyle.ALIGN_RIGHT, "right"),
 		; 
 		private short xlsAlignment;
-		private CustomCellAlignment(short xlsAlignment) { 
+		private String htmlAlignment;
+		
+		private CustomCellAlignment(short xlsAlignment, String htmlAlignment) { 
 			this.xlsAlignment = xlsAlignment; 
+			this.htmlAlignment = htmlAlignment;
 		}		
-		public short xlsAlignment() { return this.xlsAlignment; }
+		
+		public short  xlsAlignment()  { return this.xlsAlignment; }
+		public String htmlAlignment() { return this.htmlAlignment; }
+		
 		public static CustomCellAlignment fromXlsStyle(CellStyle cellStyle) {
 			CustomCellAlignment alignment = null;
 			switch ( cellStyle.getAlignment() ) {
@@ -272,26 +382,26 @@ public class CustomCellFormat extends ApplicationObject {
 	}
 	
 	public enum CustomCellColor {
-		AUTOMATIC(IndexedColors.AUTOMATIC, HSSFColor.AUTOMATIC.index),
+		AUTOMATIC(IndexedColors.AUTOMATIC, HSSFColor.AUTOMATIC.index, "transparent"),
 
-		BLACK(IndexedColors.BLACK, HSSFColor.BLACK.index),
-		BLUE(IndexedColors.BLUE, HSSFColor.BLUE.index),
-		BRIGHT_GREEN(IndexedColors.BRIGHT_GREEN, HSSFColor.BRIGHT_GREEN.index),
-		CORNFLOWER_BLUE(IndexedColors.CORNFLOWER_BLUE, HSSFColor.CORNFLOWER_BLUE.index),
-		DARK_BLUE(IndexedColors.DARK_BLUE, HSSFColor.DARK_BLUE.index),
-		DARK_RED(IndexedColors.DARK_RED, HSSFColor.DARK_RED.index),
-		DARK_YELLOW(IndexedColors.DARK_YELLOW, HSSFColor.DARK_YELLOW.index),
-		GREEN(IndexedColors.GREEN, HSSFColor.GREEN.index),
-		GREY_25_PERCENT(IndexedColors.GREY_25_PERCENT, HSSFColor.GREY_25_PERCENT.index),
-		GREY_50_PERCENT(IndexedColors.GREY_50_PERCENT, HSSFColor.GREY_50_PERCENT.index),
-		ORANGE(IndexedColors.ORANGE, HSSFColor.ORANGE.index),
-		PINK(IndexedColors.PINK, HSSFColor.PINK.index),
-		RED(IndexedColors.RED, HSSFColor.RED.index),
-		TEAL(IndexedColors.TEAL, HSSFColor.TEAL.index),
-		TURQUOISE(IndexedColors.TURQUOISE, HSSFColor.TURQUOISE.index),
-		VIOLET(IndexedColors.VIOLET, HSSFColor.VIOLET.index),
-		WHITE(IndexedColors.WHITE, HSSFColor.WHITE.index),
-		YELLOW(IndexedColors.YELLOW, HSSFColor.YELLOW.index),
+		BLACK(IndexedColors.BLACK, HSSFColor.BLACK.index, "#000000"),
+		BLUE(IndexedColors.BLUE, HSSFColor.BLUE.index, "#0000FF"),
+		BRIGHT_GREEN(IndexedColors.BRIGHT_GREEN, HSSFColor.BRIGHT_GREEN.index, "#00FF00"),
+		CORNFLOWER_BLUE(IndexedColors.CORNFLOWER_BLUE, HSSFColor.CORNFLOWER_BLUE.index, "#6495ED"),
+		DARK_BLUE(IndexedColors.DARK_BLUE, HSSFColor.DARK_BLUE.index, "00008B"),
+		DARK_RED(IndexedColors.DARK_RED, HSSFColor.DARK_RED.index, "#8B0000"),
+		DARK_YELLOW(IndexedColors.DARK_YELLOW, HSSFColor.DARK_YELLOW.index, "#FFCC00"),
+		GREEN(IndexedColors.GREEN, HSSFColor.GREEN.index, "#008000"),
+		GREY_25_PERCENT(IndexedColors.GREY_25_PERCENT, HSSFColor.GREY_25_PERCENT.index, "#778899"),
+		GREY_50_PERCENT(IndexedColors.GREY_50_PERCENT, HSSFColor.GREY_50_PERCENT.index, "#808080"),
+		ORANGE(IndexedColors.ORANGE, HSSFColor.ORANGE.index, "#FF8C00"),
+		PINK(IndexedColors.PINK, HSSFColor.PINK.index, "#FFC0CB"),
+		RED(IndexedColors.RED, HSSFColor.RED.index, "#FF0000"),
+		TEAL(IndexedColors.TEAL, HSSFColor.TEAL.index, "#008080"),
+		TURQUOISE(IndexedColors.TURQUOISE, HSSFColor.TURQUOISE.index, "#40E0D0"),
+		VIOLET(IndexedColors.VIOLET, HSSFColor.VIOLET.index, "#EE82EE"),
+		WHITE(IndexedColors.WHITE, HSSFColor.WHITE.index, "#FFFFFF"),
+		YELLOW(IndexedColors.YELLOW, HSSFColor.YELLOW.index, "#FFFF00"),
 
 		
 //		MAROON(IndexedColors.MAROON, HSSFColor.YELLOW.index),
@@ -327,12 +437,17 @@ public class CustomCellFormat extends ApplicationObject {
 		
 		private IndexedColors indexedColors;
 		private short hssfColor;
-		private CustomCellColor(IndexedColors indexedColors, short hssfColor) {
+		private String htmlColor;
+		private CustomCellColor(IndexedColors indexedColors, short hssfColor, String htmlColor) {
 			this.indexedColors = indexedColors;
 			this.hssfColor = hssfColor;
+			this.htmlColor = htmlColor;
 		}
+		
 		public IndexedColors indexedColors() { return indexedColors; }
-		public short hssfColor() { return this.hssfColor; }		
+		public short         hssfColor()     { return this.hssfColor; }	
+		public String        htmlColor()     { return this.htmlColor; }
+		
 		public static CustomCellColor fromIndexedColor(short indexedColor) {
 			CustomCellColor customCellColor = null;
 			for ( CustomCellColor color : CustomCellColor.values() ) {

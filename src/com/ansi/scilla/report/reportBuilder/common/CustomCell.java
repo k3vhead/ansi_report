@@ -1,5 +1,6 @@
 package com.ansi.scilla.report.reportBuilder.common;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -47,5 +48,31 @@ public class CustomCell extends ApplicationObject {
 	 */
 	public CellStyle makeXlsStyle(XSSFWorkbook workbook) {
 		return format.makeXlsStyle(workbook);
+	}
+
+
+	/**
+	 * Make a string that looks like:
+	 *   <code>&lt;td class="ansi-stdrpt-column-i" style="xxxx"&gt;&lt;span "ansi-stdrpt-column-text-i" style="yyyy"&gt;value&lt;/span&gt;&lt;/td&gt;</code>
+	 * where xxxx and yyyy are based on the custom formatter values
+	 * @param columnIndex
+	 * @return
+	 * @throws Exception 
+	 */
+	public String makeHtml(int columnIndex) throws Exception {
+		String textStyle = format.makeHtmlTextStyle();
+		String cellStyle = format.makeHtmlCellStyle();
+		StringBuffer html = new StringBuffer();
+		html.append("<td");
+		html.append(" class=\"ansi-stdrpt-column-" + columnIndex + "\"");
+		html.append(" style=\"" + cellStyle + "\">");
+		html.append("<span");
+		html.append(" class=\"ansi-stdrpt-column-text-" + columnIndex + "\"");
+		html.append(" style=\"" + textStyle + "\">");
+		html.append(format.formatHtmlValue(this.value));
+		html.append("</span>");
+		html.append("</td>");
+		
+		return StringUtils.join(html, " ");
 	}
 }
