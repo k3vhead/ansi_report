@@ -76,22 +76,30 @@ public class SkippedAndDispatchedReport extends StandardReport implements Report
 			+ "--and ticket_type in ('job','run')\n"
 			+ "order by act_division_id, ticket_id";
 	
-	public static final String REPORT_TITLE = "Invoice Register";
+	public static final String REPORT_TITLE = "Skipped and Dispatched";
 //	private final String REPORT_NOTES = "notes go here";
 	
-	private Integer ticketId;
-	private Integer ticketStatus;
+	private Integer divisionId;
 	private Calendar startDate;
-	private Calendar processDate;
-	private String processNotes;
-	private Integer actPPC;
+	private Calendar endDate;
+//	private List<RowData> data;
+	private Calendar runDate;
 	private String div;
 	private BigDecimal totalInvoiced;
 	private Integer ticketCount;
-//	private List<RowData> data;
 	
-	private Integer divisionId;
-	private Calendar endDate;
+	/*Column headers:
+	 * 	RunDate
+	 * 	Division
+	 * 	Quarter
+	 * 	StartDate
+	 * 	EndDate
+	 * 	Outstanding
+	 * 	Skipped
+	 * 	Total
+	 * 	Billed
+	 * 	%S&O
+	 * */
 	
 	private SkippedAndDispatchedReport() {
 		super();
@@ -165,20 +173,32 @@ public class SkippedAndDispatchedReport extends StandardReport implements Report
 		return makeFileName(FILENAME, runDate, division, startDate, endDate);
 	}
 	
-	
+	/*Column headers:
+	 * 	RunDate
+	 * 	Division
+	 * 	Quarter
+	 * 	StartDate
+	 * 	EndDate
+	 * 	Outstanding
+	 * 	Skipped
+	 * 	Total
+	 * 	Billed
+	 * 	%S&O
+	 * */
 
 	private void makeData(Connection conn) throws Exception {
 		super.setSubtitle(makeSubtitle());
 		super.setHeaderRow(new ColumnHeader[] {
-			new ColumnHeader("clientName","Client Name", 3, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 40),
-			new ColumnHeader("jobId", "Job ID", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("ticketId", "Ticket ID", 1, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
-			new ColumnHeader("ticketType", "Type", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
-			new ColumnHeader("dateComplete", "Date Complete", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
-			new ColumnHeader("invoiceId", "Invoice #", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-			new ColumnHeader("invoiceDate","Invoice Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
-			new ColumnHeader("invoiceAmount", "Invoice Amount", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM, "clientName"),
-			new ColumnHeader("buildingName","Building Name", 2, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 40)
+			new ColumnHeader("runDate","Run Date", 3, DataFormats.DATE_FORMAT, SummaryType.NONE),
+			new ColumnHeader("division", "Division", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+			new ColumnHeader("quarter", "Quarter", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+			new ColumnHeader("startDate", "Start Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+			new ColumnHeader("endDate", "End Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+			new ColumnHeader("outstanding", "Outstanding", 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),
+			new ColumnHeader("skipped","Skipped", 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),
+			new ColumnHeader("total", "Total", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
+			new ColumnHeader("billed","Billed", 2, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),
+			new ColumnHeader("sAndO","%S&O", 2, DataFormats.DECIMAL_FORMAT, SummaryType.NONE)
 		});
 		
 		Method getRunDateMethod = this.getClass().getMethod("getRunDate", (Class<?>[])null);
