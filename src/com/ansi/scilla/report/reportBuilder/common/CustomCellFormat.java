@@ -1,5 +1,6 @@
 package com.ansi.scilla.report.reportBuilder.common;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,15 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.ApplicationObject;
+import com.ansi.scilla.report.reportBuilder.pdfBuilder.PDFReportFormatter;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
 
 /**
  * A generic table cell formatting object that we can use to create a formatter for XLS, PDF or HTML.
@@ -283,7 +293,7 @@ public class CustomCellFormat extends ApplicationObject {
 	    return cellStyle.toString();
 	}
 
-	public String formatHtmlValue(Object value) throws Exception {
+	public String formatValueAsText(Object value) throws Exception {
 		String formattedValue = null;
 		Logger logger = LogManager.getLogger(this.getClass());
 		if ( value instanceof String ) {
@@ -333,6 +343,60 @@ public class CustomCellFormat extends ApplicationObject {
 		return format;
 	}
 
+	public PdfPCell formatPdfCell(PdfPCell pdfCell) {
+		pdfCell.setVerticalAlignment(Element.ALIGN_TOP);
+		pdfCell.setIndent(0F);
+		pdfCell.setPaddingTop(4F);
+		pdfCell.setPaddingBottom(4F);
+		pdfCell.setHorizontalAlignment(alignment.pdfAlignment());
+		if ( borderTop || borderBottom || borderLeft || borderRight ) {
+			if ( borderTop ) {
+				pdfCell.setBorderColorTop(BaseColor.BLACK);
+				pdfCell.setBorderWidthTop(1F);
+			}
+			if ( borderBottom ) {
+				pdfCell.setBorderColorBottom(BaseColor.BLACK);
+				pdfCell.setBorderWidthBottom(1F);
+			}
+			if ( borderLeft ) {
+				pdfCell.setBorderColorLeft(BaseColor.BLACK);
+				pdfCell.setBorderWidthLeft(1F);
+			}
+			if ( borderRight ) {
+				pdfCell.setBorderColorRight(BaseColor.BLACK);
+				pdfCell.setBorderWidthRight(1F);
+			}
+		} else {
+			pdfCell.setBorder(Rectangle.NO_BORDER);			
+		}
+		if ( background != null ) {
+			if ( background.equals(CustomCellColor.AUTOMATIC) ) {
+				pdfCell.setBackgroundColor(BaseColor.WHITE);
+			} else {
+				pdfCell.setBackgroundColor(background.pdfColor());
+			}
+		}
+	
+		return pdfCell;
+	}
+
+	public Chunk makePdfDisplay(String display) throws DocumentException, IOException {
+		BaseFont calibri = PDFReportFormatter.getCalibri();		
+		Font myFont = this.bold ? new Font(calibri, fontHeight.floatValue(), Font.BOLD) : new Font(calibri, fontHeight.floatValue());
+		if ( foreground != null ) {
+			if ( foreground.equals(CustomCellColor.AUTOMATIC ) ) {
+				myFont.setColor(BaseColor.BLACK);
+			} else {
+				myFont.setColor(foreground.pdfColor());
+			}
+		}
+		Chunk chunk = new Chunk(display, myFont);
+		if ( underline ) {
+			chunk.setUnderline(0.1f, -2f);
+		}
+		return chunk;
+	}
+
 	@Override
 	public CustomCellFormat clone() throws CloneNotSupportedException {
 		CustomCellFormat format = new CustomCellFormat();
@@ -346,20 +410,23 @@ public class CustomCellFormat extends ApplicationObject {
 
 
 	public enum CustomCellAlignment { 
-		LEFT(CellStyle.ALIGN_LEFT, "left"), 
-		CENTER(CellStyle.ALIGN_CENTER, "center"), 
-		RIGHT(CellStyle.ALIGN_RIGHT, "right"),
+		LEFT(CellStyle.ALIGN_LEFT, "left", Element.ALIGN_LEFT), 
+		CENTER(CellStyle.ALIGN_CENTER, "center", Element.ALIGN_CENTER), 
+		RIGHT(CellStyle.ALIGN_RIGHT, "right", Element.ALIGN_RIGHT),
 		; 
 		private short xlsAlignment;
 		private String htmlAlignment;
+		private int pdfAlignment;
 		
-		private CustomCellAlignment(short xlsAlignment, String htmlAlignment) { 
+		private CustomCellAlignment(short xlsAlignment, String htmlAlignment, int pdfAlignment) { 
 			this.xlsAlignment = xlsAlignment; 
 			this.htmlAlignment = htmlAlignment;
+			this.pdfAlignment = pdfAlignment;
 		}		
 		
-		public short  xlsAlignment()  { return this.xlsAlignment; }
+		public short  xlsAlignment()  { return this.xlsAlignment;  }
 		public String htmlAlignment() { return this.htmlAlignment; }
+		public int    pdfAlignment()  { return this.pdfAlignment;  }
 		
 		public static CustomCellAlignment fromXlsStyle(CellStyle cellStyle) {
 			CustomCellAlignment alignment = null;
@@ -444,9 +511,24 @@ public class CustomCellFormat extends ApplicationObject {
 			this.htmlColor = htmlColor;
 		}
 		
-		public IndexedColors indexedColors() { return indexedColors; }
+
+		public IndexedColors indexedColors() { return indexedColors;  }
 		public short         hssfColor()     { return this.hssfColor; }	
 		public String        htmlColor()     { return this.htmlColor; }
+		
+		public BaseColor pdfColor() { 
+			BaseColor color = null;
+			try {
+				color = new BaseColor(
+					Integer.valueOf( htmlColor().substring(1,3),16),
+					Integer.valueOf( htmlColor().substring(3,5),16),
+					Integer.valueOf( htmlColor().substring(5,7),16)
+				);
+			} catch ( Exception e) {
+				color = BaseColor.WHITE;
+			}
+			return color;
+		}
 		
 		public static CustomCellColor fromIndexedColor(short indexedColor) {
 			CustomCellColor customCellColor = null;

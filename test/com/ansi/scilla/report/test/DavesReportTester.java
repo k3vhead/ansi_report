@@ -21,8 +21,8 @@ public class DavesReportTester extends AbstractReportTester {
 
 	
 	public void go() throws Exception {
-		boolean makePDF = false;
-		boolean makeHTML = true;
+		boolean makePDF = true;
+		boolean makeHTML = false;
 		boolean makeXLS = false;
 
 		Integer divisionId = 101;

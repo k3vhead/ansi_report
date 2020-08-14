@@ -5,6 +5,10 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.ApplicationObject;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
 
 public class CustomCell extends ApplicationObject {
 
@@ -69,10 +73,29 @@ public class CustomCell extends ApplicationObject {
 		html.append("<span");
 		html.append(" class=\"ansi-stdrpt-column-text-" + columnIndex + "\"");
 		html.append(" style=\"" + textStyle + "\">");
-		html.append(format.formatHtmlValue(this.value));
+		html.append(format.formatValueAsText(this.value));
 		html.append("</span>");
 		html.append("</td>");
 		
 		return StringUtils.join(html, " ");
+	}
+	
+	
+	/**
+	 * Courtesy method for cell formatter
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String formatValueAsText() throws Exception {
+		return format.formatValueAsText(this.value);
+	}
+
+	public PdfPCell makePdfCell() throws Exception {
+		String display = format.formatValueAsText(this.value);
+		Chunk chunk = format.makePdfDisplay(display);
+		PdfPCell pdfCell = new PdfPCell(new Phrase(chunk));
+		format.formatPdfCell(pdfCell);
+		return pdfCell;
 	}
 }
