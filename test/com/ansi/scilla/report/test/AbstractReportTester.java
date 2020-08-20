@@ -13,6 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.common.utils.AppUtils;
+import com.ansi.scilla.report.accountsReceivable.AccountsReceivableTotals;
+import com.ansi.scilla.report.accountsReceivable.AccountsReceivableTotalsByDivision;
 import com.ansi.scilla.report.accountsReceivable.AccountsReceivableTotalsSummary;
 import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
 import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterSummaryReport;
@@ -188,6 +190,40 @@ public abstract class AbstractReportTester {
 			AccountsReceivableTotalsOver60Detail report = AccountsReceivableTotalsOver60Detail.buildReport(conn);
 			super.writeReport(report, fileName);
 			logger.info("End AROver60");			
+		}
+		
+	}
+
+	public class MakeARTotals extends ReportMaker {
+		public MakeARTotals(boolean makeXLS, boolean makePDF, boolean makeHTML) {
+			super(makeXLS, makePDF, makeHTML);
+		}
+	
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start End AR TotalBy Div");
+			String fileName = AccountsReceivableTotals.FILENAME;
+			AccountsReceivableTotals report = AccountsReceivableTotals.buildReport(conn);
+			super.writeReport(report, fileName);
+			logger.info("End AR TotalBy Div");			
+		}
+		
+	}
+
+
+	public class MakeARTotalByDiv extends ReportMaker {
+		public MakeARTotalByDiv(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId) {
+			super(makeXLS, makePDF, makeHTML);
+			this.divisionId = divisionId;
+		}
+	
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start End AR TotalBy Div");
+			String fileName = AccountsReceivableTotalsByDivision.FILENAME;
+			AccountsReceivableTotalsByDivision report = AccountsReceivableTotalsByDivision.buildReport(conn, divisionId);
+			super.writeReport(report, fileName);
+			logger.info("End AR TotalBy Div");			
 		}
 		
 	}

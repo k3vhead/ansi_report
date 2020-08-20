@@ -71,11 +71,17 @@ public class HTMLBuilder extends AbstractHTMLBuilder {
 			for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
 				ColumnHeader columnHeader = report.getHeaderRow()[i];				
 				Object value = makeDisplayData(columnHeader,row);
-				String display = makeFormattedDisplayData(columnHeader.getFormatter(), value);
-				if(display != null) {
-					if(columnHeader.getMaxCharacters() != null) {
-						StringUtils.abbreviate(display, columnHeader.getMaxCharacters());
+				String display = null;
+				try {
+					display = makeFormattedDisplayData(columnHeader.getFormatter(), value);
+					if(display != null) {
+						if(columnHeader.getMaxCharacters() != null) {
+							StringUtils.abbreviate(display, columnHeader.getMaxCharacters());
+						}
 					}
+				} catch ( Exception e ) {
+					logger.log(Level.FATAL, "Error in column " + i + ": " + columnHeader.getFieldName());
+					throw e;
 				}
 				super.doSummaries(columnHeader, value);
 				buffer.append("\n\t<td class=\"ansi-stdrpt-column-" + i + "\">");
