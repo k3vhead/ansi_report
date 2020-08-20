@@ -1,10 +1,6 @@
 package com.ansi.scilla.report.reportBuilder.xlsBuilder;
 
-import java.text.SimpleDateFormat;
-
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Footer;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFPrintSetup;
@@ -12,7 +8,6 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.ansi.scilla.report.common.ReportUtils;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
@@ -84,63 +79,7 @@ public class XLSSummaryBuilder extends AbstractXLSBuilder {
 	}
 
 
-	/**
-	 * Use XLSReportBuilderUtils.makeSummaryHeader
-	 * @deprecated
-	 * @param sheet Excel sheet to be populated
-	 * @return Number of header Rows
-	 * @throws Exception Something bad happened
-	 */
-	@Deprecated
-	protected Integer makeHeader(XSSFSheet sheet) throws Exception {
-		StandardSummaryReport report = (StandardSummaryReport)this.report; 
-//		int headerRowCount = makeHeaderRowCount();
-		int headerRowCount = ReportUtils.makeHeaderRowCount(report);
-		sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
-//		boolean reportIsLandscape = report.getReportOrientation().equals(ReportOrientation.LANDSCAPE);
-//		sheet.getPrintSetup().setLandscape(reportIsLandscape);
-		sheet.getPrintSetup().setFitWidth((short)1);
-
-		SimpleDateFormat dateFormatTime = new SimpleDateFormat("yyyy/mm/dd hh:mm:ss");
-		SimpleDateFormat dateFormatStandard = new SimpleDateFormat("yyyy/mm/dd");
-		dateFormatTime.format(runDate);
-		dateFormatStandard.format(startDate);
-		dateFormatStandard.format(endDate);
-		
-		XSSFRow row = null;
-		XSSFCell cell = null;
-		
-		makeHeaderRow(0, report.getHeaderLeft(), report.getBanner(), rf.cellStyleReportBanner, report.getHeaderRight(), sheet);
-		if ( headerRowCount > 1 ) {
-			makeHeaderRow(1, report.getHeaderLeft(), report.getTitle(), rf.cellStyleReportTitle, report.getHeaderRight(), sheet);	
-		}
-		if ( headerRowCount > 2 ) {
-			makeHeaderRow(2, report.getHeaderLeft(), report.getSubtitle(), rf.cellStyleReportSubTitle, report.getHeaderRight(), sheet);
-		}
-		if ( headerRowCount > 3 ) {
-			for ( int i=3;i<headerRowCount;i++) {
-				makeHeaderRow(i, report.getHeaderLeft(), "", rf.cellStyleStandardCenter, report.getHeaderRight(), sheet);
-			}
-		}
-		
-		if ( ! StringUtils.isBlank(report.getHeaderNotes())) {			
-			row = sheet.createRow(headerRowCount);
-//			sheet.addMergedRegion(new CellRangeAddress(headerRowCount, headerRowCount, 0, report.getHeaderRow().length + 1));
-			sheet.addMergedRegion(new CellRangeAddress(headerRowCount, headerRowCount, 0, 10));
-			cell = row.createCell(0);
-			cell.setCellStyle(rf.cellStyleReportNote);
-			cell.setCellValue(this.report.getHeaderNotes());
-		}
-		
-		int numberOfHeaderRows = Math.max(3, headerRowCount); // banner + title + subtitle is the minimum
-		numberOfHeaderRows++;  // need to include headers + column labels
-		sheet.setRepeatingRows(new CellRangeAddress(0,numberOfHeaderRows, 0, makeColumnCount(report)));
-	    
-		Footer footer = sheet.getFooter();
-		footer.setCenter("Page &P of &N");
-		
-		return numberOfHeaderRows;
-	}
+	
 	
 
 	

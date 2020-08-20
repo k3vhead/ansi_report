@@ -23,13 +23,13 @@ public class DavesReportTester extends AbstractReportTester {
 	public void go() throws Exception {
 		boolean makePDF = true;
 		boolean makeHTML = false;
-		boolean makeXLS = true;
+		boolean makeXLS = false;
 
 		Integer divisionId = 101;
 		Integer month = Calendar.JULY;
 		Integer year = 2019;
-		Calendar startDate = new GregorianCalendar(2021, Calendar.JULY, 1);
-		Calendar endDate = new GregorianCalendar(2021, Calendar.JULY, 31);
+		Calendar startDate = new GregorianCalendar(2020, Calendar.JULY, 1);
+		Calendar endDate = new GregorianCalendar(2020, Calendar.JULY, 31);
 
 //		MakeLiftAndGenie prodLiftAndGenie = new MakeLiftAndGenie( makeXLS, makePDF, makeHTML, startDate, endDate);
 //		prodLiftAndGenie.setReportConn(ReportConn.PROD);
@@ -37,7 +37,7 @@ public class DavesReportTester extends AbstractReportTester {
 		ReportMaker[] reportList = new ReportMaker[] {				
 //				new Make6MRV(makeXLS, makePDF, makeHTML, divisionId, month, year),		// this is a custom report
 //				new MakeAROver60(makeXLS, makePDF, makeHTML),							// this is a datadump
-//				new MakeARTotalsSummary(makeXLS, makePDF, makeHTML),
+				new MakeARTotalsSummary(makeXLS, makePDF, makeHTML),
 //				new MakeClientContact(makeXLS, makePDF, makeHTML),						// this is a datadump
 //				new MakeCRRDetail(makeXLS, makePDF, makeHTML, startDate, endDate),		// this is a standard report with subtotals
 //				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
@@ -52,7 +52,7 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenieDetailReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
-				new MakeMonthlyServiceTaxReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeMonthlyServiceTaxReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				prodLiftAndGenie,
 		};
 		super.makeMyReports(reportList);

@@ -183,7 +183,7 @@ public class AccountsReceivableTotalsSummary extends StandardReport implements R
 		recapLabelStyle.setUnderline(true);
 		CustomCellFormat emptyCell = recapLabelStyle.clone();
 		emptyCell.setBorder(true);
-		CustomCellFormat totalDueStyle = new CustomCellFormat(CustomCellColor.BLACK,CustomCellColor.WHITE, CustomCellAlignment.RIGHT, "#,##0.00");
+		CustomCellFormat totalDueStyle = new CustomCellFormat(CustomCellColor.BLACK,CustomCellColor.WHITE, CustomCellAlignment.RIGHT, "#,##0.00", "#,###0.00");
 		totalDueStyle.setBorder(true);
 		CustomCellFormat currentStyle = totalDueStyle.clone();
 		currentStyle.setBackground(CustomCellColor.BRIGHT_GREEN);
@@ -196,13 +196,13 @@ public class AccountsReceivableTotalsSummary extends StandardReport implements R
 		over90Style.setForeground(CustomCellColor.WHITE);
 		
 		CustomCellFormat currentPctStyle = currentStyle.clone();
-		currentPctStyle.setDataFormat("#,##0.00%");
+		currentPctStyle.setXlsDataFormat("#,##0.00%");
 		CustomCellFormat over30PctStyle = over30Style.clone();
-		over30PctStyle.setDataFormat("#,##0.00%");
+		over30PctStyle.setXlsDataFormat("#,##0.00%");
 		CustomCellFormat over60PctStyle = over60Style.clone();
-		over60PctStyle.setDataFormat("#,##0.00%");
+		over60PctStyle.setXlsDataFormat("#,##0.00%");
 		CustomCellFormat over90PctStyle = over90Style.clone();
-		over90PctStyle.setDataFormat("#,##0.00%");
+		over90PctStyle.setXlsDataFormat("#,##0.00%");
 
 		List<CustomCell> totalRow = new ArrayList<CustomCell>();
 		totalRow.add(new CustomCell("", recapLabelStyle));

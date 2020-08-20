@@ -1,23 +1,21 @@
 package com.ansi.scilla.report.reportBuilder.xlsBuilder;
 
 import java.lang.reflect.InvocationTargetException;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
-import org.apache.poi.ss.usermodel.Footer;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFPrintSetup;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.ansi.scilla.report.common.ReportUtils;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.common.CustomCell;
-import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
+import com.ansi.scilla.report.reportBuilder.formatter.StringWrapFormatter;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardSummaryReport;
 
@@ -68,64 +66,7 @@ public class XLSBuilder extends AbstractXLSBuilder {
 	}
 
 
-	/**
-	 * Use XLSReportBuilderUtils.makeStandardHeader()
-	 * 
-	 * @deprecated
-	 * @param sheet The sheet upon which to put the header
-	 * @throws Exception Something bad happened
-	 */
-	@Deprecated
-	protected void makeHeader(XSSFSheet sheet) throws Exception {
-		StandardReport report = (StandardReport)this.report; 
-//		int headerRowCount = makeHeaderRowCount();
-		int headerRowCount = ReportUtils.makeHeaderRowCount(report);
-		sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
-		sheet.getPrintSetup().setLandscape(report.getReportOrientation().equals(ReportOrientation.LANDSCAPE));
-		sheet.getPrintSetup().setFitWidth((short)1);
-
-		SimpleDateFormat dateFormatTime = new SimpleDateFormat("yyyy/mm/dd hh:mm:ss");
-		SimpleDateFormat dateFormatStandard = new SimpleDateFormat("yyyy/mm/dd");
-		dateFormatTime.format(runDate);
-		dateFormatStandard.format(startDate);
-		dateFormatStandard.format(endDate);
-		
-		XSSFRow row = null;
-		XSSFCell cell = null;
-		
-		int startingRow = this.reportStartLoc.rowIndex;
-		
-		makeHeaderRow(startingRow, report.getHeaderLeft(), report.getBanner(), rf.cellStyleReportBanner, report.getHeaderRight(), sheet);
-		if ( headerRowCount > 1 ) {
-			makeHeaderRow(startingRow + 1, report.getHeaderLeft(), report.getTitle(), rf.cellStyleReportTitle, report.getHeaderRight(), sheet);	
-		}
-		if ( headerRowCount > 2 ) {
-			makeHeaderRow(startingRow + 2, report.getHeaderLeft(), report.getSubtitle(), rf.cellStyleReportSubTitle, report.getHeaderRight(), sheet);
-		}
-		if ( headerRowCount > 3 ) {
-			for ( int i=startingRow + 3;i<headerRowCount;i++) {
-				makeHeaderRow(i, report.getHeaderLeft(), "", rf.cellStyleStandardCenter, report.getHeaderRight(), sheet);
-			}
-		}
-		
-		if ( ! StringUtils.isBlank(report.getHeaderNotes())) {			
-			row = XLSReportBuilderUtils.makeRow(sheet, startingRow + headerRowCount); //sheet.createRow(startingRow + headerRowCount);
-			String reportNote = this.report.getHeaderNotes();
-			Integer endCell = report.getHeaderRow().length;
-			sheet.addMergedRegion(new CellRangeAddress(headerRowCount, headerRowCount, 0, endCell));
-			cell = row.createCell(0);
-			cell.setCellStyle(rf.cellStyleReportNote);
-			cell.setCellValue(reportNote);
-			row.setHeight(XLSReportFormatter.calculateRowHeight(sheet, endCell, reportNote));
-		}
-		
-		int numberOfHeaderRows = Math.max(3, startingRow + headerRowCount); // banner + title + subtitle is the minimum
-		numberOfHeaderRows++;  // need to include headers + column labels
-		sheet.setRepeatingRows(new CellRangeAddress(0,numberOfHeaderRows, 0, report.getHeaderRow().length));
-	    
-		Footer footer = sheet.getFooter();
-		footer.setCenter("Page &P of &N");
-	}
+	
 	
 
 
@@ -134,41 +75,14 @@ public class XLSBuilder extends AbstractXLSBuilder {
 	}
 
 
-	/*
-	This method moved to XLSReportBuilderUtils
-	private void makeColumnHeader(XSSFSheet sheet) {
-		StandardReport report = (StandardReport)this.report;
-		XSSFRow row = null;
-		XSSFCell cell = null;
-		
-		int rowNum = this.reportStartLoc.rowIndex + XLSReportBuilderUtils.makeHeaderRowCount(this.report) + 1;
-		int columnIndex = this.reportStartLoc.columnIndex;
-		int startingColumn = this.reportStartLoc.columnIndex;
-		row = XLSReportBuilderUtils.makeRow(sheet, rowNum);  //sheet.createRow(rowNum);
-
-//		row.setHeight(rf.standardHeaderHeight);
-		for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
-			ColumnHeader columnHeader = report.getHeaderRow()[i];
-			if ( i == 1 ) {
-				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn, startingColumn + 1));
-				columnIndex++;
-			}
-			if ( i == report.getHeaderRow().length - 1 ) {
-				sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startingColumn + report.getHeaderRow().length, startingColumn + report.getHeaderRow().length+1));
-			}
-			cell = row.createCell(columnIndex);
-			cell.setCellValue(columnHeader.getLabel());
-			cell.setCellStyle(rf.cellStyleColHdrLeft);
-			columnIndex++;
-		}
-	}
-	*/
+	
 
 	private void makeDetails(XSSFSheet sheet) throws Exception {
 		XSSFRow row = null;
 		StandardReport report = (StandardReport)this.report;
 		
-		int rowNum = this.reportStartLoc.rowIndex + XLSReportBuilderUtils.makeHeaderRowCount(this.report) + 2;
+		int startingRow = this.reportStartLoc.rowIndex + XLSReportBuilderUtils.makeHeaderRowCount(this.report) + 2;
+		int rowNum = startingRow;
 		for ( Object dataRow : report.getDataRows() ) {
 			rowNum = makeSubtotal(report, sheet, dataRow, rowNum);
 			row = XLSReportBuilderUtils.makeRow(sheet, rowNum);   //sheet.createRow(rowNum);	
@@ -210,6 +124,42 @@ public class XLSBuilder extends AbstractXLSBuilder {
 			}
 			rowNum++;
 		}
+		
+		
+		// After we populate all the rows & columns, we go back and see if we need to increase the row height
+		// for any rows. This only happens if text-wrap is set to yes (else, we have one line and the default
+		// height should be sufficient. If we set the height per row as we add the row, all following rows will have
+		// the same height, which may not be appropriate for the given report.
+		List<Integer> columnsToCheck = new ArrayList<Integer>();
+		for ( Integer idx = 0; idx < report.getHeaderRow().length; idx++ ) {
+			if ( report.getHeaderRow()[idx].getFormatter().formatter() instanceof StringWrapFormatter ) {
+				columnsToCheck.add(idx);
+			}
+		}
+		logger.log(Level.DEBUG, "Columns to check: " + StringUtils.join(columnsToCheck, ","));
+		if ( columnsToCheck.size() > 0 ) {
+			for ( int rowIdx=startingRow; rowIdx < sheet.getLastRowNum()+1; rowIdx++ ) {
+				XSSFRow reportRow = sheet.getRow(rowIdx);
+				short currentHeight = reportRow.getHeight();
+				short requiredHeight = -1;
+				for ( Integer columnIndex : columnsToCheck ) {					
+					XSSFCell cell = reportRow.getCell(columnIndex);
+					String text = StringUtils.strip(StringUtils.trim(StringUtils.strip(cell.getStringCellValue())));
+					Integer columnWidth = sheet.getColumnWidth(columnIndex);
+					XSSFFont font = cell.getCellStyle().getFont();
+					requiredHeight = XLSReportFormatter.calculateRequiredRowHeight(columnWidth, font, text);
+//					logger.log(Level.DEBUG, "Checking: " + rowIdx+","+columnIndex + "\t" + currentHeight + "\t" + requiredHeight + "\t" + cell.getStringCellValue());
+					if ( requiredHeight > currentHeight ) {
+						reportRow.setHeight(requiredHeight);
+						currentHeight = requiredHeight;
+					}
+				}
+//				logger.log(Level.DEBUG, "Row: " + rowIdx + "\t" + firstHeight + "\t" + currentHeight + "\t" + requiredHeight);
+			}
+		}
+		
+		
+		
 //		for ( int i = 0; i < report.getHeaderRow().length+4; i++ ) { // removed for performance issues 13 mins/column in CRR Detail
 //			sheet.autoSizeColumn(i);
 //		}

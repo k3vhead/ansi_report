@@ -4,10 +4,12 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.CustomCell;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -49,6 +51,13 @@ public class PDFBuilder extends AbstractPDFBuilder {
 		makeDetails((StandardReport)report, dataTable);
 		makeFinalSubtotal(dataTable);
 		makeSummary((StandardReport)report, dataTable);	
+		if ( this.report instanceof StandardReport ) {
+			StandardReport myReport = (StandardReport)report;
+			if ( myReport.getAddendum() != null ) {
+				logger.log(Level.DEBUG, "Recap");
+				makeRecap(myReport, dataTable);
+			}
+		}
 		document.add(dataTable);
 		document.close();
 
@@ -117,6 +126,16 @@ public class PDFBuilder extends AbstractPDFBuilder {
 	
 	
 	
+
+	private void makeRecap(StandardReport myReport, PdfPTable dataTable) throws Exception {
+		for ( List<CustomCell> dataRow : myReport.getAddendum() ) {
+			for ( CustomCell customCell : dataRow ) {				
+				PdfPCell cell = customCell.makePdfCell();
+				dataTable.addCell(cell);
+			}
+		}
+	}
+
 
 	public static ByteArrayOutputStream build(StandardReport report) throws Exception {
 		return new PDFBuilder(report).buildReport();

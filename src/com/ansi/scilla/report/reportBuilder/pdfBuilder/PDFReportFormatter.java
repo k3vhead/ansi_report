@@ -137,6 +137,10 @@ public class PDFReportFormatter extends ApplicationObject {
 			cellStyles.put(DataFormats.STRING_CENTERED, Element.ALIGN_CENTER);
 			cellStyles.put(DataFormats.STRING_TRUNCATE, Element.ALIGN_LEFT);
 			cellStyles.put(DataFormats.STRING_ABBREVIATE, Element.ALIGN_LEFT);
+			
+			cellStyles.put(DataFormats.STRING_WRAP_LEFT, Element.ALIGN_LEFT);
+			cellStyles.put(DataFormats.STRING_WRAP_CENTERED, Element.ALIGN_CENTER);
+			cellStyles.put(DataFormats.STRING_WRAP_RIGHT, Element.ALIGN_RIGHT);
 		} catch (Exception e) {			
 			throw new RuntimeException(e);
 		}

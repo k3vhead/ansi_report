@@ -3,7 +3,10 @@ package com.ansi.scilla.report.reportBuilder.htmlBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.Level;
+
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.CustomCell;
 import com.ansi.scilla.report.reportBuilder.common.NoPreviousValue;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
@@ -29,6 +32,14 @@ public class HTMLBuilder extends AbstractHTMLBuilder {
 		buffer.append(makeDetails((StandardReport)this.report));
 		buffer.append(makeFinalSubtotal((StandardReport)this.report));
 		buffer.append(makeSummary((StandardReport)this.report));
+		if ( this.report instanceof StandardReport ) {
+			StandardReport myReport = (StandardReport)report;
+			if ( myReport.getAddendum() != null ) {
+				logger.log(Level.DEBUG, "Recap");
+				String recap = makeRecap(myReport);
+				buffer.append(recap);
+			}
+		}
 		buffer.append("\n</table>");
 		return buffer.toString();
 	}
@@ -177,6 +188,21 @@ public class HTMLBuilder extends AbstractHTMLBuilder {
 	
 
 	
+	private String makeRecap(StandardReport myReport) throws Exception {
+		StringBuffer recap = new StringBuffer();
+		for ( List<CustomCell> dataRow : myReport.getAddendum() ) {
+			StringBuffer htmlRow = new StringBuffer("\n<tr class=\"" + HTMLReportFormatter.CSS_DATA_ROW + "\">");
+			int columnIndex = 0;
+			for ( CustomCell customCell : dataRow ) {				
+				htmlRow.append(customCell.makeHtml(columnIndex));
+				columnIndex++;
+			}
+			htmlRow.append("</tr>");
+			recap.append(htmlRow);
+		}
+		return recap.toString();
+	}
+
 	public static String build(StandardReport report) throws Exception {	
 		HTMLBuilder builder = new HTMLBuilder(report);
 		return builder.buildReport();
