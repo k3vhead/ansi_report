@@ -1,10 +1,13 @@
 package com.ansi.scilla.report.test.serviceTaxMaker;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -42,12 +45,20 @@ public class SqlMaker {
 	
 	private void go() throws Exception {
 		Connection conn = null;
+		Calendar startDate = new GregorianCalendar(2020, Calendar.JANUARY, 1);
+		Calendar endDate = new GregorianCalendar(2020, Calendar.MARCH, 31);
+		
 		try {
 			conn = AppUtils.getDevConn();
 			conn.setAutoCommit(false);
-			List<String> divList = makeDivList(conn);
-			String sql = makeSql(divList);
-			System.out.println(sql);
+			List<String> allDivList = makeDailyDivList(conn);
+			String dailySql = makeSql(allDivList);
+			System.out.println(dailySql);
+			
+			
+			List<String> divList = makeMonthlyDivList(conn, startDate, endDate);
+			String monthlySql = makeSql(divList);
+			System.out.println(monthlySql);
 		} catch ( Exception e) {
 			conn.rollback();
 			throw e;
@@ -56,22 +67,42 @@ public class SqlMaker {
 		}
 	}
 	
+	
+	private List<String> makeDailyDivList(Connection conn) throws SQLException {
+		String sql = "select division.division_id, concat(division.division_nbr, '-',division.division_code ) as div\n" + 
+				"from division \n" + 
+				"where division.division_status=1\n" + 
+				"order by concat(division.division_nbr, '-',division.division_code )";
+		
+		List<String> divList = new ArrayList<String>();
+		Statement s = conn.createStatement();
+		ResultSet rs = s.executeQuery(sql);
+		while ( rs.next() ) {
+			divList.add("[" + rs.getString("div") + "]");
+		}
+		rs.close();
+		return divList;
+	}
 	/**
 	 * Returns a list of divisions that have jobs for which we are collecting tax (ie tax_exempt flag is zero)
 	 * @param conn
 	 * @return
 	 * @throws SQLException
 	 */
-	private List<String> makeDivList(Connection conn) throws SQLException {
-		String sql = "select distinct job.division_id, concat(division.division_nbr, '-',division.division_code ) as div\n" + 
-				"from job\n" + 
-				"inner join division on division.division_id=job.division_id\n" + 
-				"where job.tax_exempt=0\n" + 
+	private List<String> makeMonthlyDivList(Connection conn, Calendar startDate, Calendar endDate) throws SQLException {
+		String sql = "select distinct division.division_id, concat(division.division_nbr, '-',division.division_code ) as div\n" + 
+				"from ticket_payment\n" + 
+				"inner join ticket on ticket.ticket_id=ticket_payment.ticket_id\n" + 
+				"inner join payment on payment.payment_id=ticket_payment.payment_id and payment_date >= ? and payment_date <= ?\n" + 
+				"inner join division on division.division_id=ticket.act_division_id\n" + 
+				"where tax_amt > 0\n" + 
 				"order by concat(division.division_nbr, '-',division.division_code )";
 		
 		List<String> divList = new ArrayList<String>();
-		Statement s = conn.createStatement();
-		ResultSet rs = s.executeQuery(sql);
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ps.setDate(1, new java.sql.Date(startDate.getTime().getTime()));
+		ps.setDate(2, new java.sql.Date(endDate.getTime().getTime()));
+		ResultSet rs = ps.executeQuery();
 		while ( rs.next() ) {
 			divList.add("[" + rs.getString("div") + "]");
 		}
