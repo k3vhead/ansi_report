@@ -1,6 +1,7 @@
 package com.ansi.scilla.report.woAndFees;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -58,8 +58,8 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 			
 
 	
-	public static final String REPORT_TITLE = "Lift And Genie Detail";
-	public static final String FILENAME = "LiftAndGenieDetail";
+	public static final String REPORT_TITLE = "WO and Fees Detail";
+	public static final String FILENAME = "WOandFeesDetail";
 //	private final String REPORT_NOTES = "notes go here";
 	
 	private Calendar startDate;
@@ -178,13 +178,9 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 		super.setHeaderRow(new ColumnHeader[] {
 
 				new ColumnHeader("div", "Div", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("job", "Job", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("serviceDescription","Service Description", 1, DataFormats.STRING_WRAP_LEFT, SummaryType.NONE),
-				new ColumnHeader("jobEquipment", "Job Equipment", 1, DataFormats.STRING_WRAP_LEFT, SummaryType.NONE),
-				new ColumnHeader("directLabor", "Direct Labor", 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),
-				new ColumnHeader("completedDate", "Completed Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("clientName","Client Name", 1, DataFormats.STRING_WRAP_LEFT, SummaryType.NONE),
-
+				new ColumnHeader("type", "Type", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("ppc","PPC", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
+				
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
@@ -255,22 +251,15 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 		private static final long serialVersionUID = 1L;
 
 		public String div;
-		public Integer job;
-		public String serviceDescription;
-		public String jobEquipment;
-		public Double directLabor;
-		public Date completedDate;
-		public String clientName;
+		public String type;
+		public BigDecimal ppc;
+		
 	
 		public RowData(ResultSet rs, WOAndFeesDetailReport report) throws SQLException {
 			this.div = rs.getString("div");
-			this.job = rs.getInt("job");
-			this.serviceDescription = rs.getString("service_description");
-			this.jobEquipment = rs.getString("job_equipment");
-			this.directLabor = rs.getDouble("direct_labor");
-			this.completedDate = rs.getDate("completed_date");
-			this.clientName = rs.getString("client_name");
-
+			this.type = rs.getString("job");
+			this.ppc = rs.getBigDecimal("service_description");
+			
 		}
 
 		public RowData() {
@@ -285,52 +274,20 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 			this.div = div;
 		}
 
-		public Integer getJob() {
-			return job;
+		public String getType() {
+			return type;
 		}
 
-		public void setJob(Integer job) {
-			this.job = job;
+		public void setType(String type) {
+			this.type = type;
 		}
 
-		public String getServiceDescription() {
-			return serviceDescription;
+		public BigDecimal getServiceDescription() {
+			return ppc;
 		}
 
-		public void setServiceDescription(String serviceDescription) {
-			this.serviceDescription = serviceDescription;
-		}
-
-		public String getJobEquipment() {
-			return jobEquipment;
-		}
-
-		public void setJobEquipment(String jobEquipment) {
-			this.jobEquipment = jobEquipment;
-		}
-
-		public Double getDirectLabor() {
-			return directLabor;
-		}
-
-		public void setDirectLabor(Double directLabor) {
-			this.directLabor = directLabor;
-		}
-
-		public Date getCompletedDate() {
-			return completedDate;
-		}
-
-		public void setCompletedDate(Date completedDate) {
-			this.completedDate = completedDate;
-		}
-
-		public String getClientName() {
-			return clientName;
-		}
-
-		public void setClientName(String clientName) {
-			this.clientName = clientName;
+		public void setServiceDescription(BigDecimal ppc) {
+			this.ppc = ppc;
 		}
 
 		
