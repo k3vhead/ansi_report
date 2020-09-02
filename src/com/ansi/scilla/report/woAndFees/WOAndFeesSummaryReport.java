@@ -35,31 +35,33 @@ import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.ReportStartLoc;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 
-public class WOAndFeesDetailReport extends StandardReport implements ReportByDivStartEnd {
+public class WOAndFeesSummaryReport extends StandardReport implements ReportByDivStartEnd {
 
 	private static final long serialVersionUID = 1L;
 
-	private final String sql = "select concat(division_code,'-',ticket.ticket_type)" +
-			" as div_type, division_code as Div, ticket.ticket_type as 'Fee/WO'\n" + 
-			", ticket.ticket_id as Ticket, job_site.name as 'Job Site', " +
-			"job.job_id as Job, job_site.address1 as 'Job Address'\n" + 
-			", job.job_nbr as 'Job #', \n" + 
-			"ticket.invoice_id as Invoice, ticket.invoice_date as 'Inv Date', " +
-			"ticket.act_price_per_cleaning as PPC\n" + 
-			", ticket.process_notes as Notes\n" + 
-			"from ticket\n" + 
-			"join division on division.division_id = ticket.act_division_id\n" + 
-			"join job on job.job_id = ticket.job_id\n" + 
-			"join quote on quote.quote_id = job.quote_id\n" + 
-			"join address as job_site on job_site.address_id = job_site_address_id\n" + 
-			"where invoice_date >= '2020-01-01' and invoice_date < '2020-04-01'\n" + 
-			"and ticket.ticket_type in ('fee','writeoff')\n" + 
-			"order by division_nbr, ticket_type, name, job_nbr, invoice_date\n";
+	private final String sql = "select concat(division_nbr,'-',division_code) as div,\n" + 
+			"isnull(ticket_type,'no records') as ticket_type, isnull(sum(PPC),0.00) as PPC \n" + 
+			"from division\n" + 
+			"left outer join (select ticket.act_division_id, concat(division_code,'-',ticket.ticket_type) as div_type, \n" + 
+			"	ticket_type, division_code as Div, ticket.ticket_type as 'ticket_type'\n" + 
+			"	, ticket.ticket_id as ticket, job_site.name as 'job_site', job.job_id as job_id, job_site.address1 as 'job_address'\n" + 
+			"	, job.job_nbr as 'job_nbr', \n" + 
+			"	ticket.invoice_id as Invoice, ticket.invoice_date as 'invoice_date', ticket.act_price_per_cleaning as PPC\n" + 
+			"	, ticket.process_notes as notes\n" + 
+			"	from ticket\n" + 
+			"	join division on division.division_id = ticket.act_division_id\n" + 
+			"	join job on job.job_id = ticket.job_id\n" + 
+			"	join quote on quote.quote_id = job.quote_id\n" + 
+			"	join address as job_site on job_site.address_id = job_site_address_id\n" + 
+			"	where invoice_date >= '?' and invoice_date < '?'\n" + 
+			"	and ticket.ticket_type in ('fee','writeoff')) as div_totals on div_totals.act_division_id = division.division_id\n" + 
+			"group by concat(division_nbr,'-',division_code), div_type, ticket_type\n" + 
+			"order by concat(division_nbr,'-',division_code), div_type, ticket_type";
 			
 
 	
-	public static final String REPORT_TITLE = "WO and Fees Detail";
-	public static final String FILENAME = "WOandFeesDetail";
+	public static final String REPORT_TITLE = "WO and Fees Summary";
+	public static final String FILENAME = "WOandFeesSummary";
 //	private final String REPORT_NOTES = "notes go here";
 	
 	private Calendar startDate;
@@ -70,7 +72,7 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 	
 	Logger logger = LogManager.getLogger(this.getClass());
 	
-	public WOAndFeesDetailReport() {
+	public WOAndFeesSummaryReport() {
 		super();
 		this.setTitle(REPORT_TITLE);
 		super.setReportOrientation(ReportOrientation.PORTRAIT);
@@ -81,7 +83,7 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 	 * @param conn Database exception
 	 * @throws Exception something bad happened
 	 */
-	protected WOAndFeesDetailReport(Connection conn) throws Exception {
+	protected WOAndFeesSummaryReport(Connection conn) throws Exception {
 		this();
 		logger.log(Level.DEBUG, "constructor1");
 		DateFormatter dateFormatter = (DateFormatter)DataFormats.DATE_FORMAT.formatter();
@@ -99,7 +101,7 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 		makeReport(startDate, endDate, data, subtitle);
 	}
 
-	protected WOAndFeesDetailReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
+	protected WOAndFeesSummaryReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
 		this();
 		DateFormatter dateFormatter = (DateFormatter)DataFormats.DATE_FORMAT.formatter();
 		this.startDate = startDate;
@@ -140,7 +142,7 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 		return this.data.size();
 	}
 	
-	private List<RowData> makeData(Connection conn, WOAndFeesDetailReport report, Calendar startDate, Calendar endDate) throws Exception {
+	private List<RowData> makeData(Connection conn, WOAndFeesSummaryReport report, Calendar startDate, Calendar endDate) throws Exception {
 		
 		startDate.set(Calendar.HOUR_OF_DAY, 0);
 		startDate.set(Calendar.MINUTE, 0);
@@ -239,11 +241,11 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 		XLSBuilder.build(this, sheet, new ReportStartLoc(0, 0));
 	}
 	
-	public static WOAndFeesDetailReport buildReport(Connection conn) throws Exception {
-		return new WOAndFeesDetailReport(conn);
+	public static WOAndFeesSummaryReport buildReport(Connection conn) throws Exception {
+		return new WOAndFeesSummaryReport(conn);
 	}
-	public static WOAndFeesDetailReport buildReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
-		return new WOAndFeesDetailReport(conn, startDate, endDate);
+	public static WOAndFeesSummaryReport buildReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
+		return new WOAndFeesSummaryReport(conn, startDate, endDate);
 	}
 
 
@@ -255,10 +257,10 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 		public BigDecimal ppc;
 		
 	
-		public RowData(ResultSet rs, WOAndFeesDetailReport report) throws SQLException {
-			this.div = rs.getString("div");
-			this.type = rs.getString("job");
-			this.ppc = rs.getBigDecimal("service_description");
+		public RowData(ResultSet rs, WOAndFeesSummaryReport report) throws SQLException {
+			this.div = rs.getString("Div");
+			this.type = rs.getString("ticket_type");
+			this.ppc = rs.getBigDecimal("PPC");
 			
 		}
 
