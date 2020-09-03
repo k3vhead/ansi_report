@@ -6,3 +6,4 @@ lib/ansi_common.jar
 .project
 .settings
 tmp
+.metadata

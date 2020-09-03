@@ -7,11 +7,11 @@ import java.util.Calendar;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.db.Division;
-import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
 import com.ansi.scilla.report.reportBuilder.reportType.AbstractReport;
 import com.ansi.scilla.report.reportBuilder.reportType.CompoundReport;
 
-public class LiftAndGenieReport extends CompoundReport implements ReportByDivStartEnd {
+public class LiftAndGenieReport extends CompoundReport implements ReportByStartEnd {
 
 	private static final long serialVersionUID = 1L;
 

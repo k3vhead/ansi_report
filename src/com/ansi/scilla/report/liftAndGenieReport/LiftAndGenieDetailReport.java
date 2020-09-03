@@ -30,12 +30,12 @@ import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.ReportStartLoc;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 
-public class LiftAndGenieDetailReport extends StandardReport implements ReportByDivStartEnd {
+public class LiftAndGenieDetailReport extends StandardReport implements ReportByStartEnd {
 
 	private static final long serialVersionUID = 1L;
 
@@ -165,7 +165,7 @@ public class LiftAndGenieDetailReport extends StandardReport implements ReportBy
 		List<RowData> data = new ArrayList<RowData>();
 		RowData newRow;
 		while ( rs.next() ) {
-			newRow = new RowData(rs, report);
+			newRow = new RowData(rs);
 			data.add(newRow);
 		}
 		rs.close();
@@ -267,7 +267,7 @@ public class LiftAndGenieDetailReport extends StandardReport implements ReportBy
 		public Date completedDate;
 		public String clientName;
 	
-		public RowData(ResultSet rs, LiftAndGenieDetailReport report) throws SQLException {
+		public RowData(ResultSet rs) throws SQLException {
 			this.div = rs.getString("div");
 			this.job = rs.getInt("job");
 			this.serviceDescription = rs.getString("service_description");
