@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -150,7 +150,6 @@ public class AccountsReceivableTotalsByDivision extends StandardReport implement
 	}
 	
 	
-	@SuppressWarnings("unchecked")
 	private void makeReport(List<RowData> data) throws NoSuchMethodException, SecurityException {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 		super.setTitle(REPORT_TITLE);	

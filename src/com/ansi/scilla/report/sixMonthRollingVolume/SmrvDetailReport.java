@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -307,7 +307,7 @@ public class SmrvDetailReport extends StandardReport implements ReportByDivMonth
 	}
 
 
-	@SuppressWarnings("unchecked")	
+
 	private void makeReport(String div, Calendar startDate, List<RowData> data, String subtitle) throws NoSuchMethodException, SecurityException {
 
 		super.setTitle(this.REPORT_TITLE);	

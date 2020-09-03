@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
@@ -53,7 +53,7 @@ public abstract class ReportDistributionDetail extends StandardReport implements
 		return data;
 	}
 	
-	@SuppressWarnings("unchecked")
+
 	private void makeReport(List<RowData> data) {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 		Calendar today = Calendar.getInstance();
