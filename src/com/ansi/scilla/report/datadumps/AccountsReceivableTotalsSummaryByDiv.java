@@ -9,6 +9,7 @@ import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByNoInput;
 import com.ansi.scilla.report.reportBuilder.reportType.DataDumpReport;
 
+@Deprecated
 public class AccountsReceivableTotalsSummaryByDiv extends DataDumpReport implements ReportByNoInput {
 	
 	private static final long serialVersionUID = 1L;

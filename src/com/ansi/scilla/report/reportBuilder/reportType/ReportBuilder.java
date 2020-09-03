@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeaderExtended;
 import com.ansi.scilla.report.reportBuilder.common.NoPreviousValue;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderCol;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
@@ -255,11 +256,31 @@ public abstract class ReportBuilder extends ApplicationObject {
 	 * @throws InvocationTargetException java reflection error - this shouldn't happen
 	 */
 	protected Object makeDisplayData(ColumnHeader columnHeader, Object row) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException  {
-		String methodName = "get" + StringUtils.capitalize(columnHeader.getFieldName());
-		Method dataMethod = row.getClass().getMethod(methodName, (Class<?>[])null);
-		Object value = dataMethod.invoke(row, (Object[])null);
-		if ( value instanceof String && columnHeader.getMaxCharacters() != null ) {
-			value = StringUtils.abbreviate((String)value, columnHeader.getMaxCharacters());
+		Object value = null;
+		if ( columnHeader instanceof ColumnHeaderExtended ) {
+			ColumnHeaderExtended extended = (ColumnHeaderExtended)columnHeader;
+			Method getterMethod = extended.getGetterMethod();
+			
+			HashMap<String, Object> values = (HashMap<String, Object>)getterMethod.invoke(row, (Object[])null);
+			if ( values == null ) {
+				value = "null values";
+			} else {
+				String fieldName = extended.getFieldName();
+				if ( fieldName == null ) {
+					value = "null fieldname";
+				} else {
+					value = values.get(extended.getFieldName());
+				}
+				
+			}			
+		} else {
+			String methodName = "get" + StringUtils.capitalize(columnHeader.getFieldName());
+			Method dataMethod = row.getClass().getMethod(methodName, (Class<?>[])null);
+			value = dataMethod.invoke(row, (Object[])null);
+			if ( value instanceof String && columnHeader.getMaxCharacters() != null ) {
+				value = StringUtils.abbreviate((String)value, columnHeader.getMaxCharacters());
+			}
+			
 		}
 		return value;
 	}

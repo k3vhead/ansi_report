@@ -2,9 +2,10 @@ package com.ansi.scilla.report.accountsReceivable;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -40,7 +41,7 @@ public class AccountsReceivableTotalsSummary extends StandardReport implements R
 	protected final String sql = "select div\n" + 
 			", (select sum(case \n" + 
 			"	when invoice_date is null then '0.00' - isnull(ticket_payment_totals.amount,0.00)\n" + 
-			"	when datediff(d, invoice_date, sysdatetime()) < 0 then '0.00' - isnull(ticket_payment_totals.amount,0.00)\n" + 
+			"	when datediff(d, invoice_date, ?) < 0 then '0.00' - isnull(ticket_payment_totals.amount,0.00)\n" + 
 			"	else act_price_per_cleaning - isnull(ticket_payment_totals.amount,0.00)\n" + 
 			"	end) as total_due\n" + 
 			"	from ticket \n" + 
@@ -55,7 +56,7 @@ public class AccountsReceivableTotalsSummary extends StandardReport implements R
 			"			sum(tax_amt) as tax_amt \n" + 
 			"			from ticket_payment \n" + 
 			"			join payment on payment.payment_id = ticket_payment.payment_id\n" + 
-			"			where payment_date <= sysdatetime()\n" + 
+			"			where payment_date <= ?\n" + 
 			"			group by ticket_id) as ticket_payment_totals \n" + 
 			"		on ticket_payment_totals.ticket_id = ticket.ticket_id \n" + 
 			"\n" + 
@@ -66,11 +67,11 @@ public class AccountsReceivableTotalsSummary extends StandardReport implements R
 			"from \n" + 
 			"(select concat( division_nbr, '-', division_code) as div\n" + 
 			", CASE\n" + 
-			"	when datediff(d, invoice_date, sysdatetime()) < 30 then 'current'\n" + 
-			"	when datediff(d, invoice_date, sysdatetime()) < 60 then 'over30'\n" + 
-			"	when datediff(d, invoice_date, sysdatetime()) < 90 then 'over60'\n" + 
-			"	when datediff(d, invoice_date, sysdatetime()) < 120 then 'over90'\n" + 
-			"	when datediff(d, invoice_date, sysdatetime()) < 180 then 'over120'\n" + 
+			"	when datediff(d, invoice_date, ?) < 30 then 'current'\n" + 
+			"	when datediff(d, invoice_date, ?) < 60 then 'over30'\n" + 
+			"	when datediff(d, invoice_date, ?) < 90 then 'over60'\n" + 
+			"	when datediff(d, invoice_date, ?) < 120 then 'over90'\n" + 
+			"	when datediff(d, invoice_date, ?) < 180 then 'over120'\n" + 
 			"	else 'over180' end as 'dueGroup'\n" + 
 			", act_price_per_cleaning - isnull(ticket_payment_totals.amount,0.00) as amount_due\n" + 
 			"from ticket \n" + 
@@ -85,13 +86,13 @@ public class AccountsReceivableTotalsSummary extends StandardReport implements R
 			"			sum(tax_amt) as tax_amt \n" + 
 			"			from ticket_payment \n" + 
 			"			join payment on payment.payment_id = ticket_payment.payment_id\n" + 
-			"			where payment_date <= sysdatetime()\n" + 
+			"			where payment_date <= ?\n" + 
 			"			group by ticket_id) as ticket_payment_totals \n" + 
 			"		on ticket_payment_totals.ticket_id = ticket.ticket_id \n" + 
 			"where  \n" + 
 			"  case \n" + 
 			"	when invoice_date is null then '0.00' - isnull(ticket_payment_totals.amount,0.00)\n" + 
-			"	when datediff(d, invoice_date, sysdatetime()) < 0 then '0.00' - isnull(ticket_payment_totals.amount,0.00)\n" + 
+			"	when datediff(d, invoice_date, ?) < 0 then '0.00' - isnull(ticket_payment_totals.amount,0.00)\n" + 
 			"	else act_price_per_cleaning - isnull(ticket_payment_totals.amount,0.00) end <> 0.00\n" + 
 			") as sourceTable \n" + 
 			"PIVOT\n" + 
@@ -105,9 +106,12 @@ public class AccountsReceivableTotalsSummary extends StandardReport implements R
 
 	Logger logger = LogManager.getLogger(this.getClass());
 
-	public AccountsReceivableTotalsSummary(Connection conn) throws Exception {
+	protected AccountsReceivableTotalsSummary(Connection conn, Calendar runDate) throws Exception {
 		super();
+		this.runDate = runDate;
 		this.setTitle(REPORT_TITLE);
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		this.setSubtitle("As of " + sdf.format(this.runDate.getTime()));
 		super.setReportOrientation(ReportOrientation.PORTRAIT);
 		this.data = this.makeData(conn);
 		makeReport(data);
@@ -116,8 +120,18 @@ public class AccountsReceivableTotalsSummary extends StandardReport implements R
 	
 	private List<RowData> makeData(Connection conn) throws SQLException {
 		List<RowData> data = new ArrayList<RowData>();
-		Statement ps = conn.createStatement();
-		ResultSet rs = ps.executeQuery(sql);
+		PreparedStatement ps = conn.prepareStatement(sql);
+		java.sql.Date sqlDate = new java.sql.Date(runDate.getTime().getTime());
+		ps.setDate(1, sqlDate);
+		ps.setDate(2, sqlDate);
+		ps.setDate(3, sqlDate);
+		ps.setDate(4, sqlDate);
+		ps.setDate(5, sqlDate);
+		ps.setDate(6, sqlDate);
+		ps.setDate(7, sqlDate);
+		ps.setDate(8, sqlDate);
+		ps.setDate(9, sqlDate);
+		ResultSet rs = ps.executeQuery();
 		
 		this.data = new ArrayList<RowData>();
 		RowData newRow;
@@ -279,9 +293,14 @@ public class AccountsReceivableTotalsSummary extends StandardReport implements R
 	}
 
 	public static AccountsReceivableTotalsSummary buildReport(Connection conn) throws Exception {
-		return new AccountsReceivableTotalsSummary(conn);
+		return AccountsReceivableTotalsSummary.buildReport(conn, Calendar.getInstance());
 	}
 
+	public static AccountsReceivableTotalsSummary buildReport(Connection conn, Calendar runDate) throws Exception {
+		return new AccountsReceivableTotalsSummary(conn, runDate);
+	}
+
+	
 	public class RowData extends ApplicationObject implements Comparable<RowData> {
 		private static final long serialVersionUID = 1L;
 		private String div;
