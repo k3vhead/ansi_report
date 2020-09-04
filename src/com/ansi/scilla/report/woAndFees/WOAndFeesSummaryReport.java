@@ -30,12 +30,12 @@ import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.ReportStartLoc;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 
-public class WOAndFeesSummaryReport extends StandardReport implements ReportByDivStartEnd {
+public class WOAndFeesSummaryReport extends StandardReport implements ReportByStartEnd {
 
 	private static final long serialVersionUID = 1L;
 
@@ -43,7 +43,7 @@ public class WOAndFeesSummaryReport extends StandardReport implements ReportByDi
 			"isnull(ticket_type,'no records') as ticket_type, isnull(sum(PPC),0.00) as PPC \n" + 
 			"from division\n" + 
 			"left outer join (select ticket.act_division_id, concat(division_code,'-',ticket.ticket_type) as div_type, \n" + 
-			"	ticket_type, division_code as Div, ticket.ticket_type as 'ticket_type'\n" + 
+			"	ticket_type, division_code as Div\n" + 
 			"	, ticket.ticket_id as ticket, job_site.name as 'job_site', job.job_id as job_id, job_site.address1 as 'job_address'\n" + 
 			"	, job.job_nbr as 'job_nbr', \n" + 
 			"	ticket.invoice_id as Invoice, ticket.invoice_date as 'invoice_date', ticket.act_price_per_cleaning as PPC\n" + 
@@ -53,7 +53,7 @@ public class WOAndFeesSummaryReport extends StandardReport implements ReportByDi
 			"	join job on job.job_id = ticket.job_id\n" + 
 			"	join quote on quote.quote_id = job.quote_id\n" + 
 			"	join address as job_site on job_site.address_id = job_site_address_id\n" + 
-			"	where invoice_date >= '?' and invoice_date < '?'\n" + 
+			"	where invoice_date >= ? and invoice_date < ?\n" + 
 			"	and ticket.ticket_type in ('fee','writeoff')) as div_totals on div_totals.act_division_id = division.division_id\n" + 
 			"group by concat(division_nbr,'-',division_code), div_type, ticket_type\n" + 
 			"order by concat(division_nbr,'-',division_code), div_type, ticket_type";
@@ -155,6 +155,7 @@ public class WOAndFeesSummaryReport extends StandardReport implements ReportByDi
 		endDate.set(Calendar.MILLISECOND, 0);
 		
 		PreparedStatement ps = conn.prepareStatement(sql);
+		logger.log(Level.DEBUG, sql);
 		ps.setDate(1, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(2, new java.sql.Date(endDate.getTimeInMillis()));
 		ResultSet rs = ps.executeQuery();
@@ -162,7 +163,7 @@ public class WOAndFeesSummaryReport extends StandardReport implements ReportByDi
 		List<RowData> data = new ArrayList<RowData>();
 		RowData newRow;
 		while ( rs.next() ) {
-			newRow = new RowData(rs, report);
+			newRow = new RowData(rs);
 			data.add(newRow);
 		}
 		rs.close();
@@ -236,6 +237,13 @@ public class WOAndFeesSummaryReport extends StandardReport implements ReportByDi
 
 	}
 	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		String fileName = makeFileName(FILENAME, runDate, division, startDate, endDate);
+		logger.log(Level.DEBUG, fileName);
+		return fileName;
+	}
+	
 	public void makeXLS(XSSFWorkbook workbook) throws Exception {
 		XSSFSheet sheet = workbook.createSheet();
 		XLSBuilder.build(this, sheet, new ReportStartLoc(0, 0));
@@ -257,48 +265,48 @@ public class WOAndFeesSummaryReport extends StandardReport implements ReportByDi
 		public BigDecimal ppc;
 		
 	
-		public RowData(ResultSet rs, WOAndFeesSummaryReport report) throws SQLException {
+		public RowData(ResultSet rs) throws SQLException {
 			this.div = rs.getString("Div");
 			this.type = rs.getString("ticket_type");
 			this.ppc = rs.getBigDecimal("PPC");
 			
 		}
 
-		public RowData() {
-			super();
-		}
 
 		public String getDiv() {
 			return div;
 		}
 
+
 		public void setDiv(String div) {
 			this.div = div;
 		}
+
 
 		public String getType() {
 			return type;
 		}
 
+
 		public void setType(String type) {
 			this.type = type;
 		}
 
-		public BigDecimal getServiceDescription() {
+
+		public BigDecimal getPpc() {
 			return ppc;
 		}
 
-		public void setServiceDescription(BigDecimal ppc) {
+
+		public void setPpc(BigDecimal ppc) {
 			this.ppc = ppc;
 		}
 
 		
-	}
 
-	
-	@Override
-	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
-		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+		
+
+		
 	}
 
 }

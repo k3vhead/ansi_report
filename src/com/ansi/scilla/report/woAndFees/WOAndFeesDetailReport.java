@@ -28,18 +28,18 @@ import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDiv;
-import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 
-public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv, ReportByDivision {
+public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv, ReportByDivStartEnd {
 
 	private static final long serialVersionUID = 1L;
 
 	public static final  String REPORT_TITLE = "AR Totals Summary By Division";
 	public static final String FILENAME = "Accounts Receivable Totals Summary By Division";
 	
-	private final String sql = "select concat(division_code,'-',ticket.ticket_type) as div_type" +
-			", division_code as division_code" +
+	private final String sql = "select " +
+			", concat(division_nbr, '-', division_code) as div" +
 			", ticket.ticket_type as ticket_type\n" + 
 			", ticket.ticket_id as ticket_id, job_site.name as job_site_name" +
 			", job.job_id as job_id, job_site.address1 as job_address\n" + 
@@ -48,7 +48,7 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 			", ticket.act_price_per_cleaning as ppc\n" + 
 			", ticket.process_notes as notes\n" + 
 			"from ticket\n" + 
-			"join division on division.division_id = ticket.act_division_id\n" + 
+			"join division on division.division_id = ticket.act_division_id and division.division_id=?\n" + 
 			"join job on job.job_id = ticket.job_id\n" + 
 			"join quote on quote.quote_id = job.quote_id\n" + 
 			"join address as job_site on job_site.address_id = job_site_address_id\n" + 
@@ -61,7 +61,7 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 
 	Logger logger = LogManager.getLogger(this.getClass());
 
-	private WOAndFeesDetailReport(Connection conn, Integer divisionId, Calendar runDate) throws Exception {
+	private WOAndFeesDetailReport(Connection conn, Integer divisionId, Calendar startDate, Calendar endDate) throws Exception {
 		super();
 		this.setTitle(REPORT_TITLE);
 		super.setReportOrientation(ReportOrientation.PORTRAIT);
@@ -156,13 +156,14 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 	}
 
 	
-	public static WOAndFeesDetailReport buildReport(Connection conn, Integer divisionId) throws Exception {
-		return WOAndFeesDetailReport.buildReport(conn, divisionId, Calendar.getInstance());
+	public static WOAndFeesDetailReport buildReport(Connection conn, Calendar runDate, Integer divisionId, Calendar startDate, Calendar endDate) throws Excepstion {
+		return new WOAndFeesDetailReport(conn, runDate, divisionId, startDate, endDate);
 	}
 	
-	public static WOAndFeesDetailReport buildReport(Connection conn, Integer divisionId, Calendar runDate) throws Exception {
-		return new WOAndFeesDetailReport(conn, divisionId, runDate);
+	public static WOAndFeesDetailReport buildReport(Connection conn, Integer divisionId, Calendar startDate, Calendar endDate) throws Exception {
+		return WOAndFeesDetailReport.buildReport(conn, Calendar.getInstance(), divisionId, startDate, endDate);
 	}
+	
 	
 	
 	public class RowData extends ApplicationObject {

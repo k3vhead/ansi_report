@@ -24,6 +24,7 @@ import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
 import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieDetailReport;
 import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieDivisionSummary;
 import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieReport;
+import com.ansi.scilla.report.monthlyServiceTaxReport.MonthlyServiceTaxByDayReport;
 import com.ansi.scilla.report.monthlyServiceTaxReport.MonthlyServiceTaxReport;
 import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.pac.PacSummaryReport;
@@ -35,7 +36,9 @@ import com.ansi.scilla.report.reportBuilder.reportType.CompoundReport;
 import com.ansi.scilla.report.sixMonthRollingVolume.SmrvReport;
 import com.ansi.scilla.report.subscriptions.SubscriptionChangeReport;
 import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
-import com.ansi.scilla.report.ticket.TicketStatusReport;;
+import com.ansi.scilla.report.ticket.TicketStatusReport;
+import com.ansi.scilla.report.woAndFees.WOAndFeesDetailReport;
+import com.ansi.scilla.report.woAndFees.WOAndFeesSummaryReport;;
 
 
 public abstract class AbstractReportTester {
@@ -412,6 +415,26 @@ public abstract class AbstractReportTester {
 		}
 	
 	}
+	
+	
+	public class MakeServiceTaxByDayReport extends ReportMaker {
+		
+		public MakeServiceTaxByDayReport(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+	
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start Monthly Service Tax Report");
+			String fileName = MonthlyServiceTaxByDayReport.FILENAME;			
+			MonthlyServiceTaxByDayReport report = MonthlyServiceTaxByDayReport.buildReport(conn, startDate, endDate);
+			super.writeReport(report, fileName);
+			logger.info("Monthly Service Tax Report");			
+		}
+	
+	}
 
 	public class MakePastDue2 extends ReportMaker {
 		public MakePastDue2(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Calendar startDate) {
@@ -428,6 +451,8 @@ public abstract class AbstractReportTester {
 			super.writeReport(report, fileName);
 		}
 	}
+	
+	
 
 	public class MakePACListing extends ReportMaker {
 
@@ -528,7 +553,40 @@ public abstract class AbstractReportTester {
 	}
 
 
+	public class MakeWOandFeesDetail extends ReportMaker {		
+		public MakeWOandFeesDetail(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Integer month, Integer year) {
+			super(makeXLS, makePDF, makeHTML);
+			this.divisionId = divisionId;
+			this.month = month;
+			this.year = year;
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			String fileName = WOAndFeesDetailReport.FILENAME;
+//			SixMonthRollingVolumeReport report = SixMonthRollingVolumeReport.buildReport(conn, divisionId, month, year);
+			WOAndFeesDetailReport report = WOAndFeesDetailReport.buildReport(conn, divisionId, startDate, endDate);
+			super.writeReport(report, fileName);
+		}
+
+	}
 	
+	public class MakeWOandFeesSummary extends ReportMaker {		
+		public MakeWOandFeesSummary(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.divisionId = divisionId;
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			String fileName = WOAndFeesSummaryReport.FILENAME;
+//			SixMonthRollingVolumeReport report = SixMonthRollingVolumeReport.buildReport(conn, divisionId, month, year);
+			WOAndFeesSummaryReport report = WOAndFeesSummaryReport.buildReport(conn, startDate, endDate);
+			super.writeReport(report, fileName);
+		}
+	}
 
 	
 

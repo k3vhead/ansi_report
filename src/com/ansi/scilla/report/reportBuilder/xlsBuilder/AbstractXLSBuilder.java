@@ -192,12 +192,12 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 	}
 
 	public void populateCell(ColumnHeader columnHeader, Object value, int columnIndex, Object dataRow, XSSFRow row) throws Exception {
-		logger.log(Level.DEBUG, "populating cell. columnIndex: " + columnIndex);
+//		logger.log(Level.DEBUG, "populating cell. columnIndex: " + columnIndex);
 		XSSFCell cell = row.createCell(columnIndex);
 		if ( this.cellStyles.containsKey(columnHeader.getFormatter())) {		
-			logger.log(Level.DEBUG, "\t" + columnHeader.getFormatter().name());
+//			logger.log(Level.DEBUG, "\t" + columnHeader.getFormatter().name());
 			CellStyle cellStyle = this.cellStyles.get(columnHeader.getFormatter());
-			logger.log(Level.DEBUG, "\t" + cellStyle.getWrapText() + "\t" + row.getHeight());
+//			logger.log(Level.DEBUG, "\t" + cellStyle.getWrapText() + "\t" + row.getHeight());
 			cell.setCellStyle(this.cellStyles.get(columnHeader.getFormatter()));			
 		} else {
 			throw new Exception("Missing cell style for " + columnHeader.getFormatter());
