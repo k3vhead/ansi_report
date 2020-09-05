@@ -27,16 +27,15 @@ import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
-import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDiv;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 
-public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv, ReportByDivStartEnd {
+public class WOAndFeesDetailReport extends StandardReport implements ReportByDivStartEnd {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final  String REPORT_TITLE = "AR Totals Summary By Division";
-	public static final String FILENAME = "Accounts Receivable Totals Summary By Division";
+	public static final  String REPORT_TITLE = "WO and Fees Detail by Division";
+	public static final String FILENAME = "WOandFeesDetail";
 	
 	private final String sql = "select " +
 			", concat(division_nbr, '-', division_code) as div" +
@@ -52,7 +51,7 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 			"join job on job.job_id = ticket.job_id\n" + 
 			"join quote on quote.quote_id = job.quote_id\n" + 
 			"join address as job_site on job_site.address_id = job_site_address_id\n" + 
-			"where invoice_date >= '?' and invoice_date < '?'\n" + 
+			"where invoice_date >= ? and invoice_date < ? \n" + 
 			"and ticket.ticket_type in ('fee','writeoff')\n" + 
 			"order by division_nbr, ticket_type, name, job_nbr, invoice_date";
 			
@@ -68,8 +67,8 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 		this.division = new Division();
 		this.division.setDivisionId(divisionId);
 		this.division.selectOne(conn);
-		this.runDate = runDate;
-		this.data = this.makeData(conn, divisionId, runDate);
+		this.runDate = startDate;
+		this.data = this.makeData(conn, divisionId, runDate, endDate);
 		makeReport(data);
 	}
 	
@@ -77,22 +76,15 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 		return division;
 	}
 
-	private List<RowData> makeData(Connection conn, Integer divisionId, Calendar runDate) throws SQLException {
+	private List<RowData> makeData(Connection conn, Integer divisionId, Calendar runDate, Calendar endDate) throws SQLException {
 		List<RowData> data = new ArrayList<RowData>();
 		logger.log(Level.DEBUG, sql);
 		PreparedStatement ps = conn.prepareStatement(sql);
 		java.sql.Date sqlDate = new java.sql.Date(runDate.getTime().getTime());
-		ps.setDate(1, sqlDate);
+		ps.setInt(1, divisionId);
 		ps.setDate(2, sqlDate);
+		sqlDate = new java.sql.Date(endDate.getTime().getTime());
 		ps.setDate(3, sqlDate);
-		ps.setDate(4, sqlDate);
-		ps.setDate(5, sqlDate);
-		ps.setDate(6, sqlDate);
-		ps.setDate(7, sqlDate);
-		ps.setDate(8, sqlDate);
-		ps.setInt(9, divisionId);
-		ps.setDate(10, sqlDate);
-		ps.setDate(11, sqlDate);
 		ResultSet rs = ps.executeQuery();
 		
 		this.data = new ArrayList<RowData>();
@@ -156,8 +148,8 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 	}
 
 	
-	public static WOAndFeesDetailReport buildReport(Connection conn, Calendar runDate, Integer divisionId, Calendar startDate, Calendar endDate) throws Excepstion {
-		return new WOAndFeesDetailReport(conn, runDate, divisionId, startDate, endDate);
+	public static WOAndFeesDetailReport buildReport(Connection conn, Calendar runDate, Integer divisionId, Calendar startDate, Calendar endDate) throws Exception {
+		return new WOAndFeesDetailReport(conn, divisionId, startDate, endDate);
 	}
 	
 	public static WOAndFeesDetailReport buildReport(Connection conn, Integer divisionId, Calendar startDate, Calendar endDate) throws Exception {
