@@ -11,7 +11,7 @@ import com.ansi.scilla.common.utils.AppUtils;;
 
 public class JoshuasReportTester extends AbstractReportTester {
 
-	private final String joshuasTestResultDirectory = "/Users/jwlew/Documents/";
+	private final String joshuasTestResultDirectory = "/home/jwlewis/Documents/xlsWorks";
 	
 	
 	public static void main(String[] args) {
@@ -51,7 +51,9 @@ public class JoshuasReportTester extends AbstractReportTester {
 //					new MakeInvoiceRegister(makeXLS, makePDF, makeHTML, divisionId, month, year),   	// this is a standard report with totals
 //					new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
 //					new makePastDue2(makeXLS, makePDF, makeHTML, divisionId, startDate),	
-					new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report
+//					new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
+					new MakeWOandFeesSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
+//					new MakeWOandFeesDetail(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
 			};
 			super.makeMyReports(reportList);
 			

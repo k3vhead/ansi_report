@@ -176,16 +176,16 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 		public RowData(ResultSet rs) throws SQLException {
 			super();
 			this.div = rs.getString("div");
-			this.ticketType = rs.getString("invoiced");
-			this.ticketId = rs.getString("days_due");
-			this.jobSiteName = rs.getString("client");
-			this.jobId = rs.getString("ticket");
-			this.jobAddress = rs.getString("site");
-			this.jobNbr = rs.getString("terms");
-			this.invoice = rs.getInt("over60");
-			this.invoiceDate = rs.getDate("over90");
-			this.ppc = rs.getBigDecimal("over120");
-			this.notes = rs.getString("over180");
+			this.ticketType = rs.getString("ticket_type");
+			this.ticketId = rs.getString("ticket_id");
+			this.jobSiteName = rs.getString("job_site_name");
+			this.jobId = rs.getString("job_id");
+			this.jobAddress = rs.getString("job_address");
+			this.jobNbr = rs.getString("job_nbr");
+			this.invoice = rs.getInt("invoice_id");
+			this.invoiceDate = rs.getDate("invoice_date");
+			this.ppc = rs.getBigDecimal("ppc");
+			this.notes = rs.getString("notes");
 		}
 
 		public String getDiv() {
