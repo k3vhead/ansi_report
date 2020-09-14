@@ -37,8 +37,7 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 	public static final  String REPORT_TITLE = "WO and Fees Detail by Division";
 	public static final String FILENAME = "WOandFeesDetail";
 	
-	private final String sql = "select " +
-			", concat(division_nbr, '-', division_code) as div" +
+	private final String sql = "select concat(division_nbr, '-', division_code) as div" +
 			", ticket.ticket_type as ticket_type\n" + 
 			", ticket.ticket_id as ticket_id, job_site.name as job_site_name" +
 			", job.job_id as job_id, job_site.address1 as job_address\n" + 
@@ -112,14 +111,14 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 		
 		super.setHeaderRow(new ColumnHeader[] {
 				new ColumnHeader("div", "Div", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("ticket_type", "Fee/WO", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("ticket_id","Ticket", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("job_site_name", "Job Site", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("job_id", "Job", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("job_address", "Job Address", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("job_nbr", "Job #", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),				
+				new ColumnHeader("ticketType", "Fee/WO", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("ticketId","Ticket", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("jobSiteName", "Job Site", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobId", "Job", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("jobAddress", "Job Address", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobNbr", "Job #", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),				
 				new ColumnHeader("invoice", "Invoice", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("invoice_date", "Inv Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("invoiceDate", "Inv Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
 				new ColumnHeader("ppc", "PPC", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
 				new ColumnHeader("notes", "Notes", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 		});
