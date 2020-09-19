@@ -554,11 +554,11 @@ public abstract class AbstractReportTester {
 
 
 	public class MakeWOandFeesDetail extends ReportMaker {		
-		public MakeWOandFeesDetail(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Integer month, Integer year) {
+		public MakeWOandFeesDetail(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Calendar startDate, Calendar endDate) {
 			super(makeXLS, makePDF, makeHTML);
 			this.divisionId = divisionId;
-			this.month = month;
-			this.year = year;
+			this.startDate = startDate;
+			this.endDate = endDate;
 		}
 
 		@Override

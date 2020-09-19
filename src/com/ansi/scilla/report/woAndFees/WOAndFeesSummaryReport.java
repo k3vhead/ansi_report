@@ -208,12 +208,9 @@ public class WOAndFeesSummaryReport extends StandardReport implements ReportBySt
 		
 		super.setColumnWidths(new ColumnWidth[] {
 				(ColumnWidth)null,
-				new ColumnWidth(3950, 45.0F),
-				new ColumnWidth(11000, (Float)null),
-				new ColumnWidth(11000, (Float)null),
-				new ColumnWidth(3250, (Float)null),
-				(ColumnWidth)null,
-				new ColumnWidth(6000, 57.0F),
+				new ColumnWidth(4000, 45.0F),
+				new ColumnWidth(4000, 45.0F),
+				new ColumnWidth(4000, 45.0F),
 		});
 		
 //		super.setColumnWidths(new Integer[] {

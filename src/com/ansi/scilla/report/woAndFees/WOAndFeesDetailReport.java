@@ -79,11 +79,11 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 		List<RowData> data = new ArrayList<RowData>();
 		logger.log(Level.DEBUG, sql);
 		PreparedStatement ps = conn.prepareStatement(sql);
-		java.sql.Date sqlDate = new java.sql.Date(runDate.getTime().getTime());
+		java.sql.Date sqlStartDate = new java.sql.Date(runDate.getTime().getTime());
 		ps.setInt(1, divisionId);
-		ps.setDate(2, sqlDate);
-		sqlDate = new java.sql.Date(endDate.getTime().getTime());
-		ps.setDate(3, sqlDate);
+		ps.setDate(2, sqlStartDate);
+		java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime().getTime());
+		ps.setDate(3, sqlEndDate);
 		ResultSet rs = ps.executeQuery();
 		
 		this.data = new ArrayList<RowData>();
@@ -117,7 +117,7 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 				new ColumnHeader("jobId", "Job", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
 				new ColumnHeader("jobAddress", "Job Address", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobNbr", "Job #", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),				
-				new ColumnHeader("invoice", "Invoice", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
+				new ColumnHeader("invoice", "Invoice", 1, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
 				new ColumnHeader("invoiceDate", "Inv Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
 				new ColumnHeader("ppc", "PPC", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
 				new ColumnHeader("notes", "Notes", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
@@ -128,16 +128,16 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 		
 		super.setColumnWidths(new ColumnWidth[] {
 				new ColumnWidth(2000,15.0F), 	// div
-				new ColumnWidth(2750,20.0F),	// ticketType
-				new ColumnWidth(2000,15.0F),	// ticketId
+				new ColumnWidth(2500,20.0F),	// ticketType
+				new ColumnWidth(2200,18.0F),	// ticketId
 				new ColumnWidth(6000,45.0F),	// jobSiteName
-				new ColumnWidth(2800,25.0F),	// jobId
+				new ColumnWidth(2600,23.0F),	// jobId
 				new ColumnWidth(6000,45.0F),	// jobAddress
-				new ColumnWidth(2000,20.0F),	// jobNbr
-				new ColumnWidth(3000,25.8F),	// invoice
+				new ColumnWidth(1800,18.0F),	// jobNbr
+				new ColumnWidth(2500,20.8F),	// invoice
 				new ColumnWidth(3000,25.8F),	// InvoiceDate
-				new ColumnWidth(3000,25.8F),	// ppc
-				new ColumnWidth(3000,25.8F),	// notes
+				new ColumnWidth(2500,20.8F),	// ppc
+				new ColumnWidth(3500,30.8F),	// notes
 		});
 	}
 

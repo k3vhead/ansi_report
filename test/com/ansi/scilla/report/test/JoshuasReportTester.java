@@ -34,8 +34,8 @@ public class JoshuasReportTester extends AbstractReportTester {
 			this.divisionId = 101;
 			this.month=07;
 			this.year=2018;
-			this.startDate = new Midnight(2018, Calendar.JULY, 20);
-			this.endDate = new Midnight(2017, Calendar.DECEMBER, 31);
+			this.startDate = new Midnight(2017, Calendar.JULY, 20);
+			this.endDate = new Midnight(2018, Calendar.SEPTEMBER, 31);
 			
 			boolean makeXLS = true;
 			boolean makePDF = false;
@@ -52,8 +52,8 @@ public class JoshuasReportTester extends AbstractReportTester {
 //					new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
 //					new makePastDue2(makeXLS, makePDF, makeHTML, divisionId, startDate),	
 //					new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
-					new MakeWOandFeesSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
-//					new MakeWOandFeesDetail(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
+//					new MakeWOandFeesSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
+					new MakeWOandFeesDetail(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
 			};
 			super.makeMyReports(reportList);
 			
