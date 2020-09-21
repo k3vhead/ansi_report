@@ -21,7 +21,7 @@ public class WOAndFeesReport extends CompoundReport implements ReportByNoInput {
 	private static final long serialVersionUID = 1L;
 
 	public static final String REPORT_TITLE = "WO and Fees Report";
-	public static final String FILENAME = "WO and Fees Report";
+	public static final String FILENAME = "WOAndFeesReport";
 	
 	
 	

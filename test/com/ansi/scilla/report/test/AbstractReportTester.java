@@ -38,6 +38,7 @@ import com.ansi.scilla.report.subscriptions.SubscriptionChangeReport;
 import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
 import com.ansi.scilla.report.ticket.TicketStatusReport;
 import com.ansi.scilla.report.woAndFees.WOAndFeesDetailReport;
+import com.ansi.scilla.report.woAndFees.WOAndFeesReport;
 import com.ansi.scilla.report.woAndFees.WOAndFeesSummaryReport;;
 
 
@@ -586,6 +587,24 @@ public abstract class AbstractReportTester {
 			WOAndFeesSummaryReport report = WOAndFeesSummaryReport.buildReport(conn, startDate, endDate);
 			super.writeReport(report, fileName);
 		}
+	}
+	
+	public class MakeWOandFeesReport extends ReportMaker {		
+		public MakeWOandFeesReport(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.divisionId = divisionId;
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			String fileName = WOAndFeesDetailReport.FILENAME;
+//			SixMonthRollingVolumeReport report = SixMonthRollingVolumeReport.buildReport(conn, divisionId, month, year);
+			WOAndFeesReport report = WOAndFeesReport.buildReport(conn, startDate, endDate);
+			super.writeReport(report, fileName);
+		}
+
 	}
 
 	
