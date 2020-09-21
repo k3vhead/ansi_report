@@ -11,7 +11,7 @@ import com.ansi.scilla.common.utils.AppUtils;;
 
 public class JoshuasReportTester extends AbstractReportTester {
 
-	private final String joshuasTestResultDirectory = "/home/jwlewis/Documents/xlsWorks";
+	private final String joshuasTestResultDirectory = "/home/jwlewis/Documents/pdfs";
 	
 	
 	public static void main(String[] args) {
@@ -38,8 +38,8 @@ public class JoshuasReportTester extends AbstractReportTester {
 			this.endDate = new Midnight(2018, Calendar.SEPTEMBER, 31);
 			
 			boolean makeXLS = true;
-			boolean makePDF = false;
-			boolean makeHTML = true;
+			boolean makePDF = true;
+			boolean makeHTML = false;
 			
 			ReportMaker[] reportList = new ReportMaker[] {				
 //					new Make6MRV(makeXLS, makePDF, makeHTML, divisionId, month, year),		// this is a custom report

@@ -133,10 +133,10 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 				new ColumnWidth(6000,45.0F),	// jobSiteName
 				new ColumnWidth(2600,23.0F),	// jobId
 				new ColumnWidth(6000,45.0F),	// jobAddress
-				new ColumnWidth(1800,18.0F),	// jobNbr
+				new ColumnWidth(1500,14.0F),	// jobNbr
 				new ColumnWidth(2500,20.8F),	// invoice
 				new ColumnWidth(3000,25.8F),	// InvoiceDate
-				new ColumnWidth(2500,20.8F),	// ppc
+				new ColumnWidth(2000,17.8F),	// ppc
 				new ColumnWidth(3500,30.8F),	// notes
 		});
 	}
