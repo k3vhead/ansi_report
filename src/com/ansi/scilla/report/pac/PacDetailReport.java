@@ -12,8 +12,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -22,6 +23,7 @@ import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.invoice.InvoiceStyle;
 import com.ansi.scilla.common.jobticket.JobFrequency;
 import com.ansi.scilla.common.jobticket.JobStatus;
+import com.ansi.scilla.common.jobticket.JobUtils;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.ColumnWidth;
@@ -35,9 +37,9 @@ public class PacDetailReport extends StandardReport {
 
 	private static final long serialVersionUID = 1L;
 
-	private final String sql = "select "
+	private final String sqlSelectClause = "select "
 			+ "\n\t$REPORT_DATE$ as report_date, "
-			+ "\n\tjob_id, "
+			+ "\n\tjob.job_id, "
 			+ "\n\tjob_site.name, "
 			+ "\n\tjob_site.address1, "
 			+ "\n\tjob_site.city, "
@@ -51,13 +53,17 @@ public class PacDetailReport extends StandardReport {
 			+ "\n\tCASE job.invoice_style "
 			+ "\n\t  when '"+ InvoiceStyle.COD.code() +"' then 'Y' "
 			+ "\n\t  else 'N'"
-			+ "\n\tEND "
+			+ "\n\tEND, "
+			+ "\n\ttag_count.tag_list"
 			+ "\n\tfrom job "
 			+ "\n\tjoin quote on quote.quote_id = job.quote_id "
 			+ "\n\tjoin address as bill_to on bill_to.address_id = bill_to_address_id "
 			+ "\n\tjoin address as job_site on job_site.address_id = job_site_address_id "
-			+ "\n\tjoin division on division.division_id = job.division_id "
-			+ "\n\twhere division.division_id = ? "
+			+ "\n\tjoin division on division.division_id = job.division_id ";
+	
+			
+	private final String sqlWhereClause = 
+			"\n\twhere division.division_id = ? "
 			+ "\n\tand $REPORT_DATE$ >= ? "
 			+ "\n\tand $REPORT_DATE$ <= ? "
 			+ "\n\tand job.job_status in ('" + JobStatus.PROPOSED.code() +"','" + JobStatus.ACTIVE.code() + "','"+ JobStatus.CANCELED.code()+"') "
@@ -174,9 +180,9 @@ public class PacDetailReport extends StandardReport {
 		endDate.set(Calendar.SECOND, 0);
 		endDate.set(Calendar.MILLISECOND, 0);
 		
-		String sql = this.sql.replaceAll("\\$REPORT_DATE\\$", this.reportType.fieldName); //get the right date for this report
+		String sql = makeSql(conn);
 		PreparedStatement ps = conn.prepareStatement(sql);
-		this.logger.debug(sql);
+		this.logger.log(Level.DEBUG, sql);
 		ps.setInt(1, divisionId);
 		ps.setDate(2, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(3, new java.sql.Date(endDate.getTimeInMillis()));
@@ -191,6 +197,16 @@ public class PacDetailReport extends StandardReport {
 		return data;
 	}
 
+
+	private String makeSql(Connection conn) throws Exception {
+		String selectClause = this.sqlSelectClause.replaceAll("\\$REPORT_DATE\\$", this.reportType.fieldName); //get the right date for this report
+		String whereClause = this.sqlWhereClause.replaceAll("\\$REPORT_DATE\\$", this.reportType.fieldName); //get the right date for this report
+		String sql = selectClause 
+				+ "\n\tleft outer join (" + JobUtils.makeTagSql(conn, "my_tags") +") as tag_count on tag_count.job_id=job.job_id\n"
+				+ whereClause;
+		
+		return sql;
+	}
 
 	public Double getTotalPpc() {
 		return this.totalPpc;
@@ -220,6 +236,7 @@ public class PacDetailReport extends StandardReport {
 				new ColumnHeader("freq","Freq", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobStatus","Status", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
 				new ColumnHeader("leadType","Lead Type", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("tagList", "Equipment", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("volume","Volume", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 		});
 		
@@ -283,6 +300,7 @@ public class PacDetailReport extends StandardReport {
 		public String jobStatus;
 		public String leadType;
 		public Double volume;
+		public String tagList;
 		
 		public RowData(ResultSet rs, PacDetailReport report) throws SQLException {
 			this.reportDate = new Date( rs.getDate("report_date").getTime());
@@ -295,11 +313,12 @@ public class PacDetailReport extends StandardReport {
 			this.pricePerCleaning = rs.getBigDecimal("price_per_cleaning").doubleValue();
 			report.totalPpc = report.totalPpc + this.pricePerCleaning;
 			this.jobNbr = rs.getInt("job_nbr");
-			this.jobFrequency = JobFrequency.get(rs.getString("job_frequency"));
+			this.jobFrequency = JobFrequency.lookup(rs.getString("job_frequency"));
 			this.jobStatus = rs.getString("job_status");
 			this.leadType = rs.getString("lead_type");
 			this.volume = this.pricePerCleaning * Double.valueOf(this.jobFrequency.annualCount()); // PPC * freq.timesPerYear
 			report.totalVolume = report.totalVolume + this.volume;
+			this.tagList = rs.getString("tag_list");
 		}
 
 
@@ -341,6 +360,9 @@ public class PacDetailReport extends StandardReport {
 		}
 		public Double getVolume() {
 			return volume;
+		}
+		public String getTagList() {
+			return tagList;
 		}
 
 	}
