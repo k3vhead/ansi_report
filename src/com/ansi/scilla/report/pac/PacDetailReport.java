@@ -236,7 +236,7 @@ public class PacDetailReport extends StandardReport {
 				new ColumnHeader("freq","Freq", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobStatus","Status", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
 				new ColumnHeader("leadType","Lead Type", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("tagList", "Equipment", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("tagList", "Tags", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("volume","Volume", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 		});
 		
