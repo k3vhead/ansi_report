@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +29,7 @@ import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeaderExtended;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
@@ -125,18 +128,13 @@ public class MonthlyServiceTaxByDayReport extends StandardReport implements Repo
 	
 	private List<String> makeMonthlyDivList(Connection conn, Calendar startDate, Calendar endDate) throws SQLException {
 		String sql = "select distinct division.division_id, concat(division.division_nbr, '-',division.division_code ) as div\n" + 
-				"from ticket_payment\n" + 
-				"inner join ticket on ticket.ticket_id=ticket_payment.ticket_id\n" + 
-				"inner join payment on payment.payment_id=ticket_payment.payment_id and payment_date >= ? and payment_date <= ?\n" + 
-				"inner join division on division.division_id=ticket.act_division_id\n" + 
-				"where tax_amt > 0\n" + 
+				"from division\n" + 
+				"where division.division_status = 1\n" + 
 				"order by concat(division.division_nbr, '-',division.division_code )";
 		
 		List<String> divList = new ArrayList<String>();
-		PreparedStatement ps = conn.prepareStatement(sql);
-		ps.setDate(1, new java.sql.Date(startDate.getTime().getTime()));
-		ps.setDate(2, new java.sql.Date(endDate.getTime().getTime()));
-		ResultSet rs = ps.executeQuery();
+		Statement ps = conn.createStatement();
+		ResultSet rs = ps.executeQuery(sql);
 		while ( rs.next() ) {
 			divList.add("[" + rs.getString("div") + "]");
 		}
@@ -204,7 +202,7 @@ public class MonthlyServiceTaxByDayReport extends StandardReport implements Repo
 		columnHeaders[0] = new ColumnHeader("paymentDate", "Payment Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE);
 		for ( int i = 0; i < divList.size(); i++ ) {
 			String div = divList.get(i);
-			columnHeaders[i+1] = new ColumnHeaderExtended(getterMethod, div, div, 1, DataFormats.DATE_FORMAT, SummaryType.NONE);
+			columnHeaders[i+1] = new ColumnHeaderExtended(getterMethod, div, div, 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE);
 		}
 		return columnHeaders;
 	}
@@ -216,8 +214,9 @@ public class MonthlyServiceTaxByDayReport extends StandardReport implements Repo
 		super.setSubtitle(subtitle);
 //		super.setHeaderNotes(REPORT_NOTES);
 		
+		super.setHeaderRow(makeColumnHeaders(divList));
 		
-		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
+		List<Object> oData = IterableUtils.toList(CollectionUtils.collect(data, new ObjectTransformer()));
 		super.setDataRows(oData);
 		
 		Method getRunDateMethod = this.getClass().getMethod("getRunDate", (Class<?>[])null);
@@ -236,10 +235,13 @@ public class MonthlyServiceTaxByDayReport extends StandardReport implements Repo
 				new ReportHeaderRow("To:", getEndDateMethod, 3, DataFormats.DATE_FORMAT)
 		});
 		super.makeHeaderRight(headerRight);
+		ColumnWidth[] columnWidths = new ColumnWidth[divList.size() + 1];
+		columnWidths[0] = new ColumnWidth(5000, 50.0F);
+//		columnWidths[1] = new ColumnWidth(4000, 40.0F);
+//		for (int i = 2; i < divList.size(); i++) {
+//			columnWidths[i] = (ColumnWidth)null;
+//		}
 		
-//		super.setColumnWidths(makeDivColumnWidths());
-		
-
 	}
 	public void makeXLS(XSSFWorkbook workbook) throws Exception {
 		XSSFSheet sheet = workbook.createSheet();

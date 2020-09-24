@@ -45,7 +45,10 @@ public class KrisReportTester extends AbstractReportTester {
 //				new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report
 //				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenieDetailReport(makeXLS, makePDF, makeHTML, startDate, endDate),
-				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeMonthlyServiceTaxReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+				new MakeServiceTaxByDayReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+				
 		};
 		super.makeMyReports(reportList);
 		
