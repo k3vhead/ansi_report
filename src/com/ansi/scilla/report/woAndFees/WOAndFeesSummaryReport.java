@@ -22,6 +22,7 @@ import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.db.Division;
+import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
@@ -40,7 +41,7 @@ public class WOAndFeesSummaryReport extends StandardReport implements ReportBySt
 	private static final long serialVersionUID = 1L;
 
 	private final String sql = "select concat(division_nbr,'-',division_code) as div,\n" + 
-			"isnull(ticket_type,'no records') as ticket_type, isnull(sum(PPC),0.00) as PPC \n" + 
+			"isnull(ticket_type,'No Records') as ticket_type, isnull(sum(PPC),0.00) as PPC \n" + 
 			"from division\n" + 
 			"left outer join (select ticket.act_division_id, concat(division_code,'-',ticket.ticket_type) as div_type, \n" + 
 			"	ticket_type, division_code as Div\n" + 
@@ -258,13 +259,23 @@ public class WOAndFeesSummaryReport extends StandardReport implements ReportBySt
 		private static final long serialVersionUID = 1L;
 
 		public String div;
-		public String type;
+		public String ticketType;
 		public BigDecimal ppc;
 		
 	
 		public RowData(ResultSet rs) throws SQLException {
 			this.div = rs.getString("Div");
-			this.type = rs.getString("ticket_type");
+			String ticketTypeDisplay = rs.getString("ticket_type");
+			try {
+				TicketType ticketType = TicketType.lookup(ticketTypeDisplay);
+				if(ticketType != null) {
+					this.ticketType = ticketTypeDisplay;
+				} else {
+					this.ticketType = ticketTypeDisplay;
+				}
+			} catch (Exception e) {
+				this.ticketType = ticketTypeDisplay;
+			}
 			this.ppc = rs.getBigDecimal("PPC");
 			
 		}
@@ -281,12 +292,12 @@ public class WOAndFeesSummaryReport extends StandardReport implements ReportBySt
 
 
 		public String getType() {
-			return type;
+			return ticketType;
 		}
 
 
 		public void setType(String type) {
-			this.type = type;
+			this.ticketType = type;
 		}
 
 

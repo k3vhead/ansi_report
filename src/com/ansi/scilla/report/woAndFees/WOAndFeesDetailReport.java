@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.db.Division;
+import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
@@ -116,7 +117,7 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 				new ColumnHeader("jobSiteName", "Job Site", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobId", "Job", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
 				new ColumnHeader("jobAddress", "Job Address", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobNbr", "Job #", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),				
+				new ColumnHeader("jobNbr", "Job #", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),				
 				new ColumnHeader("invoice", "Invoice", 1, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
 				new ColumnHeader("invoiceDate", "Inv Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
 				new ColumnHeader("ppc", "PPC", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
@@ -175,7 +176,17 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 		public RowData(ResultSet rs) throws SQLException {
 			super();
 			this.div = rs.getString("div");
-			this.ticketType = rs.getString("ticket_type");
+			
+			String ticketTypeDisplay = rs.getString("ticket_type");
+			try {
+				TicketType ticketType = TicketType.lookup(ticketTypeDisplay);
+				if(ticketType != null) {
+					this.ticketType = ticketTypeDisplay;
+				}
+			} catch (Exception e) {
+				this.ticketType = ticketTypeDisplay;
+			}
+			
 			this.ticketId = rs.getString("ticket_id");
 			this.jobSiteName = rs.getString("job_site_name");
 			this.jobId = rs.getString("job_id");

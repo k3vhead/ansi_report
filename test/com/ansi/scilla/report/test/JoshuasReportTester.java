@@ -52,9 +52,9 @@ public class JoshuasReportTester extends AbstractReportTester {
 //					new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
 //					new makePastDue2(makeXLS, makePDF, makeHTML, divisionId, startDate),	
 //					new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
-					new MakeWOandFeesSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
+//					new MakeWOandFeesSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
 //					new MakeWOandFeesDetail(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
-//					new MakeWOandFeesReport(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
+					new MakeWOandFeesReport(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
 			};
 			super.makeMyReports(reportList);
 			
