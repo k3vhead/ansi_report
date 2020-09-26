@@ -181,7 +181,7 @@ public class WOAndFeesDetailReport extends StandardReport implements ReportByDiv
 			try {
 				TicketType ticketType = TicketType.lookup(ticketTypeDisplay);
 				if(ticketType != null) {
-					this.ticketType = ticketTypeDisplay;
+					this.ticketType = ticketType.display();
 				}
 			} catch (Exception e) {
 				this.ticketType = ticketTypeDisplay;

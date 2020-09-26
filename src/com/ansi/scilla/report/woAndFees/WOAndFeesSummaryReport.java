@@ -207,11 +207,12 @@ public class WOAndFeesSummaryReport extends StandardReport implements ReportBySt
 		});
 		super.makeHeaderRight(headerRight);
 		
+		super.setPdfWidthPercentage(50.0F);
+		
 		super.setColumnWidths(new ColumnWidth[] {
-				(ColumnWidth)null,
-				new ColumnWidth(4000, 45.0F),
-				new ColumnWidth(4000, 45.0F),
-				new ColumnWidth(4000, 45.0F),
+				new ColumnWidth(4000, 25.0F),
+				new ColumnWidth(4000, 25.0F),
+				new ColumnWidth(4000, 20.0F),
 		});
 		
 //		super.setColumnWidths(new Integer[] {
@@ -268,10 +269,10 @@ public class WOAndFeesSummaryReport extends StandardReport implements ReportBySt
 			String ticketTypeDisplay = rs.getString("ticket_type");
 			try {
 				TicketType ticketType = TicketType.lookup(ticketTypeDisplay);
-				if(ticketType != null) {
+				if(ticketType == null) {
 					this.ticketType = ticketTypeDisplay;
 				} else {
-					this.ticketType = ticketTypeDisplay;
+					this.ticketType = ticketType.display();
 				}
 			} catch (Exception e) {
 				this.ticketType = ticketTypeDisplay;
