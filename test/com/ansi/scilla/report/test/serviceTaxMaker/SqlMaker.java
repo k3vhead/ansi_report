@@ -249,7 +249,7 @@ public class SqlMaker {
 		columnHeaders[0] = new ColumnHeader("paymentDate", "Payment Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE);
 		for ( int i = 0; i < divList.size(); i++ ) {
 			String div = divList.get(i);
-			columnHeaders[i+1] = new ColumnHeaderExtended(getterMethod, div, div, 1, DataFormats.DATE_FORMAT, SummaryType.NONE);
+			columnHeaders[i+1] = new ColumnHeaderExtended(getterMethod, div, div, 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE);
 		}
 		return columnHeaders;
 	}

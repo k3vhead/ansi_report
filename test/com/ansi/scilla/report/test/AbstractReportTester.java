@@ -590,17 +590,15 @@ public abstract class AbstractReportTester {
 	}
 	
 	public class MakeWOandFeesReport extends ReportMaker {		
-		public MakeWOandFeesReport(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Calendar startDate, Calendar endDate) {
+		public MakeWOandFeesReport(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
 			super(makeXLS, makePDF, makeHTML);
-			this.divisionId = divisionId;
 			this.startDate = startDate;
 			this.endDate = endDate;
 		}
 
 		@Override
 		public void makeReport(Connection conn) throws Exception {
-			String fileName = WOAndFeesDetailReport.FILENAME;
-//			SixMonthRollingVolumeReport report = SixMonthRollingVolumeReport.buildReport(conn, divisionId, month, year);
+			String fileName = WOAndFeesReport.FILENAME;
 			WOAndFeesReport report = WOAndFeesReport.buildReport(conn, startDate, endDate);
 			super.writeReport(report, fileName);
 		}

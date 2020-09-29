@@ -25,11 +25,11 @@ public class DavesReportTester extends AbstractReportTester {
 		boolean makeHTML = false;
 		boolean makeXLS = true;
 
-		Integer divisionId = 106;
+		Integer divisionId = 105;
 		Integer month = Calendar.JULY;
-		Integer year = 2019;
-		Calendar startDate = new GregorianCalendar(2019, Calendar.OCTOBER, 1);
-		Calendar endDate = new GregorianCalendar(2020, Calendar.JUNE, 1);
+		Integer year = 2020;
+		Calendar startDate = new GregorianCalendar(2020, Calendar.JANUARY, 1);
+		Calendar endDate = new GregorianCalendar(2020, Calendar.APRIL, 1);
 
 //		MakeLiftAndGenie prodLiftAndGenie = new MakeLiftAndGenie( makeXLS, makePDF, makeHTML, startDate, endDate);
 //		prodLiftAndGenie.setReportConn(ReportConn.PROD);
@@ -48,7 +48,7 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenieDetailReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
-//				new MakeMonthlyServiceTaxReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+				new MakeMonthlyServiceTaxReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 				new MakeServiceTaxByDayReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
 //				new MakePACSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report (includd in PAC Listing)
@@ -56,7 +56,9 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeReportDistribution(makeXLS, makePDF, makeHTML),					// this is a standard report
 //				new MakeSubscriptionChangeReport(makeXLS, makePDF, makeHTML, startDate, endDate),			// this is a standard report
 //				new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report
+//				new MakeWOandFeesDetail(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
 //				new MakeWOandFeesSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
+//				new MakeWOandFeesReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 		};
 		super.makeMyReports(reportList);
 	}
