@@ -1,3 +1,4 @@
+com.ansi.scilla.report.accountsReceivable
 com.ansi.scilla.report.cashReceiptsRegister
 com.ansi.scilla.report.common
 com.ansi.scilla.report.common.parameters
@@ -18,9 +19,12 @@ com.ansi.scilla.report.reportBuilder.formatter
 com.ansi.scilla.report.reportBuilder.htmlBuilder
 com.ansi.scilla.report.reportBuilder.pdfBuilder
 com.ansi.scilla.report.reportBuilder.reportBy
+com.ansi.scilla.report.reportBuilder.reportInfo
 com.ansi.scilla.report.reportBuilder.reportType
 com.ansi.scilla.report.reportBuilder.xlsBuilder
 com.ansi.scilla.report.sixMonthRollingVolume
 com.ansi.scilla.report.sixMonthRollingVolumeSummary
+com.ansi.scilla.report.skippedAndDispatched
 com.ansi.scilla.report.subscriptions
 com.ansi.scilla.report.ticket
+com.ansi.scilla.report.woAndFees
