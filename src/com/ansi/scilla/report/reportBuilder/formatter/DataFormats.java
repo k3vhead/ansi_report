@@ -10,6 +10,7 @@ public enum DataFormats {
 	NUMBER_CENTERED(new NumberFormatter("0", TextAlignment.CENTER)),
 	DECIMAL_FORMAT(new NumberFormatter("#,##0.00", TextAlignment.RIGHT)),
 	
+	PCT_FORMAT(new NumberFormatter("#,##0.00%",TextAlignment.RIGHT)),
 	CURRENCY_FORMAT(new NumberFormatter("$#,##0.00", TextAlignment.RIGHT)),
 	
 	STRING_FORMAT(new StringFormatter(TextAlignment.LEFT)),

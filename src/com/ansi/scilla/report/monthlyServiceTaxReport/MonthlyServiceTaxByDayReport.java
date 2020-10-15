@@ -202,7 +202,7 @@ public class MonthlyServiceTaxByDayReport extends StandardReport implements Repo
 		columnHeaders[0] = new ColumnHeader("paymentDate", "Payment Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE);
 		for ( int i = 0; i < divList.size(); i++ ) {
 			String div = divList.get(i);
-			columnHeaders[i+1] = new ColumnHeaderExtended(getterMethod, div, div, 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE);
+			columnHeaders[i+1] = new ColumnHeaderExtended(getterMethod, div, div, 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM);
 		}
 		return columnHeaders;
 	}
@@ -237,10 +237,10 @@ public class MonthlyServiceTaxByDayReport extends StandardReport implements Repo
 		super.makeHeaderRight(headerRight);
 		ColumnWidth[] columnWidths = new ColumnWidth[divList.size() + 1];
 		columnWidths[0] = new ColumnWidth(5000, 50.0F);
-//		columnWidths[1] = new ColumnWidth(4000, 40.0F);
-//		for (int i = 2; i < divList.size(); i++) {
-//			columnWidths[i] = (ColumnWidth)null;
-//		}
+		columnWidths[1] = new ColumnWidth(4000, 40.0F);
+		for (int i = 2; i < divList.size(); i++) {
+			columnWidths[i] = (ColumnWidth)null;
+		}
 		
 	}
 	public void makeXLS(XSSFWorkbook workbook) throws Exception {

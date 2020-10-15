@@ -71,6 +71,7 @@ public class PDFReportFormatter extends ApplicationObject {
 	public short dataFormatDecimal;
 	public short dataFormatInteger;
 	public short dataFormatNumber;
+	public short dataFormatPct;
 	public short dataFormatCurrency;
 	
 	public CellStyle cellStyleColHdrLeft;
@@ -80,6 +81,7 @@ public class PDFReportFormatter extends ApplicationObject {
 	public CellStyle cellStyleStandardRight;
 	public CellStyle cellStyleStandardDecimal;
 	public CellStyle cellStyleStandardNumber;
+	public CellStyle cellStyleStandardPct;
 	public CellStyle cellStyleStandardCurrency;
 	public CellStyle cellStyleStandardInteger;
 	public CellStyle cellStyleNumberCenter;
@@ -131,6 +133,7 @@ public class PDFReportFormatter extends ApplicationObject {
 			cellStyles.put(DataFormats.NUMBER_CENTERED, Element.ALIGN_CENTER);
 			cellStyles.put(DataFormats.DECIMAL_FORMAT, Element.ALIGN_RIGHT);
 
+			cellStyles.put(DataFormats.PCT_FORMAT, Element.ALIGN_RIGHT);
 			cellStyles.put(DataFormats.CURRENCY_FORMAT, Element.ALIGN_RIGHT);
 
 			cellStyles.put(DataFormats.STRING_FORMAT, Element.ALIGN_LEFT);

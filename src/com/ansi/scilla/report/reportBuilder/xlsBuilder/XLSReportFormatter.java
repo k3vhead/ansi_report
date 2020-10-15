@@ -39,6 +39,7 @@ public class XLSReportFormatter {
 	public short dataFormatDecimal;
 	public short dataFormatInteger;
 	public short dataFormatNumber;
+	public short dataFormatPct;
 	public short dataFormatCurrency;
 	
 	public CellStyle cellStyleColHdrLeft;
@@ -51,6 +52,7 @@ public class XLSReportFormatter {
 	public CellStyle cellStyleTextWrapRight;
 	public CellStyle cellStyleStandardDecimal;
 	public CellStyle cellStyleStandardNumber;
+	public CellStyle cellStyleStandardPct;
 	public CellStyle cellStyleStandardCurrency;
 	public CellStyle cellStyleStandardInteger;
 	public CellStyle cellStyleNumberCenter;
@@ -164,6 +166,7 @@ public class XLSReportFormatter {
 	    dataFormatDecimal = createHelper.createDataFormat().getFormat("#,##0.00");
 	    dataFormatInteger = createHelper.createDataFormat().getFormat("#,##0");
 	    dataFormatNumber = createHelper.createDataFormat().getFormat("#0");
+	    dataFormatPct = createHelper.createDataFormat().getFormat("#,##0.00%");
 	    dataFormatCurrency = createHelper.createDataFormat().getFormat("$#,##0.00");
 	    
 	    
@@ -298,6 +301,12 @@ public class XLSReportFormatter {
 	    cellStyleStandardNumber.setDataFormat(dataFormatNumber);
 	    cellStyleStandardNumber.setAlignment(CellStyle.ALIGN_RIGHT);
 	    cellStyleStandardNumber.setFont(fontStandardBlack);
+	    
+	    cellStyleStandardPct = workbook.createCellStyle();
+	    cellStyleStandardPct.setFillBackgroundColor(IndexedColors.WHITE.getIndex());
+	    cellStyleStandardPct.setDataFormat(dataFormatPct);
+	    cellStyleStandardPct.setAlignment(CellStyle.ALIGN_RIGHT);
+	    cellStyleStandardPct.setFont(fontStandardBlack);
 	    
 	    cellStyleStandardCurrency = workbook.createCellStyle();
 	    cellStyleStandardCurrency.setFillBackgroundColor(IndexedColors.WHITE.getIndex());
