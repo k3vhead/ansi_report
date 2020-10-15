@@ -47,8 +47,8 @@ public class KrisReportTester extends AbstractReportTester {
 //				new MakeLiftAndGenieDetailReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeMonthlyServiceTaxReport(makeXLS, makePDF, makeHTML, startDate, endDate),
-				new MakeServiceTaxByDayReport(makeXLS, makePDF, makeHTML, startDate, endDate),
-				
+//				new MakeServiceTaxByDayReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+				new MakeMonthlyServiceTax(makeXLS, makePDF, makeHTML, startDate, endDate),
 		};
 		super.makeMyReports(reportList);
 		
