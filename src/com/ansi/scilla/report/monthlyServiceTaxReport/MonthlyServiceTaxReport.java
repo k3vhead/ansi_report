@@ -55,18 +55,6 @@ public class MonthlyServiceTaxReport extends StandardReport implements ReportByS
 			"having sum(ticket_payment.tax_amt) <> 0.00\n" +
 			"order by division_group.name asc, job_site.state asc, job_site.county asc, tax_rate.location asc";
 	
-//	public MonthlyServiceTaxReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception{
-//		super();
-//		super.sql = sql;
-//		super.setTitle(REPORT_TITLE);
-//		PreparedStatement ps = conn.prepareStatement(sql);
-//		java.sql.Date start = new java.sql.Date(startDate.getTimeInMillis());
-//		java.sql.Date end = new java.sql.Date(endDate.getTimeInMillis());
-//		ps.setDate(1, start);
-//		ps.setDate(2, end);
-//		ResultSet rs = ps.executeQuery();
-//		makeReport(rs);
-//	}
 	protected MonthlyServiceTaxReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
 		this();
 		DateFormatter dateFormatter = (DateFormatter)DataFormats.DATE_FORMAT.formatter();
@@ -212,12 +200,12 @@ public class MonthlyServiceTaxReport extends StandardReport implements ReportByS
 		super.makeHeaderRight(headerRight);
 		
 		super.setColumnWidths(new ColumnWidth[] {
-				new ColumnWidth(3500, (Float)null),
-				new ColumnWidth(1000, 30.0F),
-				new ColumnWidth(4000, 70.0F),
-				new ColumnWidth(8000, (Float)null),
+				new ColumnWidth(3500, 70.0F),
+				new ColumnWidth(3000, 30.0F),
+				new ColumnWidth(3000, 70.0F),
+				new ColumnWidth(10000, (Float)null),
 				new ColumnWidth(2000, 30.0F),
-				new ColumnWidth(2500, 50.0F),
+				new ColumnWidth(2250, 50.0F),
 		});
 		
 

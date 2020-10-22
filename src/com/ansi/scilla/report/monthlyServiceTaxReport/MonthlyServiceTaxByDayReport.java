@@ -236,8 +236,8 @@ public class MonthlyServiceTaxByDayReport extends StandardReport implements Repo
 		});
 		super.makeHeaderRight(headerRight);
 		ColumnWidth[] columnWidths = new ColumnWidth[divList.size() + 1];
-		columnWidths[0] = new ColumnWidth(5000, 50.0F);
-		columnWidths[1] = new ColumnWidth(4000, 40.0F);
+		columnWidths[0] = new ColumnWidth(5500, 50.0F);
+		columnWidths[1] = new ColumnWidth(5000, 40.0F);
 		for (int i = 2; i < divList.size(); i++) {
 			columnWidths[i] = (ColumnWidth)null;
 		}
