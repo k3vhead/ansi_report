@@ -18,6 +18,7 @@ import com.ansi.scilla.report.accountsReceivable.AccountsReceivableTotalsByDivis
 import com.ansi.scilla.report.accountsReceivable.AccountsReceivableTotalsSummary;
 import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
 import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterSummaryReport;
+import com.ansi.scilla.report.creditCardFees.CreditCardFeesSummaryReport;
 import com.ansi.scilla.report.datadumps.AccountsReceivableTotalsOver60Detail;
 import com.ansi.scilla.report.datadumps.ClientContact;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
@@ -259,6 +260,23 @@ public abstract class AbstractReportTester {
 			logger.info("PastDueReport");
 			String fileName = "ClientUsage.xlsx";
 			ClientContact report = ClientContact.buildReport(conn);
+			super.writeReport(report, fileName);
+		}
+	}
+	
+	
+	public class MakeCreditCardFeesSummaryReport extends ReportMaker {		
+		public MakeCreditCardFeesSummaryReport(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("CreditCardSummary");
+			String fileName = CreditCardFeesSummaryReport.FILENAME;
+			CreditCardFeesSummaryReport report = CreditCardFeesSummaryReport.buildReport(conn, startDate, endDate);
 			super.writeReport(report, fileName);
 		}
 	}

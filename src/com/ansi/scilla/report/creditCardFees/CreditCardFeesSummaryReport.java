@@ -41,6 +41,19 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 	private static final long serialVersionUID = 1L;
 
 	private final String sql = "select concat(division_nbr,'-',division_code) as div,\n" + 
+			"		sum(abs(ticket_payment.amount+ticket_payment.tax_amt)) as total,\n" + 
+			"		sum(abs(ticket_payment.amount+ticket_payment.tax_amt)*0.03) as fee\n" + 
+			"from payment \n" + 
+			"join ticket_payment on ticket_payment.payment_id = payment.payment_id \n" + 
+			"join ticket on ticket_payment.ticket_id = ticket.ticket_id \n" + 
+			"join division on division.division_id = act_division_id \n" + 
+			"where payment_method = 'credit_card' \n" + 
+			"and payment_date >= ? and payment_date < ? \n" + 
+			"group by concat(division_nbr,'-',division_code)\n" + 
+			"order by concat(division_nbr,'-',division_code)";
+	
+	/*
+	private final String sql = "select concat(division_nbr,'-',division_code) as div,\n" + 
 			"		payment.*,\n" + 
 			"		ticket_payment.*,\n" + 
 			"		year(payment_date) as year,\n" + 
@@ -55,7 +68,7 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 			"where payment_method = 'credit_card' \n" + 
 			"and payment_date >= ? and payment_date < ? \n" + 
 			"order by div, payment_date";
-			
+	*/		
 
 	
 	public static final String REPORT_TITLE = "WO and Fees Summary";
