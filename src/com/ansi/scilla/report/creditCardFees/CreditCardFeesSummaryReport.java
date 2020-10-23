@@ -179,8 +179,8 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 		super.setHeaderRow(new ColumnHeader[] {
 
 				new ColumnHeader("div", "Div", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("type", "Type", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("ppc","PPC", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
+//				new ColumnHeader("type", "Type", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("sum","Sum", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
 				
 		});
 		
@@ -257,24 +257,24 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 		private static final long serialVersionUID = 1L;
 
 		public String div;
-		public String ticketType;
-		public BigDecimal ppc;
+//		public String ticketType;
+		public BigDecimal sum;
 		
 	
 		public RowData(ResultSet rs) throws SQLException {
-			this.div = rs.getString("Div");
-			String ticketTypeDisplay = rs.getString("ticket_type");
-			try {
-				TicketType ticketType = TicketType.lookup(ticketTypeDisplay);
-				if(ticketType == null) {
-					this.ticketType = ticketTypeDisplay;
-				} else {
-					this.ticketType = ticketType.display();
-				}
-			} catch (Exception e) {
-				this.ticketType = ticketTypeDisplay;
-			}
-			this.ppc = rs.getBigDecimal("PPC");
+			this.div = rs.getString("div");
+//			String ticketTypeDisplay = rs.getString("ticket_type");
+//			try {
+//				TicketType ticketType = TicketType.lookup(ticketTypeDisplay);
+//				if(ticketType == null) {
+//					this.ticketType = ticketTypeDisplay;
+//				} else {
+//					this.ticketType = ticketType.display();
+//				}
+//			} catch (Exception e) {
+//				this.ticketType = ticketTypeDisplay;
+//			}
+			this.sum = rs.getBigDecimal("fee");
 			
 		}
 
@@ -283,34 +283,26 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 			return div;
 		}
 
-
 		public void setDiv(String div) {
 			this.div = div;
 		}
 
+//		public String getType() {
+//			return ticketType;
+//		}
+//
+//
+//		public void setType(String type) {
+//			this.ticketType = type;
+//		}
 
-		public String getType() {
-			return ticketType;
+		public BigDecimal getSum() {
+			return sum;
 		}
 
-
-		public void setType(String type) {
-			this.ticketType = type;
+		public void setSum(BigDecimal sum) {
+			this.sum = sum;
 		}
-
-
-		public BigDecimal getPpc() {
-			return ppc;
-		}
-
-
-		public void setPpc(BigDecimal ppc) {
-			this.ppc = ppc;
-		}
-
-		
-
-		
 
 		
 	}
