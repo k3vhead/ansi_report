@@ -22,7 +22,7 @@ import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.db.Division;
-import com.ansi.scilla.common.jobticket.TicketType;
+import com.ansi.scilla.common.utils.ApplicationPropertyName;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
@@ -39,7 +39,9 @@ import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 public class CreditCardFeesSummaryReport extends StandardReport implements ReportByStartEnd {
 
 	private static final long serialVersionUID = 1L;
-
+	
+	private ApplicationPropertyName ccfee = ApplicationPropertyName.CREDIT_CARD_PROCESSING_FEE;
+	
 	private final String sql = "select concat(division_nbr,'-',division_code) as div,\n" + 
 			"		sum(abs(ticket_payment.amount+ticket_payment.tax_amt)) as total,\n" + 
 			"		sum(abs(ticket_payment.amount+ticket_payment.tax_amt)*0.03) as fee\n" + 
@@ -71,8 +73,8 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 	*/		
 
 	
-	public static final String REPORT_TITLE = "WO and Fees Summary";
-	public static final String FILENAME = "WOandFeesSummary";
+	public static final String REPORT_TITLE = "Credit Card Fees Summary";
+	public static final String FILENAME = "Credit Card Fees Summary";
 //	private final String REPORT_NOTES = "notes go here";
 	
 	private Calendar startDate;
@@ -192,8 +194,8 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 		super.setHeaderRow(new ColumnHeader[] {
 
 				new ColumnHeader("div", "Div", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-//				new ColumnHeader("type", "Type", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("sum","Sum", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
+				new ColumnHeader("total", "Total", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
+				new ColumnHeader("fee","Fees", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
 				
 		});
 		
@@ -270,27 +272,15 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 		private static final long serialVersionUID = 1L;
 
 		public String div;
-//		public String ticketType;
-		public BigDecimal sum;
-		
+		public BigDecimal total;
+		public BigDecimal fee;
 	
 		public RowData(ResultSet rs) throws SQLException {
 			this.div = rs.getString("div");
-//			String ticketTypeDisplay = rs.getString("ticket_type");
-//			try {
-//				TicketType ticketType = TicketType.lookup(ticketTypeDisplay);
-//				if(ticketType == null) {
-//					this.ticketType = ticketTypeDisplay;
-//				} else {
-//					this.ticketType = ticketType.display();
-//				}
-//			} catch (Exception e) {
-//				this.ticketType = ticketTypeDisplay;
-//			}
-			this.sum = rs.getBigDecimal("fee");
+			this.total = rs.getBigDecimal("total");
+			this.fee = rs.getBigDecimal("fee");
 			
 		}
-
 
 		public String getDiv() {
 			return div;
@@ -300,21 +290,20 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 			this.div = div;
 		}
 
-//		public String getType() {
-//			return ticketType;
-//		}
-//
-//
-//		public void setType(String type) {
-//			this.ticketType = type;
-//		}
-
-		public BigDecimal getSum() {
-			return sum;
+		public BigDecimal getTotal() {
+			return total;
 		}
 
-		public void setSum(BigDecimal sum) {
-			this.sum = sum;
+		public void setTotal(BigDecimal total) {
+			this.total = total;
+		}
+
+		public BigDecimal getFee() {
+			return fee;
+		}
+
+		public void setFee(BigDecimal fee) {
+			this.fee = fee;
 		}
 
 		
