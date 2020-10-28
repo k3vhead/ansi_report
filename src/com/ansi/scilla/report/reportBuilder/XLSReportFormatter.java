@@ -49,6 +49,7 @@ public class XLSReportFormatter {
 	public CellStyle cellStyleStandardCurrency;
 	public CellStyle cellStyleStandardInteger;
 	public CellStyle cellStyleNumberCenter;
+	public CellStyle cellStyleNumberLeft;
 	public CellStyle cellStyleDateCenter;
 	public CellStyle cellStyleDateLeft;
 	public CellStyle cellStyleDateTimeLeft;
@@ -242,6 +243,12 @@ public class XLSReportFormatter {
 	    cellStyleNumberCenter.setDataFormat(dataFormatNumber);
 	    cellStyleNumberCenter.setAlignment(CellStyle.ALIGN_CENTER);
 	    cellStyleNumberCenter.setFont(fontStandardBlack);
+	    
+	    cellStyleNumberLeft = workbook.createCellStyle();
+	    cellStyleNumberLeft.setFillBackgroundColor(IndexedColors.WHITE.getIndex());
+	    cellStyleNumberLeft.setDataFormat(dataFormatNumber);
+	    cellStyleNumberLeft.setAlignment(CellStyle.ALIGN_LEFT);
+	    cellStyleNumberLeft.setFont(fontStandardBlack);
 	    
 	    cellStyleStandardNumber = workbook.createCellStyle();
 	    cellStyleStandardNumber.setFillBackgroundColor(IndexedColors.WHITE.getIndex());

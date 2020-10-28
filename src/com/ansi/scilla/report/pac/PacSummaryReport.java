@@ -11,6 +11,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -101,8 +103,8 @@ public class PacSummaryReport extends StandardReport {
 			+ " join division on division.division_id = job.division_id "
 
 			+ " where job.division_id = ? "
-			+ " and job.cancel_date >= ? "
-			+ " and job.cancel_date <= ? "
+//			+ " and job.cancel_date >= ? "
+//			+ " and job.cancel_date <= ? "
 			+ " and job.job_status in ('" + JobStatus.PROPOSED.code() +"','" + JobStatus.ACTIVE.code() + "','"+ JobStatus.CANCELED.code()+"')";
 	
 	public static final  String REPORT_TITLE = "PAC Summary";
@@ -118,6 +120,7 @@ public class PacSummaryReport extends StandardReport {
 	protected PacSummaryReport() {
 		super();
 		this.setTitle(REPORT_TITLE);
+		this.logger = LogManager.getLogger(this.getClass());
 	}
 	/**
 	 * Default date range is current month-to-date
@@ -222,6 +225,7 @@ public class PacSummaryReport extends StandardReport {
 		ResultSet rs;
 		
 		ps = conn.prepareStatement(proposedSql);
+		this.logger.log(Level.DEBUG, proposedSql);
 		ps.setInt(1, divisionId);
 		ps.setDate(2, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(3, new java.sql.Date(endDate.getTimeInMillis()));
@@ -233,6 +237,7 @@ public class PacSummaryReport extends StandardReport {
 		rs.close();
 		
 		ps = conn.prepareStatement(activatedSql);
+		this.logger.log(Level.DEBUG, activatedSql);
 		ps.setInt(1, divisionId);
 		ps.setDate(2, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(3, new java.sql.Date(endDate.getTimeInMillis()));
@@ -244,6 +249,7 @@ public class PacSummaryReport extends StandardReport {
 		rs.close();
 		
 		ps = conn.prepareStatement(canceledSql);
+		this.logger.log(Level.DEBUG, canceledSql);
 		ps.setInt(1, divisionId);
 		ps.setDate(2, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(3, new java.sql.Date(endDate.getTimeInMillis()));
@@ -255,16 +261,19 @@ public class PacSummaryReport extends StandardReport {
 		rs.close();
 		
 		ps = conn.prepareStatement(netSql);
+		this.logger.log(Level.DEBUG, netSql);
 		ps.setInt(1, divisionId);
-		ps.setDate(2, new java.sql.Date(startDate.getTimeInMillis()));
-		ps.setDate(3, new java.sql.Date(endDate.getTimeInMillis()));
+//		ps.setDate(2, new java.sql.Date(startDate.getTimeInMillis()));
+//		ps.setDate(3, new java.sql.Date(endDate.getTimeInMillis()));
 		rs = ps.executeQuery();
 		
 		while ( rs.next() ) {
 			data.add(new RowData(rs, report));
 		}
 		rs.close();
-		
+
+		this.logger.log(Level.DEBUG, data);
+
 		return data;
 	}
 

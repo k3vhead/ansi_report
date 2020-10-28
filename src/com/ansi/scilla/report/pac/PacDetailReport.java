@@ -49,7 +49,7 @@ public class PacDetailReport extends StandardReport {
 			+ "\n\tjob.job_nbr, "
 			+ "\n\tjob.job_frequency, "
 			+ "\n\tjob.job_status, "
-			+ "\n\tquote.lead_type, "
+			+ "\n\t$COLUMN_DATA$ as column_data, "
 			+ "\n\tCASE job.invoice_style "
 			+ "\n\t  when '"+ InvoiceStyle.COD.code() +"' then 'Y' "
 			+ "\n\t  else 'N'"
@@ -199,8 +199,9 @@ public class PacDetailReport extends StandardReport {
 
 
 	private String makeSql(Connection conn) throws Exception {
-		String selectClause = this.sqlSelectClause.replaceAll("\\$REPORT_DATE\\$", this.reportType.fieldName); //get the right date for this report
-		String whereClause = this.sqlWhereClause.replaceAll("\\$REPORT_DATE\\$", this.reportType.fieldName); //get the right date for this report
+		String selectClauseDate = this.sqlSelectClause.replaceAll("\\$REPORT_DATE\\$", this.reportType.dateName); //get the right date for this report
+		String selectClause = selectClauseDate.replaceAll("\\$COLUMN_DATA\\$", this.reportType.fieldName); //get the right date for this report
+		String whereClause = this.sqlWhereClause.replaceAll("\\$REPORT_DATE\\$", this.reportType.dateName); //get the right date for this report
 		String sql = selectClause 
 				+ "\n\tleft outer join (" + JobUtils.makeTagSql(conn, "my_tags") +") as tag_count on tag_count.job_id=job.job_id\n"
 				+ whereClause;
@@ -224,18 +225,18 @@ public class PacDetailReport extends StandardReport {
 //		super.setHeaderNotes(REPORT_NOTES);
 		
 		super.setHeaderRow(new ColumnHeader[] {
-				new ColumnHeader("reportDate", this.reportType.columnHeader, 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobId", "Job Code", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("name","Site Name", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 13),
-				new ColumnHeader("address1","Street 1", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 27),
-				new ColumnHeader("city","City", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 12),
+				new ColumnHeader("reportDate", this.reportType.dateHeader, 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobId", "Job", 1, DataFormats.NUMBER_LEFT, SummaryType.NONE),
+				new ColumnHeader("name","Site Name", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("address1","Street 1", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("city","City", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 25),
 				new ColumnHeader("state","State", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("budget","Budget", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 				new ColumnHeader("pricePerCleaning","PPC", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobNbr","Job #", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
 				new ColumnHeader("freq","Freq", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobStatus","Status", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("leadType","Lead Type", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("columnData",this.reportType.columnHeader, 2, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("tagList", "Tags", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("volume","Volume", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 		});
@@ -298,7 +299,7 @@ public class PacDetailReport extends StandardReport {
 		public Integer jobNbr;
 		public JobFrequency jobFrequency;
 		public String jobStatus;
-		public String leadType;
+		public String columnData;
 		public Double volume;
 		public String tagList;
 		
@@ -315,7 +316,7 @@ public class PacDetailReport extends StandardReport {
 			this.jobNbr = rs.getInt("job_nbr");
 			this.jobFrequency = JobFrequency.lookup(rs.getString("job_frequency"));
 			this.jobStatus = rs.getString("job_status");
-			this.leadType = rs.getString("lead_type");
+			this.columnData = rs.getString("column_data");
 			this.volume = this.pricePerCleaning * Double.valueOf(this.jobFrequency.annualCount()); // PPC * freq.timesPerYear
 			report.totalVolume = report.totalVolume + this.volume;
 			this.tagList = rs.getString("tag_list");
@@ -355,8 +356,8 @@ public class PacDetailReport extends StandardReport {
 		public String getJobStatus() {
 			return jobStatus;
 		}
-		public String getLeadType() {
-			return leadType;
+		public String getColumnData() {
+			return columnData;
 		}
 		public Double getVolume() {
 			return volume;
@@ -368,16 +369,20 @@ public class PacDetailReport extends StandardReport {
 	}
 	
 	protected enum PacDetailReportType {
-		PROPOSED("Proposals Listing", "quote.proposal_date", "Proposed Date"),
-		ACTIVATION("Activations Listing", "job.activation_date", "Activation Date"),
-		CANCELLED("Cancellations Listing", "job.cancel_date", "Cancelled Date");
+		PROPOSED("Proposals Listing", "quote.proposal_date", "Proposed Date", "quote.lead_type", "Lead Type"),
+		ACTIVATION("Activations Listing", "job.activation_date", "Activation Date", "quote.lead_type", "Lead Type"),
+		CANCELLED("Cancellations Listing", "job.cancel_date", "Cancelled Date", "job.cancel_reason", "Cancel Reason");
 		
 		public final String reportTitle;
+		public final String dateName;
+		public final String dateHeader;
 		public final String fieldName;
 		public final String columnHeader;
 		
-		private PacDetailReportType(String reportTitle, String fieldName, String columnHeader) {
+		private PacDetailReportType(String reportTitle, String dateName, String dateHeader, String fieldName, String columnHeader) {
 			this.reportTitle=reportTitle;
+			this.dateName=dateName;
+			this.dateHeader=dateHeader;
 			this.fieldName=fieldName;
 			this.columnHeader=columnHeader;
 		}
