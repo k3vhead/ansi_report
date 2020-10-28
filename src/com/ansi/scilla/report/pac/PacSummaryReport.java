@@ -332,10 +332,11 @@ public class PacSummaryReport extends StandardReport {
 		super.setColumnWidths(new Integer[] {
 				(Integer)null,
 				ColumnWidth.DATETIME.width(),
-				ColumnWidth.HEADER_ANSI.width()/3,
-				ColumnWidth.HEADER_ANSI.width()/3,
-				ColumnWidth.HEADER_ANSI.width()/3,
-				(Integer)null,
+				ColumnWidth.HEADER_ANSI.width()/2,
+				ColumnWidth.HEADER_ANSI.width()/4,
+				ColumnWidth.HEADER_ANSI.width()/2,
+				ColumnWidth.HEADER_ANSI.width()/2,
+//				(Integer)null,
 				ColumnWidth.DATE.width(),
 		});
 	}

@@ -233,10 +233,10 @@ public class PacDetailReport extends StandardReport {
 				new ColumnHeader("state","State", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("budget","Budget", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 				new ColumnHeader("pricePerCleaning","PPC", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
-				new ColumnHeader("jobNbr","Job #", 1, DataFormats.NUMBER_FORMAT, SummaryType.NONE),
-				new ColumnHeader("freq","Freq", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("jobNbr","Job #", 1, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
+				new ColumnHeader("freq","Freq", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
 				new ColumnHeader("jobStatus","Status", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("columnData",this.reportType.columnHeader, 2, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("columnData",this.reportType.columnHeader, 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("tagList", "Tags", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("volume","Volume", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 		});
@@ -272,8 +272,8 @@ public class PacDetailReport extends StandardReport {
 		super.setColumnWidths(new Integer[] {
 				ColumnWidth.DATE.width(),
 				ColumnWidth.DATETIME.width(),
-				ColumnWidth.ADDRESS_NAME.width(),
-				ColumnWidth.ADDRESS_ADDRESS1.width(),
+				ColumnWidth.ADDRESS_NAME_SHORT.width(),
+				ColumnWidth.ADDRESS_NAME_SHORT.width(),
 				ColumnWidth.ADDRESS_CITY.width(),
 				ColumnWidth.ADDRESS_STATE.width(),
 				(Integer)null,
@@ -281,6 +281,9 @@ public class PacDetailReport extends StandardReport {
 				ColumnWidth.JOB_JOB_NBR.width(),
 				ColumnWidth.JOB_JOB_FREQUENCY.width(),
 				ColumnWidth.JOB_JOB_STATUS.width(),
+				ColumnWidth.JOB_CANCEL_REASON.width(),
+				ColumnWidth.JOB_JOB_TAGS.width(),
+				ColumnWidth.JOB_VOLUME.width(),
 		});
 	}
 	
