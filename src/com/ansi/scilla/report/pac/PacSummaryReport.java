@@ -173,6 +173,11 @@ public class PacSummaryReport extends StandardReport {
 	}
 	
 	
+	@Override
+	public Integer getReportWidth() {
+		return 8;
+	}
+	
 	public String getDiv() {
 		return div;
 	}
@@ -336,7 +341,7 @@ public class PacSummaryReport extends StandardReport {
 				ColumnWidth.HEADER_ANSI.width()/4,
 				ColumnWidth.HEADER_ANSI.width()/2,
 				ColumnWidth.HEADER_ANSI.width()/2,
-//				(Integer)null,
+				(Integer)null,
 				ColumnWidth.DATE.width(),
 		});
 	}

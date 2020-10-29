@@ -71,7 +71,7 @@ public abstract class StandardReport extends AbstractReport {
 	@Override
 	public Integer getReportWidth() {
 //		return this.getHeaderRow().length + 2;  // we add 2 because first and last columns are double wide
-		Integer reportWidth = 0;
+		Integer reportWidth = this.getFirstDetailColumn();
 		for ( ColumnHeader columnHeader : this.getHeaderRow() ) {
 			reportWidth = reportWidth + columnHeader.getColspan();
 		}
