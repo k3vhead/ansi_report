@@ -21,6 +21,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
+import com.ansi.scilla.common.db.ApplicationProperties;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.utils.ApplicationPropertyName;
 import com.ansi.scilla.common.utils.ObjectTransformer;
@@ -40,11 +41,10 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 
 	private static final long serialVersionUID = 1L;
 	
-	private ApplicationPropertyName ccfee = ApplicationPropertyName.CREDIT_CARD_PROCESSING_FEE;
 	
 	private final String sql = "select concat(division_nbr,'-',division_code) as div,\n" + 
 			"		sum(abs(ticket_payment.amount+ticket_payment.tax_amt)) as total,\n" + 
-			"		sum(abs(ticket_payment.amount+ticket_payment.tax_amt)*0.03) as fee\n" + 
+			"		sum(abs(ticket_payment.amount+ticket_payment.tax_amt)*$fee$) as fee\n" + 
 			"from payment \n" + 
 			"join ticket_payment on ticket_payment.payment_id = payment.payment_id \n" + 
 			"join ticket on ticket_payment.ticket_id = ticket.ticket_id \n" + 
@@ -166,6 +166,11 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 		endDate.set(Calendar.MINUTE, 0);
 		endDate.set(Calendar.SECOND, 0);
 		endDate.set(Calendar.MILLISECOND, 0);
+		
+		ApplicationProperties creditFee = new ApplicationProperties();
+		creditFee.setPropertyId(ApplicationPropertyName.CREDIT_CARD_PROCESSING_FEE.fieldName());
+		creditFee.selectOne(conn);
+		sql.replaceAll("\\$fee\\$", String.valueOf(creditFee.getValueFloat()));
 		
 		PreparedStatement ps = conn.prepareStatement(sql);
 		logger.log(Level.DEBUG, sql);
