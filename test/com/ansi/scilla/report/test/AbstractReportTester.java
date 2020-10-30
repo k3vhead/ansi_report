@@ -28,6 +28,10 @@ import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieReport;
 import com.ansi.scilla.report.monthlyServiceTaxReport.MonthlyServiceTax;
 import com.ansi.scilla.report.monthlyServiceTaxReport.MonthlyServiceTaxByDayReport;
 import com.ansi.scilla.report.monthlyServiceTaxReport.MonthlyServiceTaxReport;
+import com.ansi.scilla.report.pac.PacActivationListReport;
+import com.ansi.scilla.report.pac.PacCancelledListReport;
+import com.ansi.scilla.report.pac.PacDetailReport;
+import com.ansi.scilla.report.pac.PacProposedListReport;
 import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.pac.PacSummaryReport;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
@@ -491,6 +495,38 @@ public abstract class AbstractReportTester {
 	}
 	
 	
+	public class MakePACDetail extends ReportMaker {
+		public String whichReport;		
+		public MakePACDetail(String whichReport, boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.whichReport = whichReport;
+			this.divisionId = divisionId;
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start PAC Listing");
+			String fileName = "PACListing";
+			PacDetailReport report = null;
+			switch ( this.whichReport ) {
+			case "P":
+				report = new PacProposedListReport(conn, divisionId, startDate, endDate);
+				break;
+			case "A":
+				report = new PacActivationListReport(conn, divisionId, startDate, endDate);
+				break;
+			case "C":
+				report = new PacCancelledListReport(conn, divisionId, startDate, endDate);
+				break;
+			default:
+				throw new Exception("which report must be P, A or C");					
+			}
+			super.writeReport(report, fileName);
+			logger.info("End PAC Listing");			
+		}
+	}
 
 	public class MakePACListing extends ReportMaker {
 

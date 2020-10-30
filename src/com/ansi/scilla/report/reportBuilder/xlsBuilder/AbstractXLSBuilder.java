@@ -66,6 +66,7 @@ public abstract class AbstractXLSBuilder extends PrintableReport {
 		this.cellStyles.put(DataFormats.INTEGER_FORMAT, rf.cellStyleStandardInteger);
 		this.cellStyles.put(DataFormats.NUMBER_FORMAT, rf.cellStyleStandardNumber);
 		this.cellStyles.put(DataFormats.NUMBER_CENTERED, rf.cellStyleNumberCenter);
+		this.cellStyles.put(DataFormats.NUMBER_LEFT, rf.cellStyleNumberLeft);
 		this.cellStyles.put(DataFormats.DECIMAL_FORMAT, rf.cellStyleStandardDecimal);
 
 		this.cellStyles.put(DataFormats.PCT_FORMAT, rf.cellStyleStandardPct);

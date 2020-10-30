@@ -40,7 +40,7 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeARTotalsSummary(makeXLS, makePDF, makeHTML),
 //				new MakeARTotalByDiv(makeXLS, makePDF, makeHTML, divisionId),
 //				new MakeARTotals(makeXLS, makePDF, makeHTML),
-				new MakeCreditCardFeesSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeCreditCardFeesSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeClientContact(makeXLS, makePDF, makeHTML),						// this is a datadump
 //				new MakeCRRDetail(makeXLS, makePDF, makeHTML, startDate, endDate),		// this is a standard report with subtotals
 //				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
@@ -51,7 +51,8 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeMonthlyServiceTaxReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeServiceTaxByDayReport(makeXLS, makePDF, makeHTML, startDate, endDate),
-//				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
+//				new MakePACDetail("C", makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
+				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
 //				new MakePACSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report (includd in PAC Listing)
 //				new MakePastDue2(makeXLS, makePDF, makeHTML, divisionId, startDate),					// this is a standard report
 //				new MakeReportDistribution(makeXLS, makePDF, makeHTML),					// this is a standard report

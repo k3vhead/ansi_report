@@ -131,6 +131,7 @@ public class PDFReportFormatter extends ApplicationObject {
 			cellStyles.put(DataFormats.INTEGER_FORMAT, Element.ALIGN_RIGHT);
 			cellStyles.put(DataFormats.NUMBER_FORMAT, Element.ALIGN_RIGHT);
 			cellStyles.put(DataFormats.NUMBER_CENTERED, Element.ALIGN_CENTER);
+			cellStyles.put(DataFormats.NUMBER_LEFT, Element.ALIGN_LEFT);
 			cellStyles.put(DataFormats.DECIMAL_FORMAT, Element.ALIGN_RIGHT);
 
 			cellStyles.put(DataFormats.PCT_FORMAT, Element.ALIGN_RIGHT);
