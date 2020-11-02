@@ -21,7 +21,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
-import com.ansi.scilla.common.db.ApplicationProperties;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.utils.ApplicationPropertyName;
 import com.ansi.scilla.common.utils.ObjectTransformer;
@@ -167,13 +166,14 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 		endDate.set(Calendar.SECOND, 0);
 		endDate.set(Calendar.MILLISECOND, 0);
 		
-		ApplicationProperties creditFee = new ApplicationProperties();
-		creditFee.setPropertyId(ApplicationPropertyName.CREDIT_CARD_PROCESSING_FEE.fieldName());
-		creditFee.selectOne(conn);
-		sql.replaceAll("\\$fee\\$", String.valueOf(creditFee.getValueFloat()));
+//		ApplicationProperties creditFee = new ApplicationProperties();
+//		creditFee.setPropertyId(ApplicationPropertyName.CREDIT_CARD_PROCESSING_FEE.fieldName());
+//		creditFee.selectOne(conn);
+		BigDecimal creditFee = ApplicationPropertyName.CREDIT_CARD_PROCESSING_FEE.getProperty(conn).getValueFloat();
+		String feeSql = sql.replaceAll("\\$fee\\$", String.valueOf(creditFee));
 		
-		PreparedStatement ps = conn.prepareStatement(sql);
-		logger.log(Level.DEBUG, sql);
+		PreparedStatement ps = conn.prepareStatement(feeSql);
+		logger.log(Level.DEBUG, feeSql);
 		ps.setDate(1, new java.sql.Date(startDate.getTimeInMillis()));
 		ps.setDate(2, new java.sql.Date(endDate.getTimeInMillis()));
 		ResultSet rs = ps.executeQuery();
