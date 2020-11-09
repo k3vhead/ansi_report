@@ -60,18 +60,18 @@ public class DavesReportTester {
 
 		List<Thread> threadList = new ArrayList<Thread>();
 		
-		threadList.add(new Thread(new MakeAROver60Detail()));
+//		threadList.add(new Thread(new MakeAROver60Detail()));
 //			threadList.add(new Thread(new Make6mrv()));
-		threadList.add(new Thread(new MakeAROver60()));
+//		threadList.add(new Thread(new MakeAROver60()));
 //			threadList.add(new Thread(new MakeClientUsage()));
 //			threadList.add(new Thread(new Make6mrv(conn)));
 //		threadList.add(new Thread(new MakeAROver60()));
 //			threadList.add(new Thread(new MakeClientUsage(conn)));
 //		threadList.add(new Thread(new MakeCRRDetail()));
-		threadList.add(new Thread(new MakeExpiringDocument()));
+//		threadList.add(new Thread(new MakeExpiringDocument()));
 //		threadList.add(new Thread(new MakeDO()));
 //		threadList.add(new Thread(new MakeInvoiceRegister()));
-//		threadList.add(new Thread(new MakePACListing()));
+		threadList.add(new Thread(new MakePACListing()));
 //			threadList.add(new Thread(new MakePastDue2()));
 //			threadList.add(new Thread(new MakePastDue2(conn)));
 //		threadList.add(new Thread(new MakeTicketStatus()));
