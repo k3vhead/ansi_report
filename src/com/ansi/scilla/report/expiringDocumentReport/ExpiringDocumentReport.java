@@ -19,6 +19,7 @@ import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.document.DocumentType;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
@@ -94,6 +95,15 @@ public class ExpiringDocumentReport extends StandardReport implements ReportBySt
 //				ColumnWidth.DOCUMENT_TYPE.width(),
 //				ColumnWidth.DOCUMENT_REFERENCE.width()
 //		});
+		super.setColumnWidths(new ColumnWidth[] {
+				new ColumnWidth(4250, (Float)null),
+				new ColumnWidth(4250, (Float)null),
+				new ColumnWidth(5000, (Float)null),
+				new ColumnWidth(5000, (Float)null),
+				new ColumnWidth(4250, (Float)null),
+				new ColumnWidth(4250, (Float)null),
+				new ColumnWidth(4250, (Float)null),
+		});
 		
 		
 		PreparedStatement ps = conn.prepareStatement(makeSql());

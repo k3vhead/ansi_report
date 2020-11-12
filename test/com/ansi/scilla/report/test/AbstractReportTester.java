@@ -21,6 +21,7 @@ import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterSummaryRe
 import com.ansi.scilla.report.creditCardFees.CreditCardFeesSummaryReport;
 import com.ansi.scilla.report.datadumps.AccountsReceivableTotalsOver60Detail;
 import com.ansi.scilla.report.datadumps.ClientContact;
+import com.ansi.scilla.report.expiringDocumentReport.ExpiringDocumentReport;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
 import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieDetailReport;
 import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieDivisionSummary;
@@ -338,6 +339,24 @@ public abstract class AbstractReportTester {
 			logger.info("End MakeDO");
 		}
 		
+	}
+	public class MakeExpiringDocumentReport extends ReportMaker {
+		
+		public MakeExpiringDocumentReport(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+	
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start Expiring Document Report");
+			String fileName = ExpiringDocumentReport.FILENAME;			
+			ExpiringDocumentReport report = ExpiringDocumentReport.buildReport(conn, startDate, endDate);
+			super.writeReport(report, fileName);
+			logger.info("End Expiring Document Report");			
+		}
+	
 	}
 	
 	public class MakeInvoiceRegister extends ReportMaker {

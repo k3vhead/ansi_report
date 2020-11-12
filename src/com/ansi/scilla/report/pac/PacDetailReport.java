@@ -279,6 +279,7 @@ public class PacDetailReport extends StandardReport implements ReportByDivStartE
 		super.makeHeaderRight(headerRight);
 		
 		super.setColumnWidths(new ColumnWidth[] {
+				(ColumnWidth)null,
 				new ColumnWidth(2750, 57.0F), 			//Proposed Date
 				new ColumnWidth(3750, 45.0F),			// Job Code
 				new ColumnWidth(11000, 145.0F),			// Site name
