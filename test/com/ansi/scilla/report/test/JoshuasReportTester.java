@@ -55,7 +55,9 @@ public class JoshuasReportTester extends AbstractReportTester {
 //					new MakeWOandFeesSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
 //					new MakeWOandFeesDetail(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
 //					new MakeWOandFeesReport(makeXLS, makePDF, makeHTML, startDate, endDate),
-					new MakeCreditCardFeesSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//					new MakeCreditCardFeesSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+					new MakeCreditCardFeesByDayReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+					
 			};
 			super.makeMyReports(reportList);
 			

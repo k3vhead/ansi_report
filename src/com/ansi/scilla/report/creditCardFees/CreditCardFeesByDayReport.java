@@ -68,7 +68,7 @@ public class CreditCardFeesByDayReport extends StandardReport implements ReportB
 			"join division on division.division_id = act_division_id \n" + 
 			"where payment_method = 'credit_card' \n" + 
 			"and payment_date >= ? and payment_date < ? \n" + 
-			"order by div, payment_date";
+			"order by div, year, month, day, payment_date";
 		
 
 	
@@ -201,9 +201,8 @@ public class CreditCardFeesByDayReport extends StandardReport implements ReportB
 				new ColumnHeader("year", "Year", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("month", "Month", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("day","Day", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("sum","Sum Total", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
-				new ColumnHeader("paymentId","Count Payment-Id", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				
+				new ColumnHeader("fee","Fee Total", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
+				new ColumnHeader("paymentId","Count Payment-Id", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
