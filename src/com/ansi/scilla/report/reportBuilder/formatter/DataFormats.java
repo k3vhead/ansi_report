@@ -8,6 +8,7 @@ public enum DataFormats {
 	INTEGER_FORMAT(new NumberFormatter("#,##0", TextAlignment.RIGHT)),
 	NUMBER_FORMAT(new NumberFormatter("0", TextAlignment.RIGHT)),
 	NUMBER_CENTERED(new NumberFormatter("0", TextAlignment.CENTER)),
+	NUMBER_LEFT(new NumberFormatter("0", TextAlignment.LEFT)),
 	DECIMAL_FORMAT(new NumberFormatter("#,##0.00", TextAlignment.RIGHT)),
 	
 	PCT_FORMAT(new NumberFormatter("#,##0.00%",TextAlignment.RIGHT)),

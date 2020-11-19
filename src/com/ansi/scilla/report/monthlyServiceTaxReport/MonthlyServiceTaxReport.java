@@ -201,7 +201,7 @@ public class MonthlyServiceTaxReport extends StandardReport implements ReportByS
 		
 		super.setColumnWidths(new ColumnWidth[] {
 				new ColumnWidth(3500, 70.0F),
-				new ColumnWidth(3000, 30.0F),
+				new ColumnWidth(4000, 30.0F),
 				new ColumnWidth(3000, 70.0F),
 				new ColumnWidth(10000, (Float)null),
 				new ColumnWidth(2000, 30.0F),

@@ -36,11 +36,11 @@ import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.ReportStartLoc;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 
-public class CreditCardFeesSummaryReport extends StandardReport implements ReportByStartEnd {
+public class CreditCardFeesByDayReport extends StandardReport implements ReportByStartEnd {
 
 	private static final long serialVersionUID = 1L;
 	
-	
+	/*
 	private final String sql = "select concat(division_nbr,'-',division_code) as div,\n" + 
 			"		sum(abs(ticket_payment.amount+ticket_payment.tax_amt)) as total,\n" + 
 			"		sum(abs(ticket_payment.amount+ticket_payment.tax_amt)*$fee$) as fee\n" + 
@@ -52,15 +52,15 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 			"and payment_date >= ? and payment_date < ? \n" + 
 			"group by concat(division_nbr,'-',division_code)\n" + 
 			"order by concat(division_nbr,'-',division_code)";
+	*/
 	
-	/*
 	private final String sql = "select concat(division_nbr,'-',division_code) as div,\n" + 
 			"		payment.*,\n" + 
 			"		ticket_payment.*,\n" + 
 			"		year(payment_date) as year,\n" + 
 			"		month(payment_date) as month,\n" + 
 			"		abs(ticket_payment.amount+ticket_payment.tax_amt) as total,\n" + 
-			"		abs(ticket_payment.amount+ticket_payment.tax_amt)*0.03 as fee,\n" + 
+			"		abs(ticket_payment.amount+ticket_payment.tax_amt)*$fee$ as fee,\n" + 
 			"		day(payment_date) as day \n" + 
 			"from payment \n" + 
 			"join ticket_payment on ticket_payment.payment_id = payment.payment_id \n" + 
@@ -68,8 +68,8 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 			"join division on division.division_id = act_division_id \n" + 
 			"where payment_method = 'credit_card' \n" + 
 			"and payment_date >= ? and payment_date < ? \n" + 
-			"order by div, payment_date";
-	*/		
+			"order by div, year, month, day, payment_date";
+		
 
 	
 	public static final String REPORT_TITLE = "Credit Card Fees Summary";
@@ -84,7 +84,7 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 	
 	Logger logger = LogManager.getLogger(this.getClass());
 	
-	public CreditCardFeesSummaryReport() {
+	public CreditCardFeesByDayReport() {
 		super();
 		this.setTitle(REPORT_TITLE);
 		super.setReportOrientation(ReportOrientation.PORTRAIT);
@@ -95,7 +95,7 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 	 * @param conn Database exception
 	 * @throws Exception something bad happened
 	 */
-	protected CreditCardFeesSummaryReport(Connection conn) throws Exception {
+	protected CreditCardFeesByDayReport(Connection conn) throws Exception {
 		this();
 		logger.log(Level.DEBUG, "constructor1");
 		DateFormatter dateFormatter = (DateFormatter)DataFormats.DATE_FORMAT.formatter();
@@ -113,7 +113,7 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 		makeReport(startDate, endDate, data, subtitle);
 	}
 
-	protected CreditCardFeesSummaryReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
+	protected CreditCardFeesByDayReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
 		this();
 		DateFormatter dateFormatter = (DateFormatter)DataFormats.DATE_FORMAT.formatter();
 		this.startDate = startDate;
@@ -154,7 +154,7 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 		return this.data.size();
 	}
 	
-	private List<RowData> makeData(Connection conn, CreditCardFeesSummaryReport report, Calendar startDate, Calendar endDate) throws Exception {
+	private List<RowData> makeData(Connection conn, CreditCardFeesByDayReport report, Calendar startDate, Calendar endDate) throws Exception {
 		
 		startDate.set(Calendar.HOUR_OF_DAY, 0);
 		startDate.set(Calendar.MINUTE, 0);
@@ -198,10 +198,11 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 		
 		super.setHeaderRow(new ColumnHeader[] {
 
-				new ColumnHeader("div", "Div", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("total", "Total", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
-				new ColumnHeader("fee","Fees", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
-				
+				new ColumnHeader("year", "Year", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("month", "Month", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("day","Day", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("fee","Fee Total", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
+				new ColumnHeader("paymentId","Count Payment-Id", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
@@ -229,6 +230,8 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 		super.setColumnWidths(new ColumnWidth[] {
 				new ColumnWidth(4000, 25.0F),
 				new ColumnWidth(4000, 25.0F),
+				new ColumnWidth(4000, 20.0F),
+				new ColumnWidth(4000, 20.0F),
 				new ColumnWidth(4000, 20.0F),
 		});
 		
@@ -265,42 +268,54 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 		XLSBuilder.build(this, sheet, new ReportStartLoc(0, 0));
 	}
 	
-	public static CreditCardFeesSummaryReport buildReport(Connection conn) throws Exception {
-		return new CreditCardFeesSummaryReport(conn);
+	public static CreditCardFeesByDayReport buildReport(Connection conn) throws Exception {
+		return new CreditCardFeesByDayReport(conn);
 	}
-	public static CreditCardFeesSummaryReport buildReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
-		return new CreditCardFeesSummaryReport(conn, startDate, endDate);
+	public static CreditCardFeesByDayReport buildReport(Connection conn, Calendar startDate, Calendar endDate) throws Exception {
+		return new CreditCardFeesByDayReport(conn, startDate, endDate);
 	}
 
 
 	public class RowData extends ApplicationObject {
 		private static final long serialVersionUID = 1L;
 
-		public String div;
-		public BigDecimal total;
+		public String year;
+		public String month;
+		public String day;
 		public BigDecimal fee;
+		public String paymentId;
 	
 		public RowData(ResultSet rs) throws SQLException {
-			this.div = rs.getString("div");
-			this.total = rs.getBigDecimal("total");
+			this.year = rs.getString("year");
+			this.month = rs.getString("month");
+			this.day = rs.getString("day");
 			this.fee = rs.getBigDecimal("fee");
+			this.paymentId = rs.getString("payment_id");
 			
 		}
 
-		public String getDiv() {
-			return div;
+		public String getYear() {
+			return year;
 		}
 
-		public void setDiv(String div) {
-			this.div = div;
+		public void setYear(String year) {
+			this.year = year;
 		}
 
-		public BigDecimal getTotal() {
-			return total;
+		public String getMonth() {
+			return month;
 		}
 
-		public void setTotal(BigDecimal total) {
-			this.total = total;
+		public void setMonth(String month) {
+			this.month = month;
+		}
+
+		public String getDay() {
+			return day;
+		}
+
+		public void setDay(String day) {
+			this.day = day;
 		}
 
 		public BigDecimal getFee() {
@@ -309,6 +324,14 @@ public class CreditCardFeesSummaryReport extends StandardReport implements Repor
 
 		public void setFee(BigDecimal fee) {
 			this.fee = fee;
+		}
+
+		public String getPaymentId() {
+			return paymentId;
+		}
+
+		public void setPaymentId(String paymentId) {
+			this.paymentId = paymentId;
 		}
 
 		
