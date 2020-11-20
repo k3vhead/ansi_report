@@ -202,7 +202,7 @@ public class CreditCardFeesByDayReport extends StandardReport implements ReportB
 				new ColumnHeader("month", "Month", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("day","Day", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("fee","Fee Total", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
-				new ColumnHeader("paymentCount","Count Payment-Id", 1, DataFormats.STRING_CENTERED, SummaryType.SUM),
+				new ColumnHeader("paymentCount","Count Payment-Id", 1, DataFormats.NUMBER_CENTERED, SummaryType.SUM),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
@@ -283,14 +283,14 @@ public class CreditCardFeesByDayReport extends StandardReport implements ReportB
 		public String month;
 		public String day;
 		public BigDecimal fee;
-		public String paymentCount;
+		public Integer paymentCount;
 	
 		public RowData(ResultSet rs) throws SQLException {
 			this.year = rs.getString("year");
 			this.month = rs.getString("month");
 			this.day = rs.getString("day");
 			this.fee = rs.getBigDecimal("fee");
-			this.paymentCount = rs.getString("payment_count");
+			this.paymentCount = rs.getInt("payment_count");
 			
 		}
 
@@ -326,11 +326,11 @@ public class CreditCardFeesByDayReport extends StandardReport implements ReportB
 			this.fee = fee;
 		}
 
-		public String getPaymentCount() {
+		public Integer getPaymentCount() {
 			return paymentCount;
 		}
 
-		public void setPaymentCount(String paymentCount) {
+		public void setPaymentCount(Integer paymentCount) {
 			this.paymentCount = paymentCount;
 		}
 
