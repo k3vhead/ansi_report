@@ -202,7 +202,7 @@ public class CreditCardFeesByDayReport extends StandardReport implements ReportB
 				new ColumnHeader("month", "Month", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("day","Day", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("fee","Fee Total", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
-				new ColumnHeader("paymentCount","Count Payment-Id", 1, DataFormats.NUMBER_CENTERED, SummaryType.SUM),
+				new ColumnHeader("paymentCount","Payments", 1, DataFormats.NUMBER_CENTERED, SummaryType.SUM),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
