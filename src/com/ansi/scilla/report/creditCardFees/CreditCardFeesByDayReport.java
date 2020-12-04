@@ -54,21 +54,21 @@ public class CreditCardFeesByDayReport extends StandardReport implements ReportB
 			"order by concat(division_nbr,'-',division_code)";
 	*/
 	
-	private final String sql = "select concat(division_nbr,'-',division_code) as div,\n" + 
-			"		payment.*,\n" + 
-			"		ticket_payment.*,\n" + 
+	private final String sql = "select \n" +
 			"		year(payment_date) as year,\n" + 
 			"		month(payment_date) as month,\n" + 
-			"		abs(ticket_payment.amount+ticket_payment.tax_amt) as total,\n" + 
-			"		abs(ticket_payment.amount+ticket_payment.tax_amt)*$fee$ as fee,\n" + 
-			"		day(payment_date) as day \n" + 
+			"		day(payment_date) as day, \n" + 
+			"		count(ticket_payment.payment_id) as payment_count, \n" +
+			"		sum(abs(ticket_payment.amount+ticket_payment.tax_amt)) as total,\n" + 
+			"		sum(abs(ticket_payment.amount+ticket_payment.tax_amt)*$fee$) as fee \n" + 
 			"from payment \n" + 
 			"join ticket_payment on ticket_payment.payment_id = payment.payment_id \n" + 
 			"join ticket on ticket_payment.ticket_id = ticket.ticket_id \n" + 
 			"join division on division.division_id = act_division_id \n" + 
 			"where payment_method = 'credit_card' \n" + 
 			"and payment_date >= ? and payment_date < ? \n" + 
-			"order by div, year, month, day, payment_date";
+			"group by year(payment_date), month(payment_date), day(payment_date) " +
+			"order by year, month, day";
 		
 
 	
@@ -202,7 +202,7 @@ public class CreditCardFeesByDayReport extends StandardReport implements ReportB
 				new ColumnHeader("month", "Month", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("day","Day", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("fee","Fee Total", 1, DataFormats.DECIMAL_FORMAT, SummaryType.SUM),
-				new ColumnHeader("paymentId","Count Payment-Id", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("paymentCount","Payments", 1, DataFormats.NUMBER_CENTERED, SummaryType.SUM),
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
@@ -283,14 +283,14 @@ public class CreditCardFeesByDayReport extends StandardReport implements ReportB
 		public String month;
 		public String day;
 		public BigDecimal fee;
-		public String paymentId;
+		public Integer paymentCount;
 	
 		public RowData(ResultSet rs) throws SQLException {
 			this.year = rs.getString("year");
 			this.month = rs.getString("month");
 			this.day = rs.getString("day");
 			this.fee = rs.getBigDecimal("fee");
-			this.paymentId = rs.getString("payment_id");
+			this.paymentCount = rs.getInt("payment_count");
 			
 		}
 
@@ -326,12 +326,12 @@ public class CreditCardFeesByDayReport extends StandardReport implements ReportB
 			this.fee = fee;
 		}
 
-		public String getPaymentId() {
-			return paymentId;
+		public Integer getPaymentCount() {
+			return paymentCount;
 		}
 
-		public void setPaymentId(String paymentId) {
-			this.paymentId = paymentId;
+		public void setPaymentCount(Integer paymentCount) {
+			this.paymentCount = paymentCount;
 		}
 
 		
