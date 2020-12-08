@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -87,26 +88,20 @@ public class ExpiringDocumentReport extends StandardReport implements ReportBySt
 		List<ReportHeaderRow> headerRight = Arrays.asList(new ReportHeaderRow[] {});
 		super.makeHeaderRight(headerRight);
 		
-//		super.setColumnWidths(new Integer[] {
-//				ColumnWidth.HEADER_COL1.width(),
-//				ColumnWidth.DESCRIPTION.width(),
-//				ColumnWidth.HEADER_ANSI.width()/2,
-//				ColumnWidth.HEADER_ANSI.width()/2,
-//				ColumnWidth.DOCUMENT_TYPE.width(),
-//				ColumnWidth.DOCUMENT_REFERENCE.width()
-//		});
+		Float dateWidth = 100.0F;
+		
 		super.setColumnWidths(new ColumnWidth[] {
-				new ColumnWidth(4250, (Float)null),
-				new ColumnWidth(4250, (Float)null),
-				new ColumnWidth(5000, (Float)null),
-				new ColumnWidth(5000, (Float)null),
-				new ColumnWidth(4250, (Float)null),
-				new ColumnWidth(4250, (Float)null),
-				new ColumnWidth(4250, (Float)null),
+				new ColumnWidth(2750, 50.0F),	// document id
+				new ColumnWidth(8000, 300.0F),	// description
+				new ColumnWidth(4250, dateWidth),	// doc. date
+				new ColumnWidth(4250, dateWidth),	// exp. date
+				new ColumnWidth(4250, dateWidth),	// type
+				new ColumnWidth(4250, dateWidth),	// reference
 		});
 		
-		
-		PreparedStatement ps = conn.prepareStatement(makeSql());
+		String sql = makeSql();
+		logger.log(Level.DEBUG, sql);
+		PreparedStatement ps = conn.prepareStatement(sql);
 		Calendar sqlStartDate = (Calendar)this.startDate.clone();
 		sqlStartDate.add(Calendar.DAY_OF_MONTH, -1);
 		Calendar sqlEndDate = (Calendar)this.endDate.clone();
@@ -145,7 +140,7 @@ public class ExpiringDocumentReport extends StandardReport implements ReportBySt
 		for ( DocumentType type : DocumentType.values()) {
 			sqlSelect.add("when xref_type = '"+type.name()+"' then " + type.xrefDisplay());			
 		}
-		return sqlSelectClause + ",\ncase\n" + StringUtils.join(sqlSelect, "\n") + "\nend as xref_display";		
+		return sqlSelectClause + ",\ncase\n" + StringUtils.join(sqlSelect, "\n") + "\nend as xref_display";
 	}
 
 	private String makeFrom() {
