@@ -26,10 +26,10 @@ public class DavesReportTester extends AbstractReportTester {
 		boolean makeXLS = true;
 
 		Integer divisionId = 105;
-		Integer month = Calendar.JULY;
+		Integer month = Calendar.OCTOBER;
 		Integer year = 2020;
-		Calendar startDate = new GregorianCalendar(2020, Calendar.JANUARY, 1);
-		Calendar endDate = new GregorianCalendar(2020, Calendar.APRIL, 1);
+		Calendar startDate = new GregorianCalendar(2020, Calendar.OCTOBER, 1);
+		Calendar endDate = new GregorianCalendar(2020, Calendar.DECEMBER, 1);
 
 //		MakeLiftAndGenie prodLiftAndGenie = new MakeLiftAndGenie( makeXLS, makePDF, makeHTML, startDate, endDate);
 //		prodLiftAndGenie.setReportConn(ReportConn.PROD);
@@ -51,8 +51,8 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeMonthlyServiceTaxReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeServiceTaxByDayReport(makeXLS, makePDF, makeHTML, startDate, endDate),
-//				new MakePACDetail("C", makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
-				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
+				new MakePACDetail("C", makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
+//				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
 //				new MakePACSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report (includd in PAC Listing)
 //				new MakePastDue2(makeXLS, makePDF, makeHTML, divisionId, startDate),					// this is a standard report
 //				new MakeReportDistribution(makeXLS, makePDF, makeHTML),					// this is a standard report

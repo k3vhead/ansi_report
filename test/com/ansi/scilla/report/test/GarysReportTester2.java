@@ -10,8 +10,9 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.Midnight;
@@ -19,8 +20,8 @@ import com.ansi.scilla.common.utils.AppUtils;
 import com.ansi.scilla.report.datadumps.AccountsReceivableTotalsOver60Detail;
 import com.ansi.scilla.report.pac.PacReport;
 import com.ansi.scilla.report.pastDue.PastDueReport2;
-import com.ansi.scilla.report.reportBuilder.HTMLBuilder;
-import com.ansi.scilla.report.reportBuilder.XLSBuilder;
+import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLBuilder;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 import com.ansi.scilla.report.sixMonthRollingVolume.SmrvReport;;
 
 
@@ -49,7 +50,8 @@ public class GarysReportTester2 {
 	}
 	
 	private void makeMyReport() throws Exception {
-		this.logger = Logger.getLogger("com.ansi.scilla.report.reportBuilder");
+//		this.logger = Logger.getLogger("com.ansi.scilla.report.reportBuilder");
+		this.logger = LogManager.getLogger("com.ansi.scilla.report.reportBuilder");
 		logger.info("Start");
 		Connection conn = null;
 		
