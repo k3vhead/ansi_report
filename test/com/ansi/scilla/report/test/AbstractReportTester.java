@@ -27,6 +27,7 @@ import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterCompanySummar
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterDivisionSummary;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterRegionSummary;
 import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
+import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterSummaryReport;
 import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieDetailReport;
 import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieDivisionSummary;
 import com.ansi.scilla.report.liftAndGenieReport.LiftAndGenieReport;
@@ -447,6 +448,23 @@ public abstract class AbstractReportTester {
 			InvoiceRegisterRegionSummary report = InvoiceRegisterRegionSummary.buildReport(conn, startDate, endDate);
 			super.writeReport(report, fileName);
 			logger.info("End IRR");
+		}		
+	}
+	
+	public class MakeInvoiceRegisterSummaryReport extends ReportMaker {
+		public MakeInvoiceRegisterSummaryReport(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start IRRS");
+			String fileName = "IRRS";
+			InvoiceRegisterSummaryReport report = InvoiceRegisterSummaryReport.buildReport(conn, startDate, endDate);
+			super.writeReport(report, fileName);
+			logger.info("End IRRS");
 		}		
 	}
 

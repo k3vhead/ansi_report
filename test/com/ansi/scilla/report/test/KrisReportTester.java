@@ -51,8 +51,9 @@ public class KrisReportTester extends AbstractReportTester {
 //				new MakeMonthlyServiceTax(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeExpiringDocumentReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeInvoiceRegisterDivisionSummary(makeXLS, makePDF, makeHTML, startDate, endDate),
-				new MakeInvoiceRegisterCompanySummary(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeInvoiceRegisterCompanySummary(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeInvoiceRegisterRegionSummary(makeXLS, makePDF, makeHTML, startDate, endDate),
+				new MakeInvoiceRegisterSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 		};
 		super.makeMyReports(reportList);
 		
