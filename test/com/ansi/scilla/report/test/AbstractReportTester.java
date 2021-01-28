@@ -461,7 +461,7 @@ public abstract class AbstractReportTester {
 		@Override
 		public void makeReport(Connection conn) throws Exception {
 			logger.info("Start IRRS");
-			String fileName = "IRRS";
+			String fileName = InvoiceRegisterSummaryReport.FILENAME;
 			InvoiceRegisterSummaryReport report = InvoiceRegisterSummaryReport.buildReport(conn, startDate, endDate);
 			super.writeReport(report, fileName);
 			logger.info("End IRRS");

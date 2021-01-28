@@ -18,6 +18,7 @@ import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
@@ -130,6 +131,12 @@ public abstract class AbstractInvoiceRegisterSummary extends StandardReport impl
 				new ColumnHeader("ticketCount", "Ticket Count", 1, DataFormats.INTEGER_FORMAT, SummaryType.NONE),
 				new ColumnHeader("invoicedAmount", "Invoiced Amount", 1, DataFormats.DECIMAL_FORMAT, SummaryType.NONE),
 
+		});
+		
+		super.setColumnWidths(new ColumnWidth[] {
+			new ColumnWidth(4000, 400.0F),	// company
+			new ColumnWidth(3000, 300.0F),	// ticket count
+			new ColumnWidth(3000, 300.0F),	// invoiced amount				
 		});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());

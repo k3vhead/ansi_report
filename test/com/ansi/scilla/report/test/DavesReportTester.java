@@ -47,11 +47,12 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
 //				new MakeExpiringDocumentReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeInvoiceRegister(makeXLS, makePDF, makeHTML, divisionId, month, year),   	// this is a standard report with totals
+				new MakeInvoiceRegisterSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenieDetailReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeMonthlyServiceTaxReport(makeXLS, makePDF, makeHTML, startDate, endDate),
-				new MakeServiceTaxByDayReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeServiceTaxByDayReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakePACDetail("C", makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
 //				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
 //				new MakePACSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report (includd in PAC Listing)

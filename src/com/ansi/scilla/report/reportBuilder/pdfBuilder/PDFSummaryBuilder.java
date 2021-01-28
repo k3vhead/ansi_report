@@ -2,6 +2,9 @@ package com.ansi.scilla.report.reportBuilder.pdfBuilder;
 
 import java.io.ByteArrayOutputStream;
 
+import org.apache.logging.log4j.Level;
+
+import com.ansi.scilla.report.exception.ReportConfigurationException;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardSummaryReport;
@@ -63,7 +66,7 @@ public class PDFSummaryBuilder extends AbstractPDFBuilder {
 		Float llx = PDFReportFormatter.marginLeft;
 		Float lly = 0F;
 		Float urx = llx + subTable.getTotalWidth();
-		Float ury = topPosition - 20F;
+		Float ury = topPosition + 20F;
 		return addTable(cb, subTable, llx, lly, urx, ury );		
 	}
 
@@ -81,26 +84,45 @@ public class PDFSummaryBuilder extends AbstractPDFBuilder {
 	
 	private PdfPTable makeSubReport(StandardReport subReport) throws DocumentException, Exception {
 		super.initializeSummaries(subReport.getHeaderRow());
-
-		PdfPTable dataTable = new PdfPTable(4);
-		dataTable.setTotalWidth(new float[] {100F, 75F, 75F, 75F});
+		
+		if ( subReport.getColumnWidths().length != subReport.getHeaderRow().length ) {
+			throw new ReportConfigurationException("Number of column widths must match number of columns");
+		}
+		
+		Integer numberOfColumns = subReport.getColumnWidths().length;
+		//float[] totalWidth = PDFReportBuilderUtils.makeColumnWidths(subReport);
+		//we're rolling our own total width instead of using the utility because a summary sub-report
+		//is required to have column widths defined so the default value calculation can get weird
+		float[] totalWidth = new float[subReport.getColumnWidths().length];
+		for ( int i = 0; i < numberOfColumns; i++ ) {
+			// the report is set up for a complete page width. Override this so the 
+			// subreport will fit into the portion of the page it should fit into
+			totalWidth[i] = 0.275F * subReport.getColumnWidths()[i].pdfWidth();
+		}
+		PdfPTable dataTable = new PdfPTable(subReport.getHeaderRow().length);
+		dataTable.setHeaderRows(1);	// set column headers to repeat on each page
+		dataTable.setWidthPercentage(subReport.getPdfWidthPercentage());
+		if ( totalWidth != null ) {
+			dataTable.setTotalWidth(totalWidth);
+		}
+		
 		dataTable.setLockedWidth(true);
 	
 		PdfPCell bannerCell = new AnsiPCell();
 		bannerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-		bannerCell.setColspan(4);
+		bannerCell.setColspan(numberOfColumns);
 		bannerCell.setPhrase(new Phrase(new Chunk(subReport.getBanner(), PDFReportFormatter.fontReportBanner)));
 		dataTable.addCell(bannerCell);
 		
 		PdfPCell titleCell = new AnsiPCell();
 		titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-		titleCell.setColspan(4);
+		titleCell.setColspan(numberOfColumns);
 		titleCell.setPhrase(new Phrase(new Chunk(subReport.getTitle(), PDFReportFormatter.fontReportTitle)));
 		dataTable.addCell(titleCell);
 		
 		PdfPCell subTitleCell = new AnsiPCell();
 		subTitleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-		subTitleCell.setColspan(4);
+		subTitleCell.setColspan(numberOfColumns);
 		subTitleCell.setPhrase(new Phrase(new Chunk(subReport.getSubtitle(), PDFReportFormatter.fontReportSubTitle)));
 		dataTable.addCell(subTitleCell);
 		
