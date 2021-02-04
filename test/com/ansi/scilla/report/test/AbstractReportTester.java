@@ -715,10 +715,11 @@ public abstract class AbstractReportTester {
 	
 	public class MakeSkippedAndDispatchedReport extends ReportMaker {
 
-		public MakeSkippedAndDispatchedReport(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
+		public MakeSkippedAndDispatchedReport(boolean makeXLS, boolean makePDF, boolean makeHTML, Integer divisionId, Calendar startDate, Calendar endDate) {
 			super(makeXLS, makePDF, makeHTML);
 			this.startDate = startDate;
 			this.endDate = endDate;
+			this.divisionId = divisionId;
 		}
 
 		@Override

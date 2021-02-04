@@ -148,6 +148,7 @@ public class SkippedAndDispatchedReport extends StandardReport implements Report
 	private String makeDivision(Connection conn, Integer divisionId) throws Exception {
 		Division division = new Division();
 		division.setDivisionId(divisionId);
+		System.out.println("Division ID: " + divisionId);
 		division.selectOne(conn);
 		return division.getDivisionNbr() + "-" + division.getDivisionCode();
 	}
@@ -239,6 +240,7 @@ public class SkippedAndDispatchedReport extends StandardReport implements Report
 				new ColumnWidth(2000, 75.0F),				// name 2
 		});
 		
+		System.out.println("\n" + sql);
 		PreparedStatement psData = conn.prepareStatement(sql + "\norder by bill_to.name, ticket.invoice_date");
 		int n=1;
 		psData.setInt(n, divisionId);
