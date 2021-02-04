@@ -46,6 +46,7 @@ import com.ansi.scilla.report.reportBuilder.AnsiReportBuilder;
 import com.ansi.scilla.report.reportBuilder.reportType.AbstractReport;
 import com.ansi.scilla.report.reportBuilder.reportType.CompoundReport;
 import com.ansi.scilla.report.sixMonthRollingVolume.SmrvReport;
+import com.ansi.scilla.report.skippedAndDispatched.SkippedAndDispatchedReport;
 import com.ansi.scilla.report.subscriptions.SubscriptionChangeReport;
 import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
 import com.ansi.scilla.report.ticket.TicketStatusReport;
@@ -712,6 +713,24 @@ public abstract class AbstractReportTester {
 
 	}
 	
+	public class MakeSkippedAndDispatchedReport extends ReportMaker {
+
+		public MakeSkippedAndDispatchedReport(boolean makeXLS, boolean makePDF, boolean makeHTML, Calendar startDate, Calendar endDate) {
+			super(makeXLS, makePDF, makeHTML);
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
+
+		@Override
+		public void makeReport(Connection conn) throws Exception {
+			logger.info("Start Skipped and Dispatched Report");
+			String fileName = SkippedAndDispatchedReport.FILENAME;			
+			SkippedAndDispatchedReport report = SkippedAndDispatchedReport.buildReport(conn, divisionId, startDate.get(Calendar.MONTH), startDate.get(Calendar.YEAR));
+			super.writeReport(report, fileName);
+			logger.info("Skipped And Dispatched Report");			
+		}
+
+	}
 	
 	public class MakeTicketStatus extends ReportMaker {
 
