@@ -19,6 +19,7 @@ import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.db.DivisionGroup;
 import com.ansi.scilla.common.utils.ObjectTransformer;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
@@ -153,6 +154,12 @@ public class CashReceiptsRegisterRegionSummary extends StandardReport implements
 				new ColumnHeader("total", "Total\nPayment\nAmount", 2, DataFormats.DECIMAL_FORMAT, SummaryType.SUM)//,
 //				new ColumnHeader("excess", "Excess Cash Amount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM)
 		});
+		super.setColumnWidths(new ColumnWidth[] {
+				new ColumnWidth(2000, 200.0F),	// company
+				new ColumnWidth(3000, 300.0F),	// amount
+				new ColumnWidth(3000, 300.0F),	// tax		
+				new ColumnWidth(3000, 300.0F),  // total
+			});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
 		super.setDataRows(oData);

@@ -37,7 +37,7 @@ public class KrisReportTester extends AbstractReportTester {
 //				new MakeAROver60(makeXLS, makePDF, makeHTML),							// this is a datadump
 //				new MakeClientContact(makeXLS, makePDF, makeHTML),						// this is a datadump
 //				new MakeCRRDetail(makeXLS, makePDF, makeHTML, startDate, endDate),		// this is a standard report with subtotals
-//				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
+				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
 //				new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
 //				new MakeInvoiceRegister(makeXLS, makePDF, makeHTML, divisionId, month, year),   	// this is a standard report with totals
 //				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
@@ -53,7 +53,7 @@ public class KrisReportTester extends AbstractReportTester {
 //				new MakeInvoiceRegisterDivisionSummary(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeInvoiceRegisterCompanySummary(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeInvoiceRegisterRegionSummary(makeXLS, makePDF, makeHTML, startDate, endDate),
-				new MakeInvoiceRegisterSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeInvoiceRegisterSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 		};
 		super.makeMyReports(reportList);
 		
