@@ -43,11 +43,11 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeCreditCardFeesSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeClientContact(makeXLS, makePDF, makeHTML),						// this is a datadump
 //				new MakeCRRDetail(makeXLS, makePDF, makeHTML, startDate, endDate),		// this is a standard report with subtotals
-//				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
+				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
 //				new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
 //				new MakeExpiringDocumentReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeInvoiceRegister(makeXLS, makePDF, makeHTML, divisionId, month, year),   	// this is a standard report with totals
-				new MakeInvoiceRegisterSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeInvoiceRegisterSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenieDetailReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
