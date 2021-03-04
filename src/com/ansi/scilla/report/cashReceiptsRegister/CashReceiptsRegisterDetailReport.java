@@ -63,7 +63,7 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 			"join payment on payment.payment_id = ticket_payment.payment_id\r\n" + 
 			"where payment_date >= ?\r\n" + 
 			"and payment_date <= ?\r\n" + 
-			"order by division_nbr, bill_to_name";
+			"order by division_nbr, bill_to_name, ticket.ticket_id";
 	
 	public static final String REPORT_TITLE = "Cash Receipts Register Detail";
 //	private final String REPORT_NOTES = "notes go here";
