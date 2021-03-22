@@ -5,8 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import com.ansi.scilla.common.batch.BatchScheduleFactory;
 import com.ansi.scilla.common.utils.AppUtils;
-import com.ansi.scilla.report.common.BatchScheduleFactory;
 import com.ansi.scilla.report.common.parameters.ReportParmStartEnd;
 
 public class TestScheduleFactory {
