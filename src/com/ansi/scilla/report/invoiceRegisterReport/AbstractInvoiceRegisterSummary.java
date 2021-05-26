@@ -50,6 +50,7 @@ public abstract class AbstractInvoiceRegisterSummary extends StandardReport impl
 	/**
 	 * Default date range is current month-to-date
 	 * @param conn Database connection
+	 * @param reportTitle Page-top report title
 	 * @throws Exception Something bad happened
 	 */
 	protected AbstractInvoiceRegisterSummary(Connection conn, String reportTitle) throws Exception {

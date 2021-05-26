@@ -3,8 +3,8 @@ package com.ansi.scilla.report.reportBuilder.common;
 import com.ansi.scilla.common.ApplicationObject;
 
 /**
- * Default width of report columns<br />
- * XLS Value is 1/256 of a character (per https://poi.apache.org/apidocs/dev/org/apache/poi/ss/usermodel/Sheet.html)<br />
+ * Default width of report columns.
+ * XLS Value is 1/256 of a character (per https://poi.apache.org/apidocs/dev/org/apache/poi/ss/usermodel/Sheet.html).
  * Naming convention is &lt;DB table&gt;_&lt;field&gt;
  * 
  * @author dclewis
