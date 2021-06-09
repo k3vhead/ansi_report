@@ -57,6 +57,11 @@ public class AccountsReceivableTotals extends CompoundReport implements ReportBy
 		return reportArray;
 	}
 
+	/**
+	 * Add a XSSF worksheet to the input XSSF workbook
+	 * @param workbook the workbook to which we are adding a sheet
+	 * @throws Exception when something bad happens
+	 */
 	public void makeXLS(XSSFWorkbook workbook) throws Exception {
 		for ( AbstractReport report : this.getReports() ) {
 			Method method = report.getClass().getMethod("makeXLS", new Class<?>[] {XSSFWorkbook.class});

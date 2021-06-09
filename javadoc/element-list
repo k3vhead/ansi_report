@@ -2,7 +2,9 @@ com.ansi.scilla.report.accountsReceivable
 com.ansi.scilla.report.cashReceiptsRegister
 com.ansi.scilla.report.common
 com.ansi.scilla.report.common.parameters
+com.ansi.scilla.report.creditCardFees
 com.ansi.scilla.report.datadumps
+com.ansi.scilla.report.exception
 com.ansi.scilla.report.expiringDocumentReport
 com.ansi.scilla.report.htmlTable
 com.ansi.scilla.report.invoiceRegisterReport

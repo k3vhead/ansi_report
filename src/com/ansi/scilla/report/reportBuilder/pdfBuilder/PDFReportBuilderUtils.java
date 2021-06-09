@@ -39,10 +39,12 @@ public class PDFReportBuilderUtils extends ReportBuilderUtils {
 	
 	/**
 	 * Builds standard header for standard reports. (Can't get much more generic than that)
-	 * @param report Any ANSI Standard report object
-	 * @param reportStartLoc Where in the sheet to put the report
-	 * @param sheet The sheet we're working with
-	 * @throws Exception Something bad happened
+	 * @param report
+	 * @param reportStartLoc
+	 * @param document
+	 * @param pdfWriter
+	 * @return
+	 * @throws Exception
 	 */
 	public static Paragraph makeStandardHeader(StandardReport report, ReportStartLoc reportStartLoc, Document document, PdfWriter pdfWriter) throws Exception {
 		Paragraph header = new Paragraph();
