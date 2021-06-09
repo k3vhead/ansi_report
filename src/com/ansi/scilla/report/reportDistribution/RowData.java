@@ -1,4 +1,4 @@
-package com.ansi.scilla.report.report;
+package com.ansi.scilla.report.reportDistribution;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

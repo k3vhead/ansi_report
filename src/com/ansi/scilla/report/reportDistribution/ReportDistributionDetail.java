@@ -1,4 +1,4 @@
-package com.ansi.scilla.report.report;
+package com.ansi.scilla.report.reportDistribution;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,6 +12,7 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 
 import com.ansi.scilla.common.utils.ObjectTransformer;
+import com.ansi.scilla.report.reportDistribution.RowData;
 import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByNoInput;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;

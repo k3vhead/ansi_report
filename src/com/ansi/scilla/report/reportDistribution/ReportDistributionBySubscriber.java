@@ -1,9 +1,11 @@
-package com.ansi.scilla.report.report;
+package com.ansi.scilla.report.reportDistribution;
 
 import java.sql.Connection;
 import java.util.Calendar;
 
 import com.ansi.scilla.common.db.Division;
+import com.ansi.scilla.report.reportDistribution.ReportDistributionBySubscriber;
+import com.ansi.scilla.report.reportDistribution.ReportDistributionDetail;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
