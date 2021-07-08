@@ -1,8 +1,10 @@
 package com.ansi.scilla.report.test;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.logging.log4j.Logger;
 
@@ -30,6 +32,25 @@ public class DavesReportTester extends AbstractReportTester {
 		Integer year = 2020;
 		Calendar startDate = new GregorianCalendar(2020, Calendar.OCTOBER, 1);
 		Calendar endDate = new GregorianCalendar(2020, Calendar.DECEMBER, 1);
+
+		List<Thread> threadList = new ArrayList<Thread>();
+		
+//		threadList.add(new Thread(new MakeAROver60Detail()));
+//			threadList.add(new Thread(new Make6mrv()));
+//		threadList.add(new Thread(new MakeAROver60()));
+//			threadList.add(new Thread(new MakeClientUsage()));
+//			threadList.add(new Thread(new Make6mrv(conn)));
+//		threadList.add(new Thread(new MakeAROver60()));
+//			threadList.add(new Thread(new MakeClientUsage(conn)));
+//		threadList.add(new Thread(new MakeCRRDetail()));
+//		threadList.add(new Thread(new MakeExpiringDocument()));
+//		threadList.add(new Thread(new MakeDO()));
+//		threadList.add(new Thread(new MakeInvoiceRegister()));
+//		threadList.add(new Thread(new MakePACListing()));
+//			threadList.add(new Thread(new MakePastDue2()));
+//			threadList.add(new Thread(new MakePastDue2(conn)));
+//		threadList.add(new Thread(new MakeTicketStatus()));
+
 
 //		MakeLiftAndGenie prodLiftAndGenie = new MakeLiftAndGenie( makeXLS, makePDF, makeHTML, startDate, endDate);
 //		prodLiftAndGenie.setReportConn(ReportConn.PROD);
