@@ -1,5 +1,6 @@
 package com.ansi.scilla.report.common.parameters;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import com.ansi.scilla.common.ApplicationObject;
@@ -38,6 +39,14 @@ public class ReportParmStartEnd extends ApplicationObject implements ReportParam
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy HH:mm:ss", timezone="America/Chicago")
 	public void setEndDate(Calendar endDate) {
 		this.endDate = endDate;
+	}
+
+	@Override
+	public String toString() {
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE MM/dd/yyyy HH:mm:ss.S z");
+		String startDate = sdf.format(this.startDate.getTime());
+		String endDate = sdf.format(this.endDate.getTime());		
+		return "startDate: " + startDate + "\nendDate: " + endDate;
 	}
 	
 	
