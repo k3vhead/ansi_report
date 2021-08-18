@@ -287,7 +287,7 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		
 		List<ReportHeaderRow> headerLeft = Arrays.asList(new ReportHeaderRow[] {
 				new ReportHeaderRow("Created:", getRunDateMethod, 0, DataFormats.DATE_TIME_FORMAT),
-				new ReportHeaderRow("Prior To:", getEndDateMethod, 0, DataFormats.DATE_FORMAT),
+				new ReportHeaderRow("End Date:", getEndDateMethod, 0, DataFormats.DATE_FORMAT),
 				new ReportHeaderRow("Tickets:", dataSizeMethod, 2, DataFormats.INTEGER_FORMAT)				
 		});
 		super.makeHeaderLeft(headerLeft);
