@@ -204,7 +204,7 @@ public class BatchScheduleFactory {
 	 * @throws Exception
 	 */
 	private static ReportParmStartEnd makeLastWeek(Connection conn, Calendar runDate)  throws RecordNotFoundException, Exception {
-		String weekStartsOn = ApplicationPropertyName.CALENDAR_WEEK_STARTS_ON.getProperty(conn).getValueString();
+		String weekStartsOn = ApplicationPropertyName.CALENDAR_REPORTING_WEEK_STARTS_ON.getProperty(conn).getValueString();
 		Calendar startDate = AppUtils.getPriorDayOfWeek(runDate, weekStartsOn); //first day of current week
 		Calendar endDate = (Calendar)startDate.clone();
 		startDate.add(Calendar.DAY_OF_YEAR, -7);

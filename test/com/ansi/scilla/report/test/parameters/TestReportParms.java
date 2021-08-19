@@ -1,10 +1,15 @@
-package com.ansi.scilla.report.test;
+package com.ansi.scilla.report.test.parameters;
 
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import com.ansi.scilla.common.utils.AppUtils;
+import com.ansi.scilla.report.common.BatchScheduleFactory;
+import com.ansi.scilla.report.common.BatchScheduleFactory.BatchSchedule;
+import com.ansi.scilla.report.common.parameters.ReportParmStartEnd;
+import com.thewebthing.commons.db2.RecordNotFoundException;
 
 public class TestReportParms {
 	private void go() throws Exception {
@@ -64,11 +69,23 @@ public class TestReportParms {
 		}
 	}
 	
+	public void goLastWeek() throws RecordNotFoundException, Exception {
+		Connection conn = null;
+		try {
+			conn = AppUtils.getDevConn();
+			Calendar runDate = new GregorianCalendar(2021,Calendar.AUGUST, 16);
+			ReportParmStartEnd reportParameter = (ReportParmStartEnd)BatchScheduleFactory.makeDates(conn, BatchSchedule.LAST_WEEK, runDate);
+			System.out.println(reportParameter);
+		} finally {
+			conn.close();
+		}
+	}
 	
 	public static void main(String[] args) {
 		try {
 //			new TestReportParms().go();
-			new TestReportParms().goQuarter();
+//			new TestReportParms().goQuarter();
+			new TestReportParms().goLastWeek();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
