@@ -55,7 +55,9 @@
         <javac srcdir="src"
                destdir="${dist}"
                debug="${compile.debug}"
-               includeantruntime="false">
+               includeantruntime="false"
+               source="1.8"
+        	   target="1.8">
             <classpath refid="ui.classpath"/>
         </javac>
     </target>
