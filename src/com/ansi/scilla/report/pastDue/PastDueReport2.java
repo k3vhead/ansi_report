@@ -123,7 +123,7 @@ public class PastDueReport2 extends StandardReport implements ReportByDivEnd, Re
 		this.pastDueDate = pastDueDate;
 		this.div = makeDiv(conn, divisionId);
 		this.setTitle(REPORT_TITLE);
-		super.setReportOrientation(ReportOrientation.LANDSCAPE);
+		super.setReportOrientation(ReportOrientation.PORTRAIT);
 		makeData(conn, pastDueDate, divisionId);
 	}
 	
@@ -251,7 +251,7 @@ public class PastDueReport2 extends StandardReport implements ReportByDivEnd, Re
 	public XSSFWorkbook makeXLS() throws Exception {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet();
-		sheet.getPrintSetup().setLandscape(true);
+		sheet.getPrintSetup().setLandscape(false);
 		sheet.getPrintSetup().setPaperSize(XSSFPrintSetup.LETTER_PAPERSIZE);
 		sheet.getPrintSetup().setFitWidth((short)1);
 		XLSReportFormatter rf = new XLSReportFormatter(workbook);
