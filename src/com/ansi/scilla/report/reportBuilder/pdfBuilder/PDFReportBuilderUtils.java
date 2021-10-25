@@ -344,7 +344,7 @@ public class PDFReportBuilderUtils extends ReportBuilderUtils {
 				}
 			}
 			float defaultWidth = (PDFReportFormatter.tableTotalWidth - definedWidth)/(columnWidths.length - definedColumnCount);
-			logger.log(Level.DEBUG, "Default Column Width: " + defaultWidth + " ("+report.getTitle() + ")");
+//			logger.log(Level.DEBUG, "Default Column Width: " + defaultWidth + " ("+report.getTitle() + ")");
 			for ( int i = 0; i < columnWidths.length; i++ ) {
 				if ( columnWidths[i] == 0.0F ) {
 					columnWidths[i] = defaultWidth;
