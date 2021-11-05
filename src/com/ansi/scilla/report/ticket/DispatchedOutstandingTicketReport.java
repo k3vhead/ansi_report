@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -155,7 +156,16 @@ public class DispatchedOutstandingTicketReport extends StandardReport implements
 	
 	@Override
 	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
-		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+//		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("Division ");
+		buffer.append(String.valueOf(division.getDivisionNbr()));
+		buffer.append(" DO List - Trailing for tickets prior to ");
+		buffer.append(sdf.format(endDate.getTime()));
+		buffer.append(" asof ");
+		buffer.append(sdf.format(runDate.getTime()));
+		return buffer.toString();
 	}
 	
 	
