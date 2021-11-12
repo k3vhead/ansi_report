@@ -7,3 +7,4 @@ lib/ansi_common.jar
 .settings
 tmp
 .metadata
+**/.directory
