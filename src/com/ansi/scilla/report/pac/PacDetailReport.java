@@ -1,5 +1,6 @@
 package com.ansi.scilla.report.pac;
 
+import java.awt.Font;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -233,6 +234,8 @@ public class PacDetailReport extends StandardReport implements ReportByDivStartE
 		super.setTitle(this.reportType.reportTitle);	
 		super.setSubtitle(subtitle);
 //		super.setHeaderNotes(REPORT_NOTES);
+		
+		Font arialFont = new Font("Arial", Font.PLAIN, 18);
 		
 		super.setHeaderRow(new ColumnHeader[] {
 				new ColumnHeader("reportDate", this.reportType.dateHeader, 1, DataFormats.DATE_FORMAT, SummaryType.NONE),

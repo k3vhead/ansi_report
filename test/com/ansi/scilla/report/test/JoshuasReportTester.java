@@ -49,13 +49,13 @@ public class JoshuasReportTester extends AbstractReportTester {
 //					new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
 //					new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
 //					new MakeInvoiceRegister(makeXLS, makePDF, makeHTML, divisionId, month, year),   	// this is a standard report with totals
-//					new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
+					new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
 //					new makePastDue2(makeXLS, makePDF, makeHTML, divisionId, startDate),	
 //					new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
 //					new MakeWOandFeesSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
 //					new MakeWOandFeesDetail(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
 //					new MakeWOandFeesReport(makeXLS, makePDF, makeHTML, startDate, endDate),
-					new MakeCreditCardFeesSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//					new MakeCreditCardFeesSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //					new MakeCreditCardFeesByDayReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //					new MakeSkippedAndDispatchedReport(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
 			};
