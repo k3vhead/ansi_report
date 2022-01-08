@@ -381,7 +381,7 @@ public class CustomCellFormat extends ApplicationObject {
 	}
 
 	public Chunk makePdfDisplay(String display) throws DocumentException, IOException {
-		BaseFont calibri = PDFReportFormatter.getCalibri();		
+		BaseFont calibri = PDFReportFormatter.getArial();		
 		Font myFont = this.bold ? new Font(calibri, fontHeight.floatValue(), Font.BOLD) : new Font(calibri, fontHeight.floatValue());
 		if ( foreground != null ) {
 			if ( foreground.equals(CustomCellColor.AUTOMATIC ) ) {

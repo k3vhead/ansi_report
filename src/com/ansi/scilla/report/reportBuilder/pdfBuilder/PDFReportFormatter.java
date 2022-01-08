@@ -35,7 +35,7 @@ public class PDFReportFormatter extends ApplicationObject {
 //	public short standardHeaderHeight = (short)400;    //this may be a good idea at some point, but we're not doing it now
 //	public short standardDetailHeight = (short)400;    //this may be a good idea at some point, but we're not doing it now
 	
-	public static final BaseFont calibri;
+	public static final BaseFont arial;
 	public static final Font fontStandardBlack;
 	public static final Font fontStandardBlackBold;
 	public static final Font fontStandardWhite;
@@ -106,18 +106,18 @@ public class PDFReportFormatter extends ApplicationObject {
 		
 		;
 		try {
-			calibri = getCalibri();
-			fontStandardBlack = new Font(calibri, fontHeight);
-			fontStandardBlackBold = new Font(calibri, fontHeight, Font.BOLD);
-			fontStandardWhite = new Font(calibri, fontHeight);
+			arial = getArial();
+			fontStandardBlack = new Font(arial, fontHeight);
+			fontStandardBlackBold = new Font(arial, fontHeight, Font.BOLD);
+			fontStandardWhite = new Font(arial, fontHeight);
 			fontStandardWhite.setColor(BaseColor.WHITE);
-			fontStandardWhiteBold = new Font(calibri, fontHeight, Font.BOLD);
+			fontStandardWhiteBold = new Font(arial, fontHeight, Font.BOLD);
 			fontStandardWhiteBold.setColor(BaseColor.WHITE);
-			fontReportBanner = new Font(calibri, reportBannerHeight, Font.BOLD);
-			fontReportTitle = new Font(calibri, reportTitleHeight, Font.BOLD);
-			fontReportSubTitle = new Font(calibri, reportSubTitleHeight, Font.BOLD);
-			fontReportNote = new Font(calibri, reportNoteHeight, Font.BOLD);
-			fontSubtotal = new Font(calibri, fontHeight, Font.BOLD);
+			fontReportBanner = new Font(arial, reportBannerHeight, Font.BOLD);
+			fontReportTitle = new Font(arial, reportTitleHeight, Font.BOLD);
+			fontReportSubTitle = new Font(arial, reportSubTitleHeight, Font.BOLD);
+			fontReportNote = new Font(arial, reportNoteHeight, Font.BOLD);
+			fontSubtotal = new Font(arial, fontHeight, Font.BOLD);
 			
 			
 			
@@ -166,17 +166,49 @@ public class PDFReportFormatter extends ApplicationObject {
 	 * @throws DocumentException
 	 * @throws IOException
 	 */
-	public static BaseFont getCalibri() throws DocumentException, IOException {
+//	public static BaseFont getCalibri() throws DocumentException, IOException {
+//		String fontFile = null;
+//		if ( SystemUtils.IS_OS_LINUX ) {
+//			File file = new File("/usr/share/fonts/calibri.ttf");
+//			if ( file.exists() && file.canRead() ) {
+//				fontFile = "/usr/share/fonts/calibri.ttf";
+//			}
+//		} else if ( SystemUtils.IS_OS_WINDOWS ) {
+//			File file = new File("C:\\Windows\\fonts\\calibri.ttf");
+//			if ( file.exists() && file.canRead() ) {
+//				fontFile = "C:\\Windows\\fonts\\calibri.ttf";
+//			}
+//		}
+//
+//		if ( fontFile == null ) {
+//			File tempDir = SystemUtils.getJavaIoTmpDir();
+//			if ( ! tempDir.exists() ) {
+//				tempDir.mkdirs();
+//			}
+//			File ttfFile = new File(tempDir.getName() + File.separator + "calibri.ttf");
+//			if ( ! ttfFile.exists() ) {
+//				InputStream is = PDFReportFormatter.class.getClassLoader().getResourceAsStream("resources/calibri.ttf");
+//				byte[] data = IOUtils.toByteArray(is);
+//				FileUtils.writeByteArrayToFile(ttfFile, data);
+//			}
+//			fontFile = ttfFile.getAbsolutePath();
+//		}
+//				
+//		BaseFont calibri = BaseFont.createFont(fontFile, BaseFont.WINANSI, true);	
+//		return calibri;
+//	}
+
+	public static BaseFont getArial() throws DocumentException, IOException {
 		String fontFile = null;
 		if ( SystemUtils.IS_OS_LINUX ) {
-			File file = new File("/usr/share/fonts/calibri.ttf");
+			File file = new File("/usr/share/fonts/arial.ttf");
 			if ( file.exists() && file.canRead() ) {
-				fontFile = "/usr/share/fonts/calibri.ttf";
+				fontFile = "/usr/share/fonts/arial.ttf";
 			}
 		} else if ( SystemUtils.IS_OS_WINDOWS ) {
-			File file = new File("C:\\Windows\\fonts\\calibri.ttf");
+			File file = new File("C:\\Windows\\fonts\\arial.ttf");
 			if ( file.exists() && file.canRead() ) {
-				fontFile = "C:\\Windows\\fonts\\calibri.ttf";
+				fontFile = "C:\\Windows\\fonts\\arial.ttf";
 			}
 		}
 
@@ -185,20 +217,18 @@ public class PDFReportFormatter extends ApplicationObject {
 			if ( ! tempDir.exists() ) {
 				tempDir.mkdirs();
 			}
-			File ttfFile = new File(tempDir.getName() + File.separator + "calibri.ttf");
+			File ttfFile = new File(tempDir.getName() + File.separator + "arial.ttf");
 			if ( ! ttfFile.exists() ) {
-				InputStream is = PDFReportFormatter.class.getClassLoader().getResourceAsStream("resources/calibri.ttf");
+				InputStream is = PDFReportFormatter.class.getClassLoader().getResourceAsStream("arial/calibri.ttf");
 				byte[] data = IOUtils.toByteArray(is);
 				FileUtils.writeByteArrayToFile(ttfFile, data);
 			}
 			fontFile = ttfFile.getAbsolutePath();
 		}
 				
-		BaseFont calibri = BaseFont.createFont(fontFile, BaseFont.WINANSI, true);	
-		return calibri;
+		BaseFont arial = BaseFont.createFont(fontFile, BaseFont.WINANSI, true);	
+		return arial;
 	}
-
-
 	
 	
 	

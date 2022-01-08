@@ -238,10 +238,10 @@ public class PDFReportHeader extends PdfPageEventHelper {
 		cb.saveState();
 		String text = String.format("Page %s of ", writer.getPageNumber());
 		float textBase = document.bottom() - 20;
-		float textSize = PDFReportFormatter.calibri.getWidthPoint(text, PDFReportFormatter.fontHeight);
+		float textSize = PDFReportFormatter.arial.getWidthPoint(text, PDFReportFormatter.fontHeight);
 		
 		cb.beginText();
-		cb.setFontAndSize(PDFReportFormatter.calibri, PDFReportFormatter.fontHeight);
+		cb.setFontAndSize(PDFReportFormatter.arial, PDFReportFormatter.fontHeight);
 		cb.setTextMatrix((document.right() / 2), textBase);  // because page is centered on page width
 		cb.showText(text);
 		cb.endText();
@@ -254,7 +254,7 @@ public class PDFReportHeader extends PdfPageEventHelper {
 	@Override
 	public void onCloseDocument(PdfWriter writer, Document document) {
 		template.beginText();
-		template.setFontAndSize(PDFReportFormatter.calibri, PDFReportFormatter.fontHeight);
+		template.setFontAndSize(PDFReportFormatter.arial, PDFReportFormatter.fontHeight);
 		template.setTextMatrix(0,0);
 		template.showText(String.valueOf(writer.getPageNumber()));
 		template.endText();
