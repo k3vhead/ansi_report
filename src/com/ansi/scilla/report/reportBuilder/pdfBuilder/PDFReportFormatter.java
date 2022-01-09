@@ -152,6 +152,10 @@ public class PDFReportFormatter extends ApplicationObject {
 		
 	}
 	
+	public static BaseFont getDefaultFont() throws DocumentException, IOException {
+		return getArial();
+	}
+	
 	
 	/**
 	 * To create a BaseFont we need the name of a TTF file (there are options but we don't care). When the TTF file
@@ -166,37 +170,37 @@ public class PDFReportFormatter extends ApplicationObject {
 	 * @throws DocumentException
 	 * @throws IOException
 	 */
-//	public static BaseFont getCalibri() throws DocumentException, IOException {
-//		String fontFile = null;
-//		if ( SystemUtils.IS_OS_LINUX ) {
-//			File file = new File("/usr/share/fonts/calibri.ttf");
-//			if ( file.exists() && file.canRead() ) {
-//				fontFile = "/usr/share/fonts/calibri.ttf";
-//			}
-//		} else if ( SystemUtils.IS_OS_WINDOWS ) {
-//			File file = new File("C:\\Windows\\fonts\\calibri.ttf");
-//			if ( file.exists() && file.canRead() ) {
-//				fontFile = "C:\\Windows\\fonts\\calibri.ttf";
-//			}
-//		}
-//
-//		if ( fontFile == null ) {
-//			File tempDir = SystemUtils.getJavaIoTmpDir();
-//			if ( ! tempDir.exists() ) {
-//				tempDir.mkdirs();
-//			}
-//			File ttfFile = new File(tempDir.getName() + File.separator + "calibri.ttf");
-//			if ( ! ttfFile.exists() ) {
-//				InputStream is = PDFReportFormatter.class.getClassLoader().getResourceAsStream("resources/calibri.ttf");
-//				byte[] data = IOUtils.toByteArray(is);
-//				FileUtils.writeByteArrayToFile(ttfFile, data);
-//			}
-//			fontFile = ttfFile.getAbsolutePath();
-//		}
-//				
-//		BaseFont calibri = BaseFont.createFont(fontFile, BaseFont.WINANSI, true);	
-//		return calibri;
-//	}
+	public static BaseFont getCalibri() throws DocumentException, IOException {
+		String fontFile = null;
+		if ( SystemUtils.IS_OS_LINUX ) {
+			File file = new File("/usr/share/fonts/calibri.ttf");
+			if ( file.exists() && file.canRead() ) {
+				fontFile = "/usr/share/fonts/calibri.ttf";
+			}
+		} else if ( SystemUtils.IS_OS_WINDOWS ) {
+			File file = new File("C:\\Windows\\fonts\\calibri.ttf");
+			if ( file.exists() && file.canRead() ) {
+				fontFile = "C:\\Windows\\fonts\\calibri.ttf";
+			}
+		}
+
+		if ( fontFile == null ) {
+			File tempDir = SystemUtils.getJavaIoTmpDir();
+			if ( ! tempDir.exists() ) {
+				tempDir.mkdirs();
+			}
+			File ttfFile = new File(tempDir.getName() + File.separator + "calibri.ttf");
+			if ( ! ttfFile.exists() ) {
+				InputStream is = PDFReportFormatter.class.getClassLoader().getResourceAsStream("resources/calibri.ttf");
+				byte[] data = IOUtils.toByteArray(is);
+				FileUtils.writeByteArrayToFile(ttfFile, data);
+			}
+			fontFile = ttfFile.getAbsolutePath();
+		}
+				
+		BaseFont calibri = BaseFont.createFont(fontFile, BaseFont.WINANSI, true);	
+		return calibri;
+	}
 
 	public static BaseFont getArial() throws DocumentException, IOException {
 		String fontFile = null;
@@ -218,8 +222,8 @@ public class PDFReportFormatter extends ApplicationObject {
 				tempDir.mkdirs();
 			}
 			File ttfFile = new File(tempDir.getName() + File.separator + "arial.ttf");
-			if ( ! ttfFile.exists() ) {
-				InputStream is = PDFReportFormatter.class.getClassLoader().getResourceAsStream("arial/calibri.ttf");
+			if ( ! ttfFile.exists() ) {				
+				InputStream is = PDFReportFormatter.class.getClassLoader().getResourceAsStream("resources/arial.ttf");
 				byte[] data = IOUtils.toByteArray(is);
 				FileUtils.writeByteArrayToFile(ttfFile, data);
 			}
