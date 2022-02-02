@@ -1,6 +1,7 @@
 package com.ansi.scilla.report.reportBuilder.pdfBuilder;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,12 +79,9 @@ public class PDFBuilder extends AbstractPDFBuilder {
 			for ( Object dataRow : report.getDataRows() ) {
 				makeSubtotal(report, dataRow, dataTable);
 				for ( int i = 0; i < report.getHeaderRow().length; i++ ) {
-					ColumnHeader columnHeader = report.getHeaderRow()[i];				
+					ColumnHeader columnHeader = report.getHeaderRow()[i];
 					Object value = makeDisplayData(columnHeader, dataRow);
-					String display = makeFormattedDisplayData(columnHeader.getFormatter(), value);
-					PdfPCell cell = new AnsiPCell(new Chunk(display, PDFReportFormatter.fontStandardBlack));	
-					/* If you're looking here because you got key error, you need to add a dataformat to the cell styles in PDFReportFormatter */
-					cell.setHorizontalAlignment(PDFReportFormatter.cellStyles.get(columnHeader.getFormatter()));
+					PdfPCell cell = makeDetailCell(columnHeader, value);
 					dataTable.addCell(cell);
 					super.doSummaries(columnHeader, value);
 					
@@ -96,6 +94,19 @@ public class PDFBuilder extends AbstractPDFBuilder {
 	
 	
 	
+	private PdfPCell makeDetailCell(ColumnHeader columnHeader, Object value) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		String display = makeFormattedDisplayData(columnHeader.getFormatter(), value);
+		PdfPCell cell = new AnsiPCell(new Chunk(display, PDFReportFormatter.fontStandardBlack));	
+		/* If you're looking here because you got key error, you need to add a dataformat to the cell styles in PDFReportFormatter */
+		cell.setHorizontalAlignment(PDFReportFormatter.cellStyles.get(columnHeader.getFormatter()));
+		cell.setPaddingTop(0F);
+		cell.setPaddingBottom(0F);
+		return cell;
+	}
+
+	
+	
+
 	private void makeFinalSubtotal(PdfPTable dataTable) throws Exception {
 		StandardReport report = (StandardReport)this.report;
 		List<PdfPCell> subtotalRow = new ArrayList<PdfPCell>();
