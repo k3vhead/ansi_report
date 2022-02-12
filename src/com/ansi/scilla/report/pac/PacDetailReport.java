@@ -13,9 +13,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Level;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -35,6 +35,7 @@ import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
+import com.thewebthing.commons.lang.StringUtils;
 
 public class PacDetailReport extends StandardReport implements ReportByDivStartEnd, ReportByDivision {
 
@@ -294,7 +295,7 @@ public class PacDetailReport extends StandardReport implements ReportByDivStartE
 				new ColumnWidth(1400, 30.0F),			// Job #
 				new ColumnWidth(1400, 27.0F),			// Freq
 				new ColumnWidth(1600, 27.0F),			// Status
-				new ColumnWidth(null, 31.5F),			// Lead Type
+				new ColumnWidth(null, 32.0F),			// Lead Type
 				new ColumnWidth(4000, 45.0F),			// tags
 				new ColumnWidth(null, 57.5F),			// volume
 
@@ -324,8 +325,10 @@ public class PacDetailReport extends StandardReport implements ReportByDivStartE
 			this.reportDate = new Date( rs.getDate("report_date").getTime());
 			this.jobId = rs.getInt("job_id");
 			this.name = rs.getString("name");
+				this.name = StringUtils.abbreviate(this.name, 25);
 			this.address1 = rs.getString("address1");
 			this.city = rs.getString("city");
+				this.city = StringUtils.substring(this.city, 0, 8);
 			this.state = rs.getString("state");
 			this.budget = rs.getBigDecimal("budget").doubleValue();
 			this.pricePerCleaning = rs.getBigDecimal("price_per_cleaning").doubleValue();
@@ -334,6 +337,7 @@ public class PacDetailReport extends StandardReport implements ReportByDivStartE
 			this.jobFrequency = JobFrequency.lookup(rs.getString("job_frequency"));
 			this.jobStatus = rs.getString("job_status");
 			this.columnData = rs.getString("column_data");
+				this.columnData = StringUtils.substring(this.columnData, 0, 4);
 			this.volume = this.pricePerCleaning * Double.valueOf(this.jobFrequency.annualCount()); // PPC * freq.timesPerYear
 			report.totalVolume = report.totalVolume + this.volume;
 			this.tagList = rs.getString("tag_list");
