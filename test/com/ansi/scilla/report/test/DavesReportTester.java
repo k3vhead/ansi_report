@@ -25,7 +25,7 @@ public class DavesReportTester extends AbstractReportTester {
 	public void go() throws Exception {
 		boolean makePDF = true;
 		boolean makeHTML = false;
-		boolean makeXLS = false;
+		boolean makeXLS = true;
 
 		Integer divisionId = 105;
 		Integer month = Calendar.OCTOBER;
@@ -65,7 +65,7 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeClientContact(makeXLS, makePDF, makeHTML),						// this is a datadump
 //				new MakeCRRDetail(makeXLS, makePDF, makeHTML, startDate, endDate),		// this is a standard report with subtotals
 //				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
-//				new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
+				new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
 //				new MakeExpiringDocumentReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeInvoiceRegister(makeXLS, makePDF, makeHTML, divisionId, month, year),   	// this is a standard report with totals
 //				new MakeInvoiceRegisterSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
@@ -74,8 +74,8 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeMonthlyServiceTaxReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeServiceTaxByDayReport(makeXLS, makePDF, makeHTML, startDate, endDate),
-				new MakePACDetail("P", makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report. "Which Report" is P|A|C
-//				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
+//				new MakePACDetail("P", makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report. "Which Report" is P|A|C
+				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
 //				new MakePACSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report (includd in PAC Listing)
 //				new MakePastDue2(makeXLS, makePDF, makeHTML, divisionId, startDate),					// this is a standard report
 //				new MakeReportDistribution(makeXLS, makePDF, makeHTML),					// this is a standard report

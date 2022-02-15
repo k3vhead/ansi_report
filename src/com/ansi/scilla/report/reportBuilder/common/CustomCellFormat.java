@@ -46,7 +46,7 @@ public class CustomCellFormat extends ApplicationObject {
 	private CustomCellAlignment alignment;
 	private CustomCellColor background;
 	private CustomCellColor foreground;
-	private Double fontHeight = 9.0D;
+	private Double fontHeight = 8.0D;
 	private Boolean bold = false;	
 	private Boolean borderTop = false;
 	private Boolean borderRight = false;

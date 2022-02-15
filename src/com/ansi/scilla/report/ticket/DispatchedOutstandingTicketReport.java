@@ -287,8 +287,8 @@ public class DispatchedOutstandingTicketReport extends StandardReport implements
 		super.setHeaderRow(new ColumnHeader[] {
 				new ColumnHeader("ticketId", "Ticket", 1, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
 //				new ColumnHeader("fleetmaticsId", "Tkt # FM", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("name","Site", 2, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("address1","Street 1", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("name","Site", 2, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 20),
+				new ColumnHeader("address1","Street 1", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 20),
 				new ColumnHeader("city","City", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("lastRun","Last Run", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
 				new ColumnHeader("startDate","Run Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
@@ -342,7 +342,7 @@ public class DispatchedOutstandingTicketReport extends StandardReport implements
 				new ColumnWidth(2500, 49.0F),			// ppc
 				new ColumnWidth(1400, 30.0F),			// j#
 				new ColumnWidth(1400, 35.0F),			// Freq
-				new ColumnWidth(3500, 50.0F),			// status
+				new ColumnWidth(3500, 50.5F),			// status
 				new ColumnWidth(null, 50.0F),			// style
 		});
 		
