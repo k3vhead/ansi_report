@@ -48,6 +48,9 @@ public class BatchScheduleFactory {
 		case LAST_WEEK:
 			parm = makeLastWeek(conn, runDate);
 			break;
+		case THIS_MONTH:
+			parm = makeThisMonth(conn, runDate);
+			break;
 		default:
 			break;
 			
@@ -213,6 +216,17 @@ public class BatchScheduleFactory {
 	}
 
 
+	private static ReportParmStartEnd makeThisMonth(Connection conn, Calendar runDate) {
+		Calendar startDate = (Calendar)runDate.clone();
+		startDate.set(Calendar.DAY_OF_MONTH, 1);
+		Calendar endDate = (Calendar)runDate.clone();
+		endDate.add(Calendar.MONTH, 1);
+		endDate.set(Calendar.DAY_OF_MONTH, 1);
+		endDate.add(Calendar.DAY_OF_YEAR, -1);
+		return new ReportParmStartEnd(startDate, endDate);
+	}
+
+
 	public enum BatchSchedule {
 		LAST_WEEK,
 		LAST_MONTH,
@@ -224,6 +238,7 @@ public class BatchScheduleFactory {
 		LAST_CALENDAR_YEAR,
 		FISCAL_YTD,
 		CALENDAR_YTD,
+		THIS_MONTH,
 		;
 
 	}
