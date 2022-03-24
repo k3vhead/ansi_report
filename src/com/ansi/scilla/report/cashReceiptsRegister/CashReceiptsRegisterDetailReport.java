@@ -59,7 +59,7 @@ public class CashReceiptsRegisterDetailReport extends StandardReport implements 
 			", payment.check_date\r\n" +
 			"from ticket \r\n" + 
 			"join job on job.job_id = ticket.job_id\r\n" + 
-			"join division on division.division_id = job.division_id\r\n" + 
+			"join division on division.division_id = ticket.act_division_id\r\n" + 
 			"join quote on quote.quote_id = job.quote_id\r\n" + 
 			"join address as job_site on job_site.address_id = quote.job_site_address_id\r\n" + 
 			"join address as bill_to on bill_to.address_id = quote.bill_to_address_id\r\n" + 

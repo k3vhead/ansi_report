@@ -32,7 +32,9 @@
 	
     <target name="init" depends="clean" description="Initializes build area">
         <!-- Create the time stamp -->
-        <tstamp />
+        <tstamp>
+        	<format property="build.time" pattern="yyyy.MM.dd HH.mm.ss" />
+    	</tstamp>
         
         <!-- Create the build directory structure used by compile -->
         <mkdir dir="${build}" />
@@ -71,6 +73,7 @@
     		<entry key="builddate" type="date" value="now" pattern="MM/dd/yyyy HH:mm:ss" />
     	</propertyfile>
         <jar destfile="${deploy}/${projectName}.jar" basedir="${dist}" />
+        <echo message="Build Complete: ${build.time}" level="info" />
     </target>
 
     <target name="deploy" depends="jar">
