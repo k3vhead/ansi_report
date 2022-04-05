@@ -2,12 +2,13 @@ package com.ansi.scilla.report.reportBuilder.pdfBuilder;
 
 import java.io.ByteArrayOutputStream;
 
+import org.dom4j.DocumentException;
+
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.report.reportBuilder.AnsiReportBuilder;
 import com.ansi.scilla.report.reportBuilder.reportType.AbstractReport;
 import com.ansi.scilla.report.reportBuilder.reportType.CompoundReport;
 import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfReader;
 

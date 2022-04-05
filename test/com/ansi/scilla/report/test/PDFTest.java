@@ -10,11 +10,6 @@ import com.ansi.scilla.common.jobticket.TicketPrinter;
 import com.ansi.scilla.common.queries.TicketPrint;
 import com.ansi.scilla.common.queries.TicketPrintResult;
 import com.ansi.scilla.common.utils.AppUtils;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Paragraph;
 
 public class PDFTest {
 
@@ -161,18 +156,18 @@ public class PDFTest {
 	*/
 	
 	
-	private Paragraph makeMakePayable() {
-		Font roman = FontFactory.getFont(FontFactory.TIMES, 10);
-		Font romanItalic = FontFactory.getFont(FontFactory.TIMES_ITALIC, 10);
-		Paragraph makePayable = new Paragraph();		
-		Chunk text1 = new Chunk("Make checks payable to ", roman);
-		Chunk text2 = new Chunk("theWebThing LLC", romanItalic);
-		makePayable.add(text1);
-		makePayable.add(text2);
-		makePayable.setAlignment(Element.ALIGN_RIGHT);
-		
-		return makePayable;
-	}
+//	private Paragraph makeMakePayable() {
+//		Font roman = FontFactory.getFont(FontFactory.TIMES, 10);
+//		Font romanItalic = FontFactory.getFont(FontFactory.TIMES_ITALIC, 10);
+//		Paragraph makePayable = new Paragraph();		
+//		Chunk text1 = new Chunk("Make checks payable to ", roman);
+//		Chunk text2 = new Chunk("theWebThing LLC", romanItalic);
+//		makePayable.add(text1);
+//		makePayable.add(text2);
+//		makePayable.setAlignment(Element.ALIGN_RIGHT);
+//		
+//		return makePayable;
+//	}
 
 	/*
 	private PdfPTable makeItemTable(Float openingBalance, List<LedgerItem> ledgerList, Float balanceDue) throws DocumentException {
