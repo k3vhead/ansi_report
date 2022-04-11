@@ -57,12 +57,15 @@
         <javac srcdir="src"
                destdir="${dist}"
                debug="${compile.debug}"
-               includeantruntime="false">
+               includeantruntime="false"
+               source="1.8"
+        	   target="1.8">
             <classpath refid="ui.classpath"/>
         </javac>
     </target>
     
     <target name="jar" depends="build" description="Make a JAR File">  
+    	<copy file="src/log4j2.xml" todir="${dist}" />
     	<copy todir="${dist}/resources">
 			<fileset dir="src/resources"/>
 		</copy>

@@ -3,7 +3,7 @@ package com.ansi.scilla.report.htmlTable;
 import java.lang.reflect.Method;
 
 import com.ansi.scilla.common.ApplicationObject;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 
 public class HTMLCell extends ApplicationObject implements Comparable<HTMLCell> {
 

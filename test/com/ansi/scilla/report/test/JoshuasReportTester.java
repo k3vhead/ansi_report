@@ -1,40 +1,21 @@
 package com.ansi.scilla.report.test;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.util.Calendar;
-import java.util.HashMap;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.logging.log4j.LogManager;
 
 import com.ansi.scilla.common.Midnight;
-import com.ansi.scilla.common.utils.AppUtils;
-import com.ansi.scilla.report.pastDue.PastDueReport2;
-import com.ansi.scilla.report.reportBuilder.HTMLBuilder;
-import com.ansi.scilla.report.reportBuilder.XLSBuilder;;
+import com.ansi.scilla.common.utils.AppUtils;;
 
 
-public class JoshuasReportTester {
+public class JoshuasReportTester extends AbstractReportTester {
 
-	private final String joshuasTestResultDirectory = "/Users/jwlew/Documents/";
+	private final String joshuasTestResultDirectory = "/home/jwlewis/Documents/pdfs";
 	
-	protected ReportType reportType;
-	protected Calendar startDate;
-	protected Calendar endDate;
-	protected Integer divisionId;
-	protected Integer month;
-	protected Integer year;
-	protected HashMap<String, String> reportDisplay;
-	protected Logger logger;
-
 	
 	public static void main(String[] args) {
 		try {
-//			TesterUtils.makeLoggers();
-//			TesterUtils.makeLogger("com.ansi.scilla.common.test", Level.DEBUG);
 			new JoshuasReportTester().makeMyReport();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -42,7 +23,7 @@ public class JoshuasReportTester {
 	}
 	
 	private void makeMyReport() throws Exception {
-		this.logger = Logger.getLogger("com.ansi.scilla.report.reportBuilder");
+		this.logger = LogManager.getLogger("com.ansi.scilla.report.reportBuilder");
 		logger.info("Start");
 		Connection conn = null;
 		
@@ -53,10 +34,32 @@ public class JoshuasReportTester {
 			this.divisionId = 101;
 			this.month=07;
 			this.year=2018;
-			this.startDate = new Midnight(2018, Calendar.JULY, 20);
-			this.endDate = new Midnight(2017, Calendar.DECEMBER, 31);
+			this.startDate = new Midnight(2018, Calendar.JULY, 31);
+			this.endDate = new Midnight(2018, Calendar.SEPTEMBER, 31);
 			
-			makeClientUsage(conn);
+			boolean makeXLS = true;
+			boolean makePDF = true;
+			boolean makeHTML = false;
+			
+			ReportMaker[] reportList = new ReportMaker[] {				
+//					new Make6MRV(makeXLS, makePDF, makeHTML, divisionId, month, year),		// this is a custom report
+//					new MakeAROver60(makeXLS, makePDF, makeHTML),							// this is a datadump
+//					new MakeClientUsage(makeXLS, makePDF, makeHTML, divisionId, startDate),
+//					new MakeCRRDetail(makeXLS, makePDF, makeHTML, startDate, endDate),
+//					new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
+//					new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
+//					new MakeInvoiceRegister(makeXLS, makePDF, makeHTML, divisionId, month, year),   	// this is a standard report with totals
+					new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
+//					new makePastDue2(makeXLS, makePDF, makeHTML, divisionId, startDate),	
+//					new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
+//					new MakeWOandFeesSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
+//					new MakeWOandFeesDetail(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
+//					new MakeWOandFeesReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//					new MakeCreditCardFeesSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//					new MakeCreditCardFeesByDayReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//					new MakeSkippedAndDispatchedReport(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
+			};
+			super.makeMyReports(reportList);
 			
 			conn.rollback();
 		} finally {
@@ -68,20 +71,9 @@ public class JoshuasReportTester {
 	}
 
 
-	private void makeClientUsage(Connection conn) throws Exception {
-		logger.info("PastDueReport");
-		//DispatchedOutstandingTicketReport userReport = DispatchedOutstandingTicketReport.buildReport(conn, divisionId, endDate);
-		//java.util.Date sDate;
-		PastDueReport2 userReport = PastDueReport2.buildReport(conn, startDate, divisionId);
-		XSSFWorkbook workbook = XLSBuilder.build(userReport);
-//		XSSFWorkbook workbook = userReport.makeXLS();
-//		CashReceiptsRegisterDetailReport userReport = CashReceiptsRegisterDetailReport.buildReport(conn, startDate, endDate);
-//		XSSFWorkbook workbook = XLSBuilder.build(userReport);
-		workbook.write(new FileOutputStream(joshuasTestResultDirectory + "PastDueDate.xlsx"));
-
-		String html = HTMLBuilder.build(userReport);
-		FileUtils.write(new File(joshuasTestResultDirectory + "PastDueDate.html"), html);
-		
+	@Override
+	protected String getTestDirectory() {
+		return joshuasTestResultDirectory;
 	}
 
 	

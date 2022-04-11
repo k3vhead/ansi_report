@@ -8,8 +8,8 @@
 	<Loggers>
 		<Logger name="com.thewebthing" level="info">
 	</Logger>
-	<Logger name="com.ansi.scilla.report" level="info">
-		<appender-ref ref="STDOUT" level="info" />
+	<Logger name="com.ansi.scilla.report" level="debug">
+		<appender-ref ref="STDOUT" level="debug" />
 	</Logger>
 	<Logger name="org.apache" level="fatal">
 		<appender-ref ref="STDOUT" level="fatal" />

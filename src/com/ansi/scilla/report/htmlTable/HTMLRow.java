@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 
 import com.ansi.scilla.common.ApplicationObject;
-import com.ansi.scilla.report.reportBuilder.HTMLReportFormatter;
+import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLReportFormatter;
 
 public class HTMLRow extends ApplicationObject implements Comparable<HTMLRow> {
 

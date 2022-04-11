@@ -1,38 +1,16 @@
 package com.ansi.scilla.report.test;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.sql.Connection;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.logging.log4j.Logger;
 
-import com.ansi.scilla.common.utils.AppUtils;
-import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
-import com.ansi.scilla.report.datadumps.AccountsReceivableTotalsOver60Detail;
-import com.ansi.scilla.report.expiringDocumentReport.ExpiringDocumentReport;
-import com.ansi.scilla.report.invoiceRegisterReport.InvoiceRegisterReport;
-import com.ansi.scilla.report.pac.PacReport;
-import com.ansi.scilla.report.pastDue.PastDueReport2;
-import com.ansi.scilla.report.reportBuilder.HTMLBuilder;
-import com.ansi.scilla.report.reportBuilder.XLSBuilder;
-import com.ansi.scilla.report.sixMonthRollingVolume.SixMonthRollingVolumeReport;
-import com.ansi.scilla.report.ticket.DispatchedOutstandingTicketReport;
-import com.ansi.scilla.report.ticket.TicketStatusReport;;
+public class DavesReportTester extends AbstractReportTester {
 
-
-public class DavesReportTester {
-
-	private final String testResultDirectory = "/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/";
+	private final String testResultDirectory = "/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_pdf/";
 	
 	protected ReportType reportType;
 	protected Calendar startDate;
@@ -44,19 +22,16 @@ public class DavesReportTester {
 	protected Logger logger;
 
 	
-	public static void main(String[] args) {
-		try {
-			new DavesReportTester().makeMyReport();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	
-	private void makeMyReport() throws Exception {
-		this.logger = Logger.getLogger("com.ansi.scilla.report.reportBuilder");
-		logger.info("Start");
+	public void go() throws Exception {
+		boolean makePDF = true;
+		boolean makeHTML = false;
+		boolean makeXLS = true;
+
+		Integer divisionId = 105;
+		Integer month = Calendar.OCTOBER;
+		Integer year = 2020;
+		Calendar startDate = new GregorianCalendar(2020, Calendar.OCTOBER, 1);
+		Calendar endDate = new GregorianCalendar(2020, Calendar.DECEMBER, 1);
 
 		List<Thread> threadList = new ArrayList<Thread>();
 		
@@ -71,223 +46,62 @@ public class DavesReportTester {
 //		threadList.add(new Thread(new MakeExpiringDocument()));
 //		threadList.add(new Thread(new MakeDO()));
 //		threadList.add(new Thread(new MakeInvoiceRegister()));
-		threadList.add(new Thread(new MakePACListing()));
+//		threadList.add(new Thread(new MakePACListing()));
 //			threadList.add(new Thread(new MakePastDue2()));
 //			threadList.add(new Thread(new MakePastDue2(conn)));
 //		threadList.add(new Thread(new MakeTicketStatus()));
 
-		for ( Thread thread : threadList ) {
-			thread.start();
-		}
+
+//		MakeLiftAndGenie prodLiftAndGenie = new MakeLiftAndGenie( makeXLS, makePDF, makeHTML, startDate, endDate);
+//		prodLiftAndGenie.setReportConn(ReportConn.PROD);
 		
-		while ( true ) {
-			try {
-				for ( Thread thread : threadList ) {
-					thread.join();
-				}
-				break;
-			} catch ( InterruptedException e) {
-				System.err.println("Interrupted");
-			}
-		}
-		logger.info("Done");		
-	}
-
-
-	
-	public abstract class ReportMaker implements Runnable {
-		@Override		
-		public void run() {
-			Connection conn = null;
-
-			try {
-				conn = AppUtils.getDevConn();
-				conn.setAutoCommit(false);
-				makeReport(conn);
-			} catch ( Exception e ) {
-				throw new RuntimeException(e);
-			} finally {
-				AppUtils.closeQuiet(conn);
-			}
-		}
-		
-		public abstract void makeReport(Connection conn) throws Exception;
-		
-		protected String makeFileName(String fileName) {
-			Date today = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddhhmmss");
-			return testResultDirectory + fileName + "_" + sdf.format(today) + ".xlsx";
-		}
-
-		protected void writeHtml(String fileName, String html) throws IOException {
-			Date today = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddhhmmss");
-			String destination =  testResultDirectory + fileName + "_" + sdf.format(today) + ".html";
-			FileUtils.writeStringToFile(new File(destination), html);
-		}
+		ReportMaker[] reportList = new ReportMaker[] {				
+//				new Make6MRV(makeXLS, makePDF, makeHTML, divisionId, month, year),		// this is a custom report
+//				new MakeAROver60(makeXLS, makePDF, makeHTML),							// this is a datadump
+//				new MakeARTotalsSummary(makeXLS, makePDF, makeHTML),
+//				new MakeARTotalByDiv(makeXLS, makePDF, makeHTML, divisionId),
+//				new MakeARTotals(makeXLS, makePDF, makeHTML),
+//				new MakeCreditCardFeesSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeClientContact(makeXLS, makePDF, makeHTML),						// this is a datadump
+//				new MakeCRRDetail(makeXLS, makePDF, makeHTML, startDate, endDate),		// this is a standard report with subtotals
+//				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
+				new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
+//				new MakeExpiringDocumentReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeInvoiceRegister(makeXLS, makePDF, makeHTML, divisionId, month, year),   	// this is a standard report with totals
+//				new MakeInvoiceRegisterSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeLiftAndGenieDetailReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeMonthlyServiceTaxReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeServiceTaxByDayReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakePACDetail("P", makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report. "Which Report" is P|A|C
+				new MakePACListing(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report
+//				new MakePACSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report (includd in PAC Listing)
+//				new MakePastDue2(makeXLS, makePDF, makeHTML, divisionId, startDate),					// this is a standard report
+//				new MakeReportDistribution(makeXLS, makePDF, makeHTML),					// this is a standard report
+//				new MakeSubscriptionChangeReport(makeXLS, makePDF, makeHTML, startDate, endDate),			// this is a standard report
+//				new MakeTicketStatus(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a standard report
+//				new MakeWOandFeesDetail(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
+//				new MakeWOandFeesSummary(makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),
+//				new MakeWOandFeesReport(makeXLS, makePDF, makeHTML, startDate, endDate),
+		};
+		super.makeMyReports(reportList);
 	}
 	
-
-	public class Make6mrv extends ReportMaker {
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			Integer divisionId = 101;
-			Integer month = Calendar.JULY;
-			Integer year = 2019;
-			SixMonthRollingVolumeReport report = SixMonthRollingVolumeReport.buildReport(conn, divisionId, month, year);
-			XSSFWorkbook workbook = report.makeXLS();
-			workbook.write(new FileOutputStream("/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_headers/6MRV.xlsx"));
-		}
+	@Override
+	protected String getTestDirectory() {
+		return testResultDirectory;
 	}
 
-	public class MakeClientUsage extends ReportMaker {
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			Calendar startDate = null;
-			Integer divisionId = null;
-			logger.info("PastDueReport");
-			PastDueReport2 userReport = PastDueReport2.buildReport(conn, startDate, divisionId);
-			XSSFWorkbook workbook = XLSBuilder.build(userReport);
-			workbook.write(new FileOutputStream(testResultDirectory + "ClientUsage.xlsx"));
-		
-			String html = HTMLBuilder.build(userReport);
-			FileUtils.write(new File(testResultDirectory + "ClientUsage.html"), html);
-		
-		}
-	}
-	
-	public class MakeAROver60Detail extends ReportMaker {
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			logger.info("Start AROver60Detail");
-			AccountsReceivableTotalsOver60Detail crrDetail = AccountsReceivableTotalsOver60Detail.buildReport(conn);
-			XSSFWorkbook workbook = crrDetail.makeXLS();
-			workbook.write(new FileOutputStream(makeFileName("AROver60Detail")));
-			logger.info("End AROver60Detail");			
+	public static void main(String[] args) {
+		try {			
+			new DavesReportTester().go();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
 	
-	public class MakeAROver60 extends ReportMaker {
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			logger.info("Start AROver60");
-			AccountsReceivableTotalsOver60Detail crrDetail = AccountsReceivableTotalsOver60Detail.buildReport(conn);
-			XSSFWorkbook workbook = crrDetail.makeXLS();
-			workbook.write(new FileOutputStream(makeFileName("AROver60")));
-			logger.info("End AROver60");			
-		}
-		
-	}
 	
-	
-	public class MakeCRRDetail extends ReportMaker {
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			logger.info("Start CRR");
-			Calendar startDate = new GregorianCalendar(2019, Calendar.AUGUST, 1);
-			Calendar endDate = new GregorianCalendar(2019, Calendar.AUGUST, 31);
-			CashReceiptsRegisterDetailReport crrDetail = CashReceiptsRegisterDetailReport.buildReport(conn, startDate, endDate);
-			XSSFWorkbook workbook = XLSBuilder.build(crrDetail);
-			workbook.write(new FileOutputStream(makeFileName("CRR_DETAIL")));
-			logger.info("End CRR");			
-		}
-		
-	}
-	
-	
-	public class MakeDO extends ReportMaker {
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			logger.info("Start MakeDO");
-			Calendar endDate = new GregorianCalendar(2019, Calendar.AUGUST, 31);
-			DispatchedOutstandingTicketReport report = DispatchedOutstandingTicketReport.buildReport(conn, 101, endDate);
-			XSSFWorkbook workbook = XLSBuilder.build(report);
-			workbook.write(new FileOutputStream(makeFileName("DO_Ticket")));
-			logger.info("End MakeDO");
-		}
-		
-	}
-	
-	public class MakeExpiringDocument extends ReportMaker {
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			logger.info("Start MakeExpiringDocument");
-			Calendar startDate = new GregorianCalendar(2020,Calendar.JANUARY, 25);
-			Calendar endDate = new GregorianCalendar(2021, Calendar.JANUARY, 31);
-			ExpiringDocumentReport report = ExpiringDocumentReport.buildReport(conn, startDate, endDate);
-//			XSSFWorkbook workbook = XLSBuilder.build(report);	
-//			workbook.write(new FileOutputStream(makeFileName("expiringDocument")));
-			String html = HTMLBuilder.build(report);
-			writeHtml("expiringDocument", html);
-			logger.info("End MakeExpiringDocument");
-		}
-		
-	}
-	
-	public class MakeInvoiceRegister extends ReportMaker {
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			logger.info("Start IRR");
-			Integer divisionId = 101;
-			Integer month = Calendar.AUGUST;
-			Integer year = 2019;
-			InvoiceRegisterReport report = InvoiceRegisterReport.buildReport(conn, divisionId, month, year);
-			XSSFWorkbook workbook = XLSBuilder.build(report);
-			workbook.write(new FileOutputStream(makeFileName("IRR")));	
-			logger.info("End IRR");
-		}		
-	}
-
-	public class MakePastDue2 extends ReportMaker {
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			logger.info("PastDueReport");
-			Calendar startDate = null;
-			Integer divisionId = null;
-			PastDueReport2 report = PastDueReport2.buildReport(conn, startDate, divisionId);
-			if ( report == null ) {
-				throw new Exception("Null report");
-			}
-			XSSFWorkbook workbook = XLSBuilder.build(report);
-			workbook.write(new FileOutputStream(testResultDirectory + "PastDueDate.xlsx"));
-		
-			//		String html = HTMLBuilder.build(userReport);
-			//		FileUtils.write(new File(testResultDirectory + "PastDueDate.html"), html);		
-		}
-	}
-	
-	public class MakePACListing extends ReportMaker {
-
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			logger.info("Start PAC Listing");
-			Integer divisionId = 101;
-			Calendar startDate = new GregorianCalendar(2019, Calendar.AUGUST, 1);
-			Calendar endDate = new GregorianCalendar(2019, Calendar.AUGUST, 30);
-			PacReport report = PacReport.buildReport(conn, divisionId, startDate, endDate);
-			XSSFWorkbook workbook = new XSSFWorkbook();
-			report.makeXLS(workbook);
-			workbook.write(new FileOutputStream(makeFileName("PACListing")));
-			logger.info("End PAC Listing");			
-		}
-	}
-
-	public class MakeTicketStatus extends ReportMaker {
-
-		@Override
-		public void makeReport(Connection conn) throws Exception {
-			logger.info("Start Ticket STatus");
-			Integer divisionId = 101;
-			Calendar startDate = new GregorianCalendar(2019, Calendar.AUGUST, 1);
-			Calendar endDate = new GregorianCalendar(2019, Calendar.AUGUST, 30);
-			TicketStatusReport report = TicketStatusReport.buildReport(conn, divisionId, startDate, endDate);
-			XSSFWorkbook workbook = XLSBuilder.build(report);
-			workbook.write(new FileOutputStream(makeFileName("TicketStatus")));
-			logger.info("End Ticket Status");			
-		}		
-	}
-
-
 
 }

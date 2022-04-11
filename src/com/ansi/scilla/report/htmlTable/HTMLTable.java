@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.report.htmlTable.HTMLRow;
 import com.ansi.scilla.report.htmlTable.SameRowIndexPredicate;
-import com.ansi.scilla.report.reportBuilder.HTMLReportFormatter;
+import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLReportFormatter;
 
 public class HTMLTable extends ApplicationObject {
 

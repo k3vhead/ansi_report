@@ -14,19 +14,24 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.Midnight;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
-import com.ansi.scilla.report.reportBuilder.ReportOrientation;
-import com.ansi.scilla.report.reportBuilder.ReportStartLoc;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.StandardSummaryReport;
-import com.ansi.scilla.report.reportBuilder.XLSBuilder;
-import com.ansi.scilla.report.reportBuilder.XLSReportBuilderUtils;
+import com.ansi.scilla.common.db.Division;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.ReportStartLoc;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardSummaryReport;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSReportBuilderUtils;
 
-public class CashReceiptsRegisterSummaryReport extends StandardSummaryReport {
+public class CashReceiptsRegisterSummaryReport extends StandardSummaryReport implements ReportByStartEnd {
 
 	private static final long serialVersionUID = 1L;
+	
+	public static final String FILENAME = "CRR_Summary";
+	
 
 	public static final String REPORT_TITLE = "Cash Receipts Register Summary";
 //	private final String REPORT_NOTES = null;
@@ -121,6 +126,14 @@ public class CashReceiptsRegisterSummaryReport extends StandardSummaryReport {
 	public Calendar getEndDate() {
 		return endDate;
 	}
+	
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
+	
 	
 	public void makeXLS(XSSFWorkbook workbook) throws Exception {
 		XSSFSheet sheet = workbook.createSheet();

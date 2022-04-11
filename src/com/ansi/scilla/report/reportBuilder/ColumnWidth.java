@@ -1,8 +1,8 @@
 package com.ansi.scilla.report.reportBuilder;
 
 /**
- * Default width of report columns<br />
- * Value is 1/256 of a character (per https://poi.apache.org/apidocs/dev/org/apache/poi/ss/usermodel/Sheet.html)<br />
+ * Default width of report columns.
+ * Value is 1/256 of a character (per https://poi.apache.org/apidocs/dev/org/apache/poi/ss/usermodel/Sheet.html.
  * Naming convention is &lt;DB table&gt;_&lt;field&gt;
  * 
  * @author dclewis

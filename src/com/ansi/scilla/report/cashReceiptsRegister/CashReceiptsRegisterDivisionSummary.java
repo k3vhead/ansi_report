@@ -8,22 +8,28 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.utils.ObjectTransformer;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 
-public class CashReceiptsRegisterDivisionSummary extends StandardReport {
+public class CashReceiptsRegisterDivisionSummary extends StandardReport implements ReportByStartEnd {
 
+	public static final String FILENAME = "CRR_Division_Summary";
+	
+	
 	private static final long serialVersionUID = 1L;
 
 	private final String DIVISION_SUMMARY_SQL = "select concat(division.division_nbr,'-',division.division_code) as name " +
@@ -97,6 +103,13 @@ public class CashReceiptsRegisterDivisionSummary extends StandardReport {
 	
 	
 	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
+	
+	
 	private List<RowData> makeData(Connection conn, CashReceiptsRegisterDivisionSummary report, Calendar startDate, Calendar endDate) throws SQLException {
 		startDate.set(Calendar.HOUR_OF_DAY, 0);
 		startDate.set(Calendar.MINUTE, 0);
@@ -123,7 +136,7 @@ public class CashReceiptsRegisterDivisionSummary extends StandardReport {
 	}
 	
 	
-	@SuppressWarnings("unchecked")
+
 	private void makeReport(Calendar startDate, Calendar endDate, List<RowData> data, String subtitle) throws NoSuchMethodException, SecurityException {
 
 		super.setTitle(REPORT_TITLE);	
@@ -137,6 +150,12 @@ public class CashReceiptsRegisterDivisionSummary extends StandardReport {
 				new ColumnHeader("total", "Total\nPayment\nAmount", 2, DataFormats.DECIMAL_FORMAT, SummaryType.SUM)//,
 //				new ColumnHeader("excess", "Excess Cash Amount", DataFormats.DECIMAL_FORMAT, SummaryType.SUM)
 		});
+		super.setColumnWidths(new ColumnWidth[] {
+				new ColumnWidth(2000, 200.0F),	// company
+				new ColumnWidth(3000, 300.0F),	// amount
+				new ColumnWidth(3000, 300.0F),	// tax		
+				new ColumnWidth(3000, 300.0F),  // total
+			});
 		
 		List<Object> oData = (List<Object>)CollectionUtils.collect(data, new ObjectTransformer());
 		super.setDataRows(oData);

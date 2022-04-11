@@ -1,13 +1,17 @@
 package com.ansi.scilla.report.datadumps;
 
 import java.sql.Connection;
+import java.util.Calendar;
 
-import com.ansi.scilla.report.reportBuilder.DataDumpReport;
+import com.ansi.scilla.common.db.Division;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByNoInput;
+import com.ansi.scilla.report.reportBuilder.reportType.DataDumpReport;
 
-public class UserListReport extends DataDumpReport {
+public class UserListReport extends DataDumpReport implements ReportByNoInput {
 
 	
 	private static final long serialVersionUID = 1L;
+	public static final String FILENAME = "User List";
 
 	private final String sql = "select ansi_user.user_id, ansi_user.last_name, ansi_user.first_name, ansi_user.user_status, ansi_user.title, " +  
 	"\n\t permission_group.name as permission_group, ansi_user.email, ansi_user.phone,   " +
@@ -30,6 +34,11 @@ public class UserListReport extends DataDumpReport {
 		makeReport(conn);
 	}
 
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
 	
 
 	public static UserListReport buildReport(Connection conn) throws Exception {

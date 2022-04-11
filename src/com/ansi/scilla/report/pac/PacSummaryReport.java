@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
@@ -20,17 +20,22 @@ import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.jobticket.JobFrequency;
 import com.ansi.scilla.common.jobticket.JobStatus;
 import com.ansi.scilla.common.utils.ObjectTransformer;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.ColumnWidth;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 
-public class PacSummaryReport extends StandardReport {
+public class PacSummaryReport extends StandardReport implements ReportByDivStartEnd, ReportByDivision {
 
 	private static final long serialVersionUID = 1L;
+	
+	public static final String FILENAME = "PAC Summary";
+	
 
 //	private final String someSQL = "select "
 //			+ " 'Proposed' as job_status, "
@@ -206,6 +211,12 @@ public class PacSummaryReport extends StandardReport {
 		return this.data.size();
 	}
 	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
+	
 	private String makeDivision(Connection conn, Integer divisionId) throws Exception {
 		Division division = new Division();
 		division.setDivisionId(divisionId);
@@ -290,7 +301,7 @@ public class PacSummaryReport extends StandardReport {
 		return this.totalVolume;
 	}
 	
-	@SuppressWarnings("unchecked")	
+
 	private void makeReport(String div, Calendar startDate, Calendar endDate, List<RowData> data, String subtitle) throws NoSuchMethodException, SecurityException {
 
 		super.setTitle(REPORT_TITLE);	
@@ -333,16 +344,16 @@ public class PacSummaryReport extends StandardReport {
 		super.makeHeaderRight(headerRight);
 		
 		super.setFirstDetailColumn(2);
+		super.setPdfWidthPercentage(40.0F);
 		
-		super.setColumnWidths(new Integer[] {
-				(Integer)null,
-				ColumnWidth.DATETIME.width(),
-				ColumnWidth.HEADER_ANSI.width()/2,
-				ColumnWidth.HEADER_ANSI.width()/4,
-				ColumnWidth.HEADER_ANSI.width()/2,
-				ColumnWidth.HEADER_ANSI.width()/2,
-				(Integer)null,
-				ColumnWidth.DATE.width(),
+		super.setColumnWidths(new ColumnWidth[] {
+				(ColumnWidth)null,						// left header "created"
+				new ColumnWidth(3750, 45.0F),			// left header date
+				new ColumnWidth(2866, (Float)null),		// job status
+				new ColumnWidth(2866, (Float)null),		// jobs
+				new ColumnWidth(2866, (Float)null),		// ppc
+				new ColumnWidth(2866, (Float)null),		// volume
+				new ColumnWidth(2750, 57.0F),			// right header date
 		});
 	}
 	

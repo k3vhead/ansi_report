@@ -27,15 +27,19 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.db.Division;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
-import com.ansi.scilla.report.reportBuilder.ReportOrientation;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivEnd;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 
-public class PastDueReport extends StandardReport {
+public class PastDueReport extends StandardReport implements ReportByDivEnd, ReportByDivision {
 	private static final long serialVersionUID = 1L;
+	
+	public static final String FILENAME = "Past Due";
 	
 	private final String sql = 
 		"select bill_to.name as bill_to_name, " +
@@ -125,6 +129,13 @@ public class PastDueReport extends StandardReport {
 	public String getDiv() {
 		return this.div;
 	}
+	
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
 	
 	private void makeData(Connection conn, Calendar pastDueDate, Integer divisionId) throws Exception {
 		//super.setSubtitle(makeSubtitle());

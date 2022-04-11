@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -12,10 +13,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -24,17 +25,22 @@ import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.jobticket.TicketStatus;
 import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.common.utils.ObjectTransformer;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.ColumnWidth;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivEnd;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 
-public class DispatchedOutstandingTicketReport extends StandardReport {
+public class DispatchedOutstandingTicketReport extends StandardReport implements ReportByDivEnd, ReportByDivision {
 	
 	private static final long serialVersionUID = 1L;
+	
+	public static final String FILENAME = "DO Ticket";
+	
 	
 	public static final String REPORT_TITLE = "Dispatched and Outstanding Tickets List -- Trailing";
 	public static final String REPORT_NOTE = "* = Tickets with statuses 'Non Dispatched' or 'Locked Freq' " +
@@ -148,6 +154,21 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		return this.data.size();
 	}
 	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+//		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("Division ");
+		buffer.append(String.valueOf(division.getDivisionNbr()));
+		buffer.append(" DO List - Trailing for tickets prior to ");
+		buffer.append(sdf.format(endDate.getTime()));
+		buffer.append(" asof ");
+		buffer.append(sdf.format(runDate.getTime()));
+		return buffer.toString();
+	}
+	
+	
 	private String makeDivision(Connection conn, Integer divisionId) throws Exception {
 		Division division = new Division();
 		division.setDivisionId(divisionId);
@@ -156,8 +177,8 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 	}
 
 	private List<RowData> makeData(Connection conn, Integer divisionId, Calendar endDate) throws Exception {
-		logger.log(Level.DEBUG, sql);
-		logger.log(Level.DEBUG, divisionId + "\n" + endDate);
+//		logger.log(Level.DEBUG, sql);
+//		logger.log(Level.DEBUG, divisionId + "\n" + endDate);
 		PreparedStatement ps = conn.prepareStatement(sql);
 		int n = 1;
 		ps.setDate(n, new java.sql.Date(endDate.getTimeInMillis()));
@@ -256,7 +277,7 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 	}
 	
 	
-	@SuppressWarnings("unchecked")	
+
 	private void makeReport(String div, Calendar endDate, List<RowData> data, String subtitle) throws NoSuchMethodException, SecurityException {
 
 		super.setTitle(REPORT_TITLE);	
@@ -266,8 +287,8 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		super.setHeaderRow(new ColumnHeader[] {
 				new ColumnHeader("ticketId", "Ticket", 1, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
 //				new ColumnHeader("fleetmaticsId", "Tkt # FM", DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("name","Site", 2, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("address1","Street 1", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
+				new ColumnHeader("name","Site", 2, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 20),
+				new ColumnHeader("address1","Street 1", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 20),
 				new ColumnHeader("city","City", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("lastRun","Last Run", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
 				new ColumnHeader("startDate","Run Date", 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
@@ -310,20 +331,21 @@ public class DispatchedOutstandingTicketReport extends StandardReport {
 		});
 		super.makeHeaderRight(headerRight);
 
-		super.setColumnWidths(new Integer[] {
-				(Integer)null,
-				ColumnWidth.DATETIME.width(),
-				ColumnWidth.ADDRESS_NAME.width() - ColumnWidth.DATETIME.width(),
-				ColumnWidth.ADDRESS_ADDRESS1.width(),
-				ColumnWidth.ADDRESS_CITY.width(),
-				ColumnWidth.DATE.width(),
-				ColumnWidth.DATE.width(),
-				ColumnWidth.JOB_PPC.width(),
-				ColumnWidth.JOB_JOB_NBR.width(),
-				ColumnWidth.JOB_JOB_FREQUENCY.width(),
-				ColumnWidth.HDR_RIGHT_NON_DISPATCHED.width(),
-				(Integer)null,
+		super.setColumnWidths(new ColumnWidth[] {
+				new ColumnWidth(null, 35.0F),			// ticket
+				new ColumnWidth(3750, 50.0F),			// site 1
+				new ColumnWidth(7250, 135.0F),			// site 2
+				new ColumnWidth(11000, 185.0F),			// street
+				new ColumnWidth(3500, 100.0F),			// city
+				new ColumnWidth(2750, 57.0F),			// last run
+				new ColumnWidth(2750, 57.0F),			// run date
+				new ColumnWidth(2500, 49.0F),			// ppc
+				new ColumnWidth(1400, 30.0F),			// j#
+				new ColumnWidth(1400, 35.0F),			// Freq
+				new ColumnWidth(3500, 50.5F),			// status
+				new ColumnWidth(null, 50.0F),			// style
 		});
+		
 		//Method getDispOutstanding = this.getClass().getMethod("getDispOutstanding", (Class<?>[])null);
 		//Method getFinished = this.getClass().getMethod("getFinished", (Class<?>[])null);
 		

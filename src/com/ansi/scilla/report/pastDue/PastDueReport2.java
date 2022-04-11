@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -27,18 +28,23 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.invoice.InvoiceTerm;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
-import com.ansi.scilla.report.reportBuilder.ReportOrientation;
-import com.ansi.scilla.report.reportBuilder.ReportStartLoc;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
-import com.ansi.scilla.report.reportBuilder.XLSReportBuilderUtils;
-import com.ansi.scilla.report.reportBuilder.XLSReportFormatter;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivEnd;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.ReportStartLoc;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSReportBuilderUtils;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSReportFormatter;
 
-public class PastDueReport2 extends StandardReport {
+public class PastDueReport2 extends StandardReport implements ReportByDivEnd, ReportByDivision {
 	private static final long serialVersionUID = 1L;
+	
+	public static final String FILENAME = "Past Due";
 	
 	private final String sql = 
 		"select bill_to.name as bill_to_name, " +
@@ -113,7 +119,7 @@ public class PastDueReport2 extends StandardReport {
 	
 	private PastDueReport2(Connection conn, Calendar pastDueDate, Integer divisionId) throws Exception {
 		super();
-		this.logger = Logger.getLogger("com.ansi.scilla.report.reportBuilder");
+		this.logger = LogManager.getLogger("com.ansi.scilla.report.reportBuilder");
 		this.pastDueDate = pastDueDate;
 		this.div = makeDiv(conn, divisionId);
 		this.setTitle(REPORT_TITLE);
@@ -197,8 +203,23 @@ public class PastDueReport2 extends StandardReport {
 				new ReportHeaderRow("Division: ", getDivMethod, 0, DataFormats.STRING_FORMAT)
 		});
 		super.makeHeaderRight(headerRight);
+	
 		
+		super.setColumnWidths(new ColumnWidth[] {
+				new ColumnWidth(11000, 200.0F),			//Bill TO Name (colspan 2)
+				(ColumnWidth)null,
+				new ColumnWidth(2500, 32.0F),		// Ticket Invoice
+				new ColumnWidth(2750, 57.0F),			// Completed Invoice
+				new ColumnWidth(2500, 32.0F),	// Job
+				new ColumnWidth(2500, 46.0F),			// PPC
+				new ColumnWidth(2500, 46.0F),			// Paid
+				new ColumnWidth(2500, 46.0F),	// Due
+				new ColumnWidth(2500, 46.0F),	// Past Due
+				new ColumnWidth(11000, 200.0F),	// Site Address (colspan 2)
+				(ColumnWidth)null,			// Site Address
+		});
 	}
+	
 		
 	
 	
@@ -218,6 +239,11 @@ public class PastDueReport2 extends StandardReport {
 			previousBillTo = rowData.getBillToName();
 		}
 		return reportRows;
+	}
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
 	}
 	
 	

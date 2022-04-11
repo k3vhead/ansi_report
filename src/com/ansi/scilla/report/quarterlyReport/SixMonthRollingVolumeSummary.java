@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -24,15 +25,21 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.ApplicationObject;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.ReportOrientation;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.common.db.Division;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivMonthYear;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 
-public class SixMonthRollingVolumeSummary extends StandardReport {
+public class SixMonthRollingVolumeSummary extends StandardReport implements ReportByDivMonthYear, ReportByDivision {
 	
 	private static final long serialVersionUID = 1L;
+	
+	public static final String FILENAME = "SMRV Quarterly";
+	
 	
 	private final String sql = "select * from (select top(43)" +
 				"\nCASE" +
@@ -419,6 +426,12 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 		
 		return StringUtils.join(subtitle, " ");
 	}
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
 	
 	public static SixMonthRollingVolumeSummary buildReport(Connection conn) throws Exception {
 		return new SixMonthRollingVolumeSummary(conn);

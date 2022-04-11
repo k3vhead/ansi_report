@@ -1,20 +1,30 @@
 package com.ansi.scilla.report.sixMonthRollingVolume;
 
 import java.sql.Connection;
+import java.util.Calendar;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.ansi.scilla.report.reportBuilder.AbstractReport;
-import com.ansi.scilla.report.reportBuilder.CompoundReport;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.XLSBuilder;
+import com.ansi.scilla.common.db.Division;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivMonthYear;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.reportType.AbstractReport;
+import com.ansi.scilla.report.reportBuilder.reportType.CompoundReport;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 
-public class SmrvReport extends CompoundReport {
+/**
+ * 
+ * A compound report consisting of two SmrvDetailReports, with start dates separated by 6 months, giving a full-year of data
+ *
+ */
+public class SmrvReport extends CompoundReport implements ReportByDivMonthYear, ReportByDivision {
 
 	private static final long serialVersionUID = 1L;
 	
 	public static final String REPORT_TITLE = "SMRV Listing Report";
+	public static final String FILENAME = "SMRV";
 	
 	private static Logger logger;
 
@@ -40,6 +50,12 @@ public class SmrvReport extends CompoundReport {
 	}
 	
 
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
+	
 	public void makeXLS(XSSFWorkbook workbook) throws Exception {
 		for ( AbstractReport report : this.reports ) {
 			XLSBuilder.build((StandardReport)report, workbook);

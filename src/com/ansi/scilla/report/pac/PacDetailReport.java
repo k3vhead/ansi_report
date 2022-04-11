@@ -11,10 +11,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Level;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -25,17 +25,21 @@ import com.ansi.scilla.common.jobticket.JobFrequency;
 import com.ansi.scilla.common.jobticket.JobStatus;
 import com.ansi.scilla.common.jobticket.JobUtils;
 import com.ansi.scilla.common.utils.ObjectTransformer;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.ColumnWidth;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 
-public class PacDetailReport extends StandardReport {
+public class PacDetailReport extends StandardReport implements ReportByDivStartEnd, ReportByDivision {
 
 	private static final long serialVersionUID = 1L;
+	
+	public static final String FILENAME = "PAC Detail";
 
 	private final String sqlSelectClause = "select "
 			+ "\n\t$REPORT_DATE$ as report_date, "
@@ -162,6 +166,12 @@ public class PacDetailReport extends StandardReport {
 		return this.data.size();
 	}
 	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
+	
 	private String makeDivision(Connection conn, Integer divisionId) throws Exception {
 		Division division = new Division();
 		division.setDivisionId(divisionId);
@@ -217,25 +227,27 @@ public class PacDetailReport extends StandardReport {
 		return this.totalVolume;
 	}
 	
-	@SuppressWarnings("unchecked")	
+
 	private void makeReport(String div, Calendar startDate, Calendar endDate, List<RowData> data, String subtitle) throws NoSuchMethodException, SecurityException {
 
 		super.setTitle(this.reportType.reportTitle);	
 		super.setSubtitle(subtitle);
 //		super.setHeaderNotes(REPORT_NOTES);
 		
+//		Font arialFont = new Font("Arial", Font.PLAIN, 18);
+		
 		super.setHeaderRow(new ColumnHeader[] {
 				new ColumnHeader("reportDate", this.reportType.dateHeader, 1, DataFormats.DATE_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobId", "Job", 1, DataFormats.NUMBER_LEFT, SummaryType.NONE),
-				new ColumnHeader("name","Site Name", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("address1","Street 1", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
-				new ColumnHeader("city","City", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 25),
+				new ColumnHeader("name","Site Name", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 20),
+				new ColumnHeader("address1","Street 1", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 20),
+				new ColumnHeader("city","City", 1, DataFormats.STRING_FORMAT, SummaryType.NONE, null, 20),
 				new ColumnHeader("state","State", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("budget","Budget", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 				new ColumnHeader("pricePerCleaning","PPC", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
 				new ColumnHeader("jobNbr","Job #", 1, DataFormats.NUMBER_CENTERED, SummaryType.NONE),
 				new ColumnHeader("freq","Freq", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
-				new ColumnHeader("jobStatus","Status", 1, DataFormats.STRING_CENTERED, SummaryType.NONE),
+				new ColumnHeader("jobStatus","Status", 1, DataFormats.STRING_CENTERED, SummaryType.NONE, null, 6),
 				new ColumnHeader("columnData",this.reportType.columnHeader, 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("tagList", "Tags", 1, DataFormats.STRING_FORMAT, SummaryType.NONE),
 				new ColumnHeader("volume","Volume", 1, DataFormats.CURRENCY_FORMAT, SummaryType.NONE),
@@ -269,21 +281,22 @@ public class PacDetailReport extends StandardReport {
 		});
 		super.makeHeaderRight(headerRight);
 		
-		super.setColumnWidths(new Integer[] {
-				ColumnWidth.DATE.width(),
-				ColumnWidth.DATETIME.width(),
-				ColumnWidth.ADDRESS_NAME_SHORT.width(),
-				ColumnWidth.ADDRESS_NAME_SHORT.width(),
-				ColumnWidth.ADDRESS_CITY.width(),
-				ColumnWidth.ADDRESS_STATE.width(),
-				(Integer)null,
-				(Integer)null,
-				ColumnWidth.JOB_JOB_NBR.width(),
-				ColumnWidth.JOB_JOB_FREQUENCY.width(),
-				ColumnWidth.JOB_JOB_STATUS.width(),
-				ColumnWidth.JOB_CANCEL_REASON.width(),
-				ColumnWidth.JOB_JOB_TAGS.width(),
-				ColumnWidth.JOB_VOLUME.width(),
+		super.setColumnWidths(new ColumnWidth[] {
+				new ColumnWidth(2750, 57.0F), 			//Proposed Date
+				new ColumnWidth(3750, 45.0F),			// Job Code
+				new ColumnWidth(11000, 140.0F),			// Site name
+				new ColumnWidth(11000, 140.0F),			// Street 1
+				new ColumnWidth(3500, 60.0F),			// City
+				new ColumnWidth(1500, 22.5F),			// State
+				new ColumnWidth(2500, 46.0F),			// Budget
+				new ColumnWidth(2500, 46.0F),			// PPC
+				new ColumnWidth(1400, 30.0F),			// Job #
+				new ColumnWidth(1400, 27.0F),			// Freq
+				new ColumnWidth(1600, 29.0F),			// Status
+				new ColumnWidth(null, 42.0F),			// Lead Type
+				new ColumnWidth(4000, 45.0F),			// tags
+				new ColumnWidth(null, 57.5F),			// volume
+
 		});
 	}
 	
@@ -310,8 +323,10 @@ public class PacDetailReport extends StandardReport {
 			this.reportDate = new Date( rs.getDate("report_date").getTime());
 			this.jobId = rs.getInt("job_id");
 			this.name = rs.getString("name");
+//				this.name = StringUtils.abbreviate(this.name, 25);
 			this.address1 = rs.getString("address1");
 			this.city = rs.getString("city");
+//				this.city = StringUtils.substring(this.city, 0, 8);
 			this.state = rs.getString("state");
 			this.budget = rs.getBigDecimal("budget").doubleValue();
 			this.pricePerCleaning = rs.getBigDecimal("price_per_cleaning").doubleValue();
@@ -320,6 +335,7 @@ public class PacDetailReport extends StandardReport {
 			this.jobFrequency = JobFrequency.lookup(rs.getString("job_frequency"));
 			this.jobStatus = rs.getString("job_status");
 			this.columnData = rs.getString("column_data");
+//				this.columnData = StringUtils.substring(this.columnData, 0, 4);
 			this.volume = this.pricePerCleaning * Double.valueOf(this.jobFrequency.annualCount()); // PPC * freq.timesPerYear
 			report.totalVolume = report.totalVolume + this.volume;
 			this.tagList = rs.getString("tag_list");

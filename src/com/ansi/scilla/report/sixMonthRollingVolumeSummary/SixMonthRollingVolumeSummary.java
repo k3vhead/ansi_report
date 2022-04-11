@@ -13,20 +13,24 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.common.ApplicationObject;
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.jobticket.JobFrequency;
 import com.ansi.scilla.common.jobticket.JobStatus;
 import com.ansi.scilla.common.jobticket.TicketStatus;
 import com.ansi.scilla.common.jobticket.TicketType;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.XLSBuilder;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivMonthYear;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 
-public class SixMonthRollingVolumeSummary extends StandardReport {
+public class SixMonthRollingVolumeSummary extends StandardReport implements ReportByDivMonthYear, ReportByDivision {
 
 	/**
 	 * @author Joshua Lewis
 	 */
 	private static final long serialVersionUID = 1L;
 	public static final String REPORT_TITLE = "Six Month Rolling Volume Summary";
+	public static final String FILENAME = "SMRV Summary";
 	
 	private final String sql = "";
 	
@@ -47,6 +51,13 @@ public class SixMonthRollingVolumeSummary extends StandardReport {
 	public static SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 	private SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.S");
 	private Logger logger;
+	
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
 	
 	private void makeData(PreparedStatement ps, Integer divisionId, Calendar startDate) throws Exception {
 		Integer queryMonth = startDate.get(Calendar.MONTH) + 1; // add 1 because January is 0;

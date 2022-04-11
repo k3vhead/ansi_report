@@ -4,13 +4,12 @@ import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.util.Calendar;
 
-import org.apache.log4j.Level;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.utils.AppUtils;
 import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
-import com.ansi.scilla.report.reportBuilder.XLSBuilder;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 
 public class TestReportBuilderXLS {
 

@@ -14,10 +14,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -29,17 +29,21 @@ import com.ansi.scilla.common.jobticket.TicketDateGenerator;
 import com.ansi.scilla.common.jobticket.TicketStatus;
 import com.ansi.scilla.common.jobticket.TicketType;
 import com.ansi.scilla.common.utils.ObjectTransformer;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.ColumnWidth;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivMonthYear;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 
-public class SmrvDetailReport extends StandardReport {
+public class SmrvDetailReport extends StandardReport implements ReportByDivMonthYear, ReportByDivision {
 
 	private static final long serialVersionUID = 1L;
+	
+	public static final String FILENAME = "SMRV Detail";
 
 	final static String sql = "select job_site.name as job_site_name "
 			+ "\n\t, job_site.zip "
@@ -94,7 +98,6 @@ public class SmrvDetailReport extends StandardReport {
 	/**
 	 * Default Start Date is current Day 1 current month
 	 * @param conn Database Connection
-	 * @param reportType Which report is to be generated
 	 * @param divisionId Division Filter
 	 * @throws Exception Something bad happened
 	 */
@@ -119,7 +122,6 @@ public class SmrvDetailReport extends StandardReport {
 	 * @param divisionId Division Filter
 	 * @param month Month of the year (1-12)
 	 * @param year 4-digit year (eg 2017, not 17)
-	 * @return Report Object
 	 * @throws Exception something bad happened
 	 */
 	public SmrvDetailReport(Connection conn, Integer divisionId, Integer month, Integer year) throws Exception {
@@ -177,6 +179,13 @@ public class SmrvDetailReport extends StandardReport {
 	public Integer getContractCount() {
 		return this.contractCount;
 	}
+	
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
 	
 	private String makeDivision(Connection conn, Integer divisionId) throws Exception {
 		Division division = new Division();
@@ -298,7 +307,7 @@ public class SmrvDetailReport extends StandardReport {
 	}
 
 
-	@SuppressWarnings("unchecked")	
+
 	private void makeReport(String div, Calendar startDate, List<RowData> data, String subtitle) throws NoSuchMethodException, SecurityException {
 
 		super.setTitle(this.REPORT_TITLE);	
@@ -367,22 +376,22 @@ public class SmrvDetailReport extends StandardReport {
 		});
 		super.makeHeaderRight(headerRight);
 
-		super.setColumnWidths(new Integer[] {
-				ColumnWidth.ADDRESS_NAME.width()-ColumnWidth.DATETIME.width()-ColumnWidth.DATE.width(),
-				ColumnWidth.DATETIME.width(),
-				(Integer)null,
-				ColumnWidth.ADDRESS_ADDRESS1.width()-ColumnWidth.DATE.width(),
-				ColumnWidth.JOB_JOB_NBR.width(),
-				ColumnWidth.DATE.width(),
-				(Integer)null,
-				ColumnWidth.JOB_JOB_FREQUENCY.width(),
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
+		super.setColumnWidths(new ColumnWidth[] {
+				new ColumnWidth(4500, 80.0F),	// building name (1)
+				new ColumnWidth(3750, 60.0F),	// building name (2)
+				(ColumnWidth)null,				//zip
+				new ColumnWidth(8250, 115.0F),	// street 1
+				new ColumnWidth(1400, 25.0F),	// job #
+				new ColumnWidth(2750, 55.0F),	// last run
+				(ColumnWidth)null,				// job
+				new ColumnWidth(1400, 30.0F),	//freq
+				(ColumnWidth)null,				// months
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
+				(ColumnWidth)null,
 		});
 }
 	

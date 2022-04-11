@@ -13,20 +13,24 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.document.DocumentType;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.ColumnWidth;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 
-public class ExpiringDocumentReport extends StandardReport {
+public class ExpiringDocumentReport extends StandardReport implements ReportByStartEnd {
 
 	private static final long serialVersionUID = 1L;
+	public static final String FILENAME = "ExpiringDocument";
 
 	public static final String REPORT_TITLE = "Expiring Document Report";
 	private Calendar startDate;
@@ -84,17 +88,20 @@ public class ExpiringDocumentReport extends StandardReport {
 		List<ReportHeaderRow> headerRight = Arrays.asList(new ReportHeaderRow[] {});
 		super.makeHeaderRight(headerRight);
 		
-		super.setColumnWidths(new Integer[] {
-				ColumnWidth.HEADER_COL1.width(),
-				ColumnWidth.DESCRIPTION.width(),
-				ColumnWidth.HEADER_ANSI.width()/2,
-				ColumnWidth.HEADER_ANSI.width()/2,
-				ColumnWidth.DOCUMENT_TYPE.width(),
-				ColumnWidth.DOCUMENT_REFERENCE.width()
+		Float dateWidth = 100.0F;
+		
+		super.setColumnWidths(new ColumnWidth[] {
+				new ColumnWidth(2750, 50.0F),	// document id
+				new ColumnWidth(8000, 300.0F),	// description
+				new ColumnWidth(4250, dateWidth),	// doc. date
+				new ColumnWidth(4250, dateWidth),	// exp. date
+				new ColumnWidth(4250, dateWidth),	// type
+				new ColumnWidth(4250, dateWidth),	// reference
 		});
 		
-		
-		PreparedStatement ps = conn.prepareStatement(makeSql());
+		String sql = makeSql();
+		logger.log(Level.DEBUG, sql);
+		PreparedStatement ps = conn.prepareStatement(sql);
 		Calendar sqlStartDate = (Calendar)this.startDate.clone();
 		sqlStartDate.add(Calendar.DAY_OF_MONTH, -1);
 		Calendar sqlEndDate = (Calendar)this.endDate.clone();
@@ -133,7 +140,7 @@ public class ExpiringDocumentReport extends StandardReport {
 		for ( DocumentType type : DocumentType.values()) {
 			sqlSelect.add("when xref_type = '"+type.name()+"' then " + type.xrefDisplay());			
 		}
-		return sqlSelectClause + ",\ncase\n" + StringUtils.join(sqlSelect, "\n") + "\nend as xref_display";		
+		return sqlSelectClause + ",\ncase\n" + StringUtils.join(sqlSelect, "\n") + "\nend as xref_display";
 	}
 
 	private String makeFrom() {
@@ -235,4 +242,10 @@ public class ExpiringDocumentReport extends StandardReport {
 		
 		
 	}
+
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+
 }

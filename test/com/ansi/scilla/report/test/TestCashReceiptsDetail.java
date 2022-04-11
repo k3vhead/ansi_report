@@ -15,7 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.utils.AppUtils;
 import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
-import com.ansi.scilla.report.reportBuilder.XLSBuilder;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 import com.ansi.scilla.report.ticket.TicketStatusReport;
 
 public class TestCashReceiptsDetail {

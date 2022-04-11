@@ -6,14 +6,17 @@ import java.util.Calendar;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.ansi.scilla.report.reportBuilder.AbstractReport;
-import com.ansi.scilla.report.reportBuilder.CompoundReport;
+import com.ansi.scilla.common.db.Division;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportType.AbstractReport;
+import com.ansi.scilla.report.reportBuilder.reportType.CompoundReport;
 
-public class LiftAndGenieReport extends CompoundReport {
+public class LiftAndGenieReport extends CompoundReport implements ReportByStartEnd {
 
 	private static final long serialVersionUID = 1L;
 
 	public static final String REPORT_TITLE = "Lift And Genie";
+	public static final String FILENAME = "LiftAndGenie";
 	
 	
 	
@@ -36,6 +39,11 @@ public class LiftAndGenieReport extends CompoundReport {
 			Method method = report.getClass().getMethod("makeXLS", new Class<?>[] {XSSFWorkbook.class});
 			method.invoke(report, new Object[] {workbook});
 		}		
+	}
+
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
 	}
 
 	public static LiftAndGenieReport buildReport(Connection conn) throws Exception {

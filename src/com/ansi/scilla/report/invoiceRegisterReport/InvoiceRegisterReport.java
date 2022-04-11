@@ -32,17 +32,20 @@ import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.jobticket.TicketType;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.ColumnWidth;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
-import com.ansi.scilla.report.reportBuilder.ReportOrientation;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivMonthYear;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 
-public class InvoiceRegisterReport extends StandardReport {
+public class InvoiceRegisterReport extends StandardReport implements ReportByDivMonthYear, ReportByDivision {
 
 	private static final long serialVersionUID = 1L;
+	public static final String FILENAME = "IR";
 
 	private final String sql = "select bill_to.address_id, "
 		+ "\n\tbill_to.name as client_name, "
@@ -141,6 +144,13 @@ public class InvoiceRegisterReport extends StandardReport {
 		this.endDate = (Calendar)workDate.clone();
 		
 	}
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
+	
 
 	private void makeData(Connection conn) throws Exception {
 		super.setSubtitle(makeSubtitle());
@@ -179,19 +189,19 @@ public class InvoiceRegisterReport extends StandardReport {
 		super.makeHeaderRight(headerRight);
 		
 		
-		super.setColumnWidths(new Integer[] {
-				ColumnWidth.HEADER_COL1.width(),
-				ColumnWidth.DATETIME.width(),
-				ColumnWidth.CONTACT_NAME.width() - ColumnWidth.DATETIME.width() - ColumnWidth.HEADER_COL1.width(),
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				ColumnWidth.ADDRESS_NAME.width() - ColumnWidth.HEADER_COL_RIGHT.width(),
-				ColumnWidth.HEADER_COL_RIGHT.width()
+		super.setColumnWidths(new ColumnWidth[] {
+				new ColumnWidth(2000, 55.0F),				// client 1
+				new ColumnWidth(3750, 45.0F),				// client 2
+				new ColumnWidth(5250, 55.0F),				// client 3
+				new ColumnWidth(null, 35.0F),				// job id
+				new ColumnWidth(null, 40.0F),				// ticket id
+				new ColumnWidth(null, 35.0F),				// type
+				new ColumnWidth(null, 50.0F),				// complete
+				new ColumnWidth(null, 35.0F),				// invoice
+				new ColumnWidth(null, 50.0F),				// date
+				new ColumnWidth(null, 50.0F),				// amount
+				new ColumnWidth(9000, 75.0F),				// name 1
+				new ColumnWidth(2000, 75.0F),				// name 2
 		});
 		
 		PreparedStatement psData = conn.prepareStatement(sql + "\norder by bill_to.name, ticket.invoice_date");

@@ -1,10 +1,13 @@
 package com.ansi.scilla.report.datadumps;
 
 import java.sql.Connection;
+import java.util.Calendar;
 
-import com.ansi.scilla.report.reportBuilder.DataDumpReport;
+import com.ansi.scilla.common.db.Division;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByNoInput;
+import com.ansi.scilla.report.reportBuilder.reportType.DataDumpReport;
 
-public class AgingARTotals extends DataDumpReport {
+public class AgingARTotals extends DataDumpReport implements ReportByNoInput {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -16,6 +19,8 @@ public class AgingARTotals extends DataDumpReport {
 	}
 	
 	public static final  String REPORT_TITLE = "Aging AR Totals";
+	public static final String FILENAME = "Aging AR Totals";
+	
 
 	protected static final String sql = "select year, month, \n" + 
 			"	isnull([0-AA00],0.00) as '00-AA00',   \n" + 
@@ -71,6 +76,12 @@ public class AgingARTotals extends DataDumpReport {
 			"where year_month>= '2015-05-01'\n" + 
 			"order by year, month";
 
+	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
 	
 
 	public static AgingARTotals buildReport(Connection conn) throws Exception {

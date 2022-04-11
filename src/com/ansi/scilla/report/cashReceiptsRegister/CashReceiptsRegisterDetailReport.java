@@ -11,7 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,21 +21,25 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.common.Midnight;
+import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.utils.ObjectTransformer;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.ColumnWidth;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
-import com.ansi.scilla.report.reportBuilder.ReportOrientation;
-import com.ansi.scilla.report.reportBuilder.ReportStartLoc;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
-import com.ansi.scilla.report.reportBuilder.XLSBuilder;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.common.ReportOrientation;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.ReportStartLoc;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
+import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
 import com.thewebthing.commons.lang.StringUtils;
 
-public class CashReceiptsRegisterDetailReport extends StandardReport {
+public class CashReceiptsRegisterDetailReport extends StandardReport implements ReportByStartEnd {
 
+	public static final String FILENAME = "CRR_Detail";
+	
 	private static final long serialVersionUID = 1L;
 
 	private final String sql = "select bill_to.name as 'bill_to_name'\r\n" + 
@@ -146,6 +150,12 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 		return this.data.size();
 	}
 	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
+	
+	
 	private List<RowData> makeData(Connection conn, CashReceiptsRegisterDetailReport report, Calendar startDate, Calendar endDate) throws Exception {
 		
 		startDate.set(Calendar.HOUR_OF_DAY, 0);
@@ -174,7 +184,7 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 		return data;
 	}
 
-	@SuppressWarnings("unchecked")	
+
 	private void makeReport(Calendar startDate, Calendar endDate, List<RowData> data, String subtitle) throws NoSuchMethodException, SecurityException {
 
 		super.setTitle(REPORT_TITLE);	
@@ -218,23 +228,24 @@ public class CashReceiptsRegisterDetailReport extends StandardReport {
 		});
 		super.makeHeaderRight(headerRight);
 		
-		super.setColumnWidths(new Integer[] {
-				(Integer)null,
-				ColumnWidth.DATETIME.width(),
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				Math.max(0, ColumnWidth.ADDRESS_NAME.width() - ColumnWidth.DATE.width()),
+		super.setColumnWidths(new ColumnWidth[] {
+				new ColumnWidth(null, 44.33F),	// client name 1
+				new ColumnWidth(3750, 44.33F),	// client name 2
+				new ColumnWidth(null, 44.33F),	// client name 3
+				new ColumnWidth(null, 32.0F),	// job code
+				new ColumnWidth(null, 35.0F),	// ticket
+				new ColumnWidth(null, 49.0F),	// invoicedate
+				new ColumnWidth(null, 32.8F),	// invoice
+				new ColumnWidth(null, 32.8F),	// div
+				new ColumnWidth(null, 46.0F),	// pmt notes
+				new ColumnWidth(null, 49.0F),	// payment date
+				new ColumnWidth(null, 66.0F),	// check number
+				new ColumnWidth(null, 49.0F),	// check date
+				new ColumnWidth(null, 43.0F),	// ppc paid
+				new ColumnWidth(null, 43.0F),	// taxes paid
+				new ColumnWidth(null, 43.0F),	// total paid
+				new ColumnWidth(7250, 57.0F),	// site name 1
+				new ColumnWidth(null, 57.0F),	// site name 2
 		});
 	}
 	

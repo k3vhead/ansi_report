@@ -1,10 +1,13 @@
 package com.ansi.scilla.report.datadumps;
 
 import java.sql.Connection;
+import java.util.Calendar;
 
-import com.ansi.scilla.report.reportBuilder.DataDumpReport;
+import com.ansi.scilla.common.db.Division;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByNoInput;
+import com.ansi.scilla.report.reportBuilder.reportType.DataDumpReport;
 
-public class AccountsReceivableTotalsOver60Detail extends DataDumpReport {
+public class AccountsReceivableTotalsOver60Detail extends DataDumpReport implements ReportByNoInput {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -16,6 +19,8 @@ public class AccountsReceivableTotalsOver60Detail extends DataDumpReport {
 	}
 	
 	public static final  String REPORT_TITLE = "AR Totals Over 60 Detail";
+	public static final String FILENAME = "Accounts Receivable Totals Over 60 Detail";
+	
 
 	protected static final String sql = "select Div, invoice_date as 'Invoiced', DaysDue, Client, Ticket, Site, Terms\n" + 
 			", isnull([over60],0.00) as [over60], isnull([over90],0.00) as [over90]\n" +
@@ -92,6 +97,10 @@ public class AccountsReceivableTotalsOver60Detail extends DataDumpReport {
 			;
 
 	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
 
 	public static AccountsReceivableTotalsOver60Detail buildReport(Connection conn) throws Exception {
 		return new AccountsReceivableTotalsOver60Detail(conn);

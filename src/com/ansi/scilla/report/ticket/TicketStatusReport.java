@@ -11,7 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import com.ansi.scilla.common.AnsiTime;
 import com.ansi.scilla.common.ApplicationObject;
@@ -19,17 +19,21 @@ import com.ansi.scilla.common.Midnight;
 import com.ansi.scilla.common.db.Division;
 import com.ansi.scilla.common.jobticket.TicketStatus;
 import com.ansi.scilla.common.utils.ObjectTransformer;
-import com.ansi.scilla.report.reportBuilder.ColumnHeader;
-import com.ansi.scilla.report.reportBuilder.ColumnWidth;
-import com.ansi.scilla.report.reportBuilder.DataFormats;
-import com.ansi.scilla.report.reportBuilder.DateFormatter;
-import com.ansi.scilla.report.reportBuilder.ReportHeaderRow;
-import com.ansi.scilla.report.reportBuilder.StandardReport;
-import com.ansi.scilla.report.reportBuilder.SummaryType;
+import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
+import com.ansi.scilla.report.reportBuilder.common.ColumnWidth;
+import com.ansi.scilla.report.reportBuilder.common.ReportHeaderRow;
+import com.ansi.scilla.report.reportBuilder.common.SummaryType;
+import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
+import com.ansi.scilla.report.reportBuilder.formatter.DateFormatter;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivStartEnd;
+import com.ansi.scilla.report.reportBuilder.reportBy.ReportByDivision;
+import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
 
-public class TicketStatusReport extends StandardReport {
+public class TicketStatusReport extends StandardReport implements ReportByDivStartEnd, ReportByDivision {
 
 	private static final long serialVersionUID = 1L;
+	public static final String FILENAME = "Ticket Status";
+	
 
 	private final String sql = "select ticket.process_date, ticket.ticket_id, ticket.ticket_status, "
 			+ "\n\tjob.price_per_cleaning, ticket.act_price_per_cleaning, "
@@ -203,8 +207,13 @@ public class TicketStatusReport extends StandardReport {
 		return this.pricePerCleaningTotal;
 	}
 	
+	@Override
+	public String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate) {
+		return makeFileName(FILENAME, runDate, division, startDate, endDate);
+	}
 	
-	@SuppressWarnings("unchecked")	
+	
+
 	private void makeReport(String div, Calendar startDate, Calendar endDate, List<RowData> data, String subtitle) throws NoSuchMethodException, SecurityException {
 
 		super.setTitle(REPORT_TITLE);	
@@ -251,16 +260,17 @@ public class TicketStatusReport extends StandardReport {
 		});
 		super.makeHeaderRight(headerRight);
 		
-		super.setColumnWidths(new Integer[] {
-				ColumnWidth.DATE.width(),
-				ColumnWidth.DATETIME.width(),
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				(Integer)null,
-				ColumnWidth.JOB_JOB_NBR.width(),
-				ColumnWidth.ADDRESS_NAME.width(),
-				ColumnWidth.ADDRESS_ADDRESS1.width(),				
+		super.setColumnWidths(new ColumnWidth[] {
+				new ColumnWidth(2750, 57.0F),			//Completed
+				new ColumnWidth(3750, 45.0F),		// Job ID
+				new ColumnWidth(2500, 32.0F),			// Ticket #
+				new ColumnWidth(2750, 55.0F),	// Status
+				new ColumnWidth(2500, 46.0F),			// PPC
+				new ColumnWidth(2500, 42.0F),			// Invoiced
+				new ColumnWidth(1400, 30.0F),	// Job #
+				new ColumnWidth(11000, 200.0F),	// Site Name
+				new ColumnWidth(11000, 200.0F),	// Site Address (colspan 2)
+				(ColumnWidth)null,			// Site Address
 		});
 	}
 	
