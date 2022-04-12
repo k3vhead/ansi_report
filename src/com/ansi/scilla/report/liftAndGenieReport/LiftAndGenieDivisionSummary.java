@@ -33,6 +33,7 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 
 	private static final long serialVersionUID = 1L;
 	public static final String FILENAME = "LiftAndGenieDivisionSummary";
+	public static final String TAB_LABEL = "Summary";
 	
 
 	private final String sql = "select concat(division.division_nbr,'-',division.division_code) as div,\n" + 
@@ -69,6 +70,7 @@ public class LiftAndGenieDivisionSummary extends StandardReport implements Repor
 	public LiftAndGenieDivisionSummary() {
 		super();
 		this.setTitle(REPORT_TITLE);
+		this.setTabLabel(TAB_LABEL);
 	}
 	/**
 	 * Default date range is current month-to-date

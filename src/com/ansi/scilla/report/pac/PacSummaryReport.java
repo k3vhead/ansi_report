@@ -113,6 +113,7 @@ public class PacSummaryReport extends StandardReport implements ReportByDivStart
 			+ " and job.job_status in ('" + JobStatus.PROPOSED.code() +"','" + JobStatus.ACTIVE.code() + "','"+ JobStatus.CANCELED.code()+"')";
 	
 	public static final  String REPORT_TITLE = "PAC Summary";
+	public static final String TAB_LABEL = "Summary";
 //	private final String REPORT_NOTES = "notes go here";
 	
 	private String div;
@@ -125,6 +126,7 @@ public class PacSummaryReport extends StandardReport implements ReportByDivStart
 	protected PacSummaryReport() {
 		super();
 		this.setTitle(REPORT_TITLE);
+		super.setTabLabel(TAB_LABEL);
 		this.logger = LogManager.getLogger(this.getClass());
 	}
 	/**
@@ -134,7 +136,7 @@ public class PacSummaryReport extends StandardReport implements ReportByDivStart
 	 * @throws Exception something bad happened
 	 */
 	public PacSummaryReport(Connection conn,  Integer divisionId) throws Exception {
-		super();
+		this();		
 		this.div = makeDivision(conn, divisionId);
 		
 		DateFormatter dateFormatter = (DateFormatter)DataFormats.DATE_FORMAT.formatter();
@@ -163,7 +165,7 @@ public class PacSummaryReport extends StandardReport implements ReportByDivStart
 	}
 
 	public PacSummaryReport(Connection conn,  Integer divisionId, Calendar startDate, Calendar endDate) throws Exception {
-		super();
+		this();
 		DateFormatter dateFormatter = (DateFormatter)DataFormats.DATE_FORMAT.formatter();
 		this.div = makeDivision(conn, divisionId);
 		this.startDate = startDate;

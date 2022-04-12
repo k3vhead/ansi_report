@@ -199,7 +199,11 @@ public class XLSBuilder extends AbstractXLSBuilder {
 	public static XSSFSheet build(StandardReport report, XSSFWorkbook workbook) throws Exception {	
 		XLSBuilder builder = new XLSBuilder(report);
 		builder.makeFormatters(workbook);
-		XSSFSheet sheet = workbook.createSheet();		
+		XSSFSheet sheet = workbook.createSheet();
+		if ( ! StringUtils.isBlank(report.getTabLabel()) ) {
+			Integer sheetNumber = workbook.getNumberOfSheets() - 1;
+			workbook.setSheetName(sheetNumber, report.getTabLabel());
+		}
 		
 		builder.buildReport(sheet);
 		return sheet;

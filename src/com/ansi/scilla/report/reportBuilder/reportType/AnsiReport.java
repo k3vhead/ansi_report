@@ -15,6 +15,14 @@ import com.ansi.scilla.report.reportBuilder.reportBy.ReportBy;
 public abstract class AnsiReport extends ApplicationObject implements ReportBy {
 
 	private static final long serialVersionUID = 1L;
+	private String tabLabel;
 
 	public abstract String makeFileName(Calendar runDate, Division division, Calendar startDate, Calendar endDate);
+	
+	public String getTabLabel() {
+		return this.tabLabel;
+	}
+	public void setTabLabel(String tabLabel) {
+		this.tabLabel = tabLabel;
+	}
 }
