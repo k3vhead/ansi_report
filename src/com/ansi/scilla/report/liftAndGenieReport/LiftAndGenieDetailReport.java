@@ -65,6 +65,7 @@ public class LiftAndGenieDetailReport extends StandardReport implements ReportBy
 	
 	public static final String REPORT_TITLE = "Lift And Genie Detail";
 	public static final String FILENAME = "LiftAndGenieDetail";
+	public static final String TAB_LABEL = "Detail";
 //	private final String REPORT_NOTES = "notes go here";
 	
 	private Calendar startDate;
@@ -78,6 +79,7 @@ public class LiftAndGenieDetailReport extends StandardReport implements ReportBy
 	public LiftAndGenieDetailReport() {
 		super();
 		this.setTitle(REPORT_TITLE);
+		this.setTabLabel(TAB_LABEL);
 		super.setReportOrientation(ReportOrientation.PORTRAIT);
 
 	}
