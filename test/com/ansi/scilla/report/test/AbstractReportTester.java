@@ -2,6 +2,7 @@ package com.ansi.scilla.report.test;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -102,7 +103,7 @@ public abstract class AbstractReportTester {
 
 	
 	public abstract class ReportMaker implements Runnable {
-		private ReportConn reportConn = ReportConn.DEV;
+		private ReportConn reportConn = ReportConn.PROD;
 
 		protected boolean makeXLS;
 		protected boolean makePDF;
@@ -135,7 +136,11 @@ public abstract class AbstractReportTester {
 
 			try {
 //				conn = AppUtils.getDevConn();
-				conn = this.reportConn.getConn();
+//				conn = this.reportConn.getConn();
+				conn =  DriverManager.getConnection(
+						"jdbc:sqlserver://192.168.10.100:1433;databaseName=asap;integratedSecurity=false;", 
+						"ansi_sched.webapp", 
+						"@Ansi2021");
 				conn.setAutoCommit(false);
 				makeReport(conn);
 			} catch ( Exception e ) {
@@ -359,7 +364,7 @@ public abstract class AbstractReportTester {
 		@Override
 		public void makeReport(Connection conn) throws Exception {
 			logger.info("Start MakeDO");
-			String fileName = "DO_Ticket";
+			String fileName = "DO_Ticket_"+divisionId;
 			DispatchedOutstandingTicketReport report = DispatchedOutstandingTicketReport.buildReport(conn, divisionId, endDate);
 			super.writeReport(report, fileName);
 			logger.info("End MakeDO");

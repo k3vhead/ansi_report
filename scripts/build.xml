@@ -54,7 +54,14 @@
             </fileset>
         </path>
         
-        <javac srcdir="src"
+    	<javac srcdir="src"
+               destdir="${dist}"
+               debug="${compile.debug}"
+               includeantruntime="false">
+            <classpath refid="ui.classpath"/>
+        </javac>
+    	<!--
+    	<javac srcdir="src"
                destdir="${dist}"
                debug="${compile.debug}"
                includeantruntime="false"
@@ -62,6 +69,7 @@
         	   target="1.8">
             <classpath refid="ui.classpath"/>
         </javac>
+        -->
     </target>
     
     <target name="jar" depends="build" description="Make a JAR File">  

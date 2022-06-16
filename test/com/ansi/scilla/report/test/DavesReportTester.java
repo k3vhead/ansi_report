@@ -10,8 +10,8 @@ import org.apache.logging.log4j.Logger;
 
 public class DavesReportTester extends AbstractReportTester {
 
-	private final String testResultDirectory = "/home/dclewis/Documents/webthing_v2/projects/ANSI/testresults/report_pdf/";
-	
+	private final String testResultDirectory = "/home/dclewis/Documents/Dropbox/webthing_v2/projects/ANSI/testresults/report_pdf/";
+
 	protected ReportType reportType;
 	protected Calendar startDate;
 	protected Calendar endDate;
@@ -27,11 +27,11 @@ public class DavesReportTester extends AbstractReportTester {
 		boolean makeHTML = false;
 		boolean makeXLS = true;
 
-		Integer divisionId = 105;
-		Integer month = Calendar.OCTOBER;
-		Integer year = 2020;
-		Calendar startDate = new GregorianCalendar(2020, Calendar.OCTOBER, 1);
-		Calendar endDate = new GregorianCalendar(2020, Calendar.DECEMBER, 1);
+		Integer divisionId = 118;
+		Integer month = Calendar.JUNE;
+		Integer year = 2022;
+		Calendar startDate = new GregorianCalendar(2022, Calendar.JUNE, 1);
+		Calendar endDate = new GregorianCalendar(2022, Calendar.JUNE, 30);
 
 		List<Thread> threadList = new ArrayList<Thread>();
 		
@@ -65,13 +65,16 @@ public class DavesReportTester extends AbstractReportTester {
 //				new MakeClientContact(makeXLS, makePDF, makeHTML),						// this is a datadump
 //				new MakeCRRDetail(makeXLS, makePDF, makeHTML, startDate, endDate),		// this is a standard report with subtotals
 //				new MakeCRRSummary(makeXLS, makePDF, makeHTML, startDate, endDate),   		// this is a standard summary
-//				new MakeDO(makeXLS, makePDF, makeHTML, divisionId, endDate),					// this is a standard report with banner notes
+				new MakeDO(makeXLS, makePDF, makeHTML, 115, endDate),					// this is a standard report with banner notes
+				new MakeDO(makeXLS, makePDF, makeHTML, 116, endDate),					// this is a standard report with banner notes
+				new MakeDO(makeXLS, makePDF, makeHTML, 117, endDate),					// this is a standard report with banner notes
+				new MakeDO(makeXLS, makePDF, makeHTML, 118, endDate),					// this is a standard report with banner notes
 //				new MakeExpiringDocumentReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeInvoiceRegister(makeXLS, makePDF, makeHTML, divisionId, month, year),   	// this is a standard report with totals
 //				new MakeInvoiceRegisterSummaryReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenieDSum(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeLiftAndGenieDetailReport(makeXLS, makePDF, makeHTML, startDate, endDate),
-				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
+//				new MakeLiftAndGenie(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeMonthlyServiceTaxReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakeServiceTaxByDayReport(makeXLS, makePDF, makeHTML, startDate, endDate),
 //				new MakePACDetail("P", makeXLS, makePDF, makeHTML, divisionId, startDate, endDate),			// this is a compound report. "Which Report" is P|A|C
