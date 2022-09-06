@@ -1,8 +1,8 @@
 package com.ansi.scilla.report.htmlTable;
 
-import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections4.Predicate;
 
-public class SameRowIndexPredicate implements Predicate {
+public class SameRowIndexPredicate implements Predicate<HTMLRow> {
 
 	private Integer index;
 	public SameRowIndexPredicate(Integer index) {
@@ -10,8 +10,7 @@ public class SameRowIndexPredicate implements Predicate {
 	}
 	
 	@Override
-	public boolean evaluate(Object arg0) {
-		HTMLRow row = (HTMLRow)arg0;
+	public boolean evaluate(HTMLRow row) {
 		return row.getRowNum().equals(index);
 	}
 	

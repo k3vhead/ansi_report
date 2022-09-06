@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.IterableUtils;
 
 import com.ansi.scilla.common.ApplicationObject;
 import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLReportFormatter;
@@ -23,8 +23,8 @@ public class HTMLRow extends ApplicationObject implements Comparable<HTMLRow> {
 		List<HTMLCell> gapCells = new ArrayList<HTMLCell>();
 		// make sure there are no gaps in the range of cells
 		for ( int index = 0; index < cells.size(); index++ ) {
-			int matches = CollectionUtils.countMatches(cells, new SameColumnIndexPredicate(index));
-			if ( matches == 0 ) {
+			long matches = IterableUtils.countMatches(cells, new SameColumnIndexPredicate(index));
+			if ( matches == 0L ) {
 				gapCells.add(new HTMLCell(index));
 			}
 		}
@@ -40,7 +40,7 @@ public class HTMLRow extends ApplicationObject implements Comparable<HTMLRow> {
 	}
 
 	public HTMLCell createCell(Integer columnIndex) {
-		HTMLCell duplicate = (HTMLCell)CollectionUtils.find(cells, new SameColumnIndexPredicate(columnIndex));			
+		HTMLCell duplicate = IterableUtils.find(cells, new SameColumnIndexPredicate(columnIndex));			
 		if ( duplicate != null ) {
 			cells.remove(duplicate);
 		}

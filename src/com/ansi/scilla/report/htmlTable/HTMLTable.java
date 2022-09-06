@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.ansi.scilla.common.ApplicationObject;
-import com.ansi.scilla.report.htmlTable.HTMLRow;
-import com.ansi.scilla.report.htmlTable.SameRowIndexPredicate;
 import com.ansi.scilla.report.reportBuilder.htmlBuilder.HTMLReportFormatter;
 
 public class HTMLTable extends ApplicationObject {
@@ -23,7 +21,7 @@ public class HTMLTable extends ApplicationObject {
 		this.rows = rows;
 	}
 	public HTMLRow createRow(int rownum) {
-		HTMLRow duplicate = (HTMLRow)CollectionUtils.find(rows, new SameRowIndexPredicate(rownum));			
+		HTMLRow duplicate = IterableUtils.find(rows, new SameRowIndexPredicate(rownum));			
 		if ( duplicate != null ) {
 			rows.remove(duplicate);
 		}
@@ -37,8 +35,8 @@ public class HTMLTable extends ApplicationObject {
 		List<HTMLRow> gapRows = new ArrayList<HTMLRow>();
 		// make sure there are no gaps in the range of cells
 		for ( int index = 0; index < rows.size(); index++ ) {
-			int matches = CollectionUtils.countMatches(rows, new SameRowIndexPredicate(index));
-			if ( matches == 0 ) {
+			long matches = IterableUtils.countMatches(rows, new SameRowIndexPredicate(index));
+			if ( matches == 0L ) {
 				gapRows.add(new HTMLRow(index));
 			}
 		}
