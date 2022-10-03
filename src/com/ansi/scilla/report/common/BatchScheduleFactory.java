@@ -1,6 +1,7 @@
 package com.ansi.scilla.report.common;
 
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -207,9 +208,13 @@ public class BatchScheduleFactory {
 	 * @throws Exception
 	 */
 	private static ReportParmStartEnd makeLastWeek(Connection conn, Calendar runDate)  throws RecordNotFoundException, Exception {
-		String weekStartsOn = ApplicationPropertyName.CALENDAR_REPORTING_WEEK_STARTS_ON.getProperty(conn).getValueString();
+		String weekStartsOn = ApplicationPropertyName.CALENDAR_WORK_WEEK_STARTS_ON.getProperty(conn).getValueString();
 		Calendar startDate = AppUtils.getPriorDayOfWeek(runDate, weekStartsOn); //first day of current week
 		Calendar endDate = (Calendar)startDate.clone();
+//		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+//		System.out.println("Week starts on: " + weekStartsOn);
+//		System.out.println("startDate: " + sdf.format(startDate.getTime()));
+//		System.out.println("endDate: " + sdf.format(endDate.getTime()));
 		startDate.add(Calendar.DAY_OF_YEAR, -7);
 		endDate.add(Calendar.DAY_OF_YEAR, -1);
 		return new ReportParmStartEnd(startDate, endDate);
