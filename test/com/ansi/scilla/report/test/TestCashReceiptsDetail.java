@@ -5,18 +5,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.utils.AppUtils;
 import com.ansi.scilla.report.cashReceiptsRegister.CashReceiptsRegisterDetailReport;
 import com.ansi.scilla.report.reportBuilder.xlsBuilder.XLSBuilder;
-import com.ansi.scilla.report.ticket.TicketStatusReport;
 
 public class TestCashReceiptsDetail {
 

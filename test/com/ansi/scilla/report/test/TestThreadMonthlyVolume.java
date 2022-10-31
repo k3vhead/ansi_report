@@ -3,16 +3,9 @@ package com.ansi.scilla.report.test;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
-
-import com.ansi.scilla.common.db.Ticket;
-import com.ansi.scilla.common.jobticket.TicketStatus;
 import com.ansi.scilla.common.utils.AppUtils;
 
 public class TestThreadMonthlyVolume {

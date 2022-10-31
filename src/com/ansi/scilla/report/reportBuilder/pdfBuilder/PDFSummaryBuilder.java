@@ -2,8 +2,6 @@ package com.ansi.scilla.report.reportBuilder.pdfBuilder;
 
 import java.io.ByteArrayOutputStream;
 
-import org.apache.logging.log4j.Level;
-
 import com.ansi.scilla.report.exception.ReportConfigurationException;
 import com.ansi.scilla.report.reportBuilder.common.ColumnHeader;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;

@@ -12,7 +12,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import com.ansi.scilla.common.batch.BatchTrigger;
 import com.ansi.scilla.common.calendar.CalendarDateType;
 import com.ansi.scilla.common.db.ApplicationProperties;
-import com.ansi.scilla.common.utils.AnsiDateUtils;
 import com.ansi.scilla.common.utils.AppUtils;
 import com.ansi.scilla.common.utils.ApplicationPropertyName;
 import com.ansi.scilla.report.common.BatchScheduleFactory;

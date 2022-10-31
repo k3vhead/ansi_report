@@ -1,6 +1,5 @@
 package com.ansi.scilla.report.test;
 
-import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,10 +10,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import com.ansi.scilla.common.utils.AppUtils;
-import com.ansi.scilla.report.sixMonthRollingVolume.SixMonthRollingVolumeReport;
 
 public class Test6MonthVolume {
 

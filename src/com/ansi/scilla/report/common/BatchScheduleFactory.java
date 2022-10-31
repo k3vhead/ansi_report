@@ -1,7 +1,6 @@
 package com.ansi.scilla.report.common;
 
 import java.sql.Connection;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 

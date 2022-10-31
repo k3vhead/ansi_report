@@ -27,7 +27,6 @@ import com.ansi.scilla.report.reportBuilder.common.SummaryType;
 import com.ansi.scilla.report.reportBuilder.formatter.DataFormats;
 import com.ansi.scilla.report.reportBuilder.reportBy.ReportByNoInput;
 import com.ansi.scilla.report.reportBuilder.reportType.StandardReport;
-import com.ansi.scilla.report.woAndFees.WOAndFeesSummaryReport;
 
 public class SubtotalTester extends StandardReport implements ReportByNoInput {
 	

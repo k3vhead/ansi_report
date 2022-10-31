@@ -6,7 +6,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.ansi.scilla.common.ApplicationObject;
 import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Font;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 
