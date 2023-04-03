@@ -197,7 +197,7 @@ public class AccountsReceivableTotalsSummary extends StandardReport implements R
 		recapLabelStyle.setUnderline(true);
 		CustomCellFormat emptyCell = recapLabelStyle.clone();
 		emptyCell.setBorder(true);
-		CustomCellFormat totalDueStyle = new CustomCellFormat(CustomCellColor.BLACK,CustomCellColor.WHITE, CustomCellAlignment.RIGHT, "#,##0.00", "#,###0.00");
+		CustomCellFormat totalDueStyle = new CustomCellFormat(CustomCellColor.BLACK,CustomCellColor.WHITE, CustomCellAlignment.RIGHT, "#,##0.00", "#,##0.00");
 		totalDueStyle.setBorder(true);
 		CustomCellFormat currentStyle = totalDueStyle.clone();
 		currentStyle.setBackground(CustomCellColor.BRIGHT_GREEN);
