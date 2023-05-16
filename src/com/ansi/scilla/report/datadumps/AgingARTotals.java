@@ -36,8 +36,8 @@ public class AgingARTotals extends DataDumpReport implements ReportByNoInput {
 			"	isnull([65-OH05],0.00) as '65-OH05',   \n" + 
 			"	isnull([66-OH06],0.00) as '66-OH06',   \n" + 
 			"	isnull([67-OH07],0.00) as '67-OH07', \n" + 
-			"	isnull([71-PA01],0.00) as '71-PA01', \n" + 
-			"	isnull([72-PA02],0.00) as '72-PA02', \n" + 
+			"	isnull([91-PA01],0.00) as '91-PA01', \n" + 
+			"	isnull([92-PA02],0.00) as '92-PA02', \n" + 
 			"	isnull([77-CL07],0.00) as '77-CL07', \n" + 
 			"	isnull([78-CL08],0.00) as '78-CL08', \n" + 
 			"	isnull([81-TN01],0.00) as '81-TN01', \n" + 
@@ -71,7 +71,7 @@ public class AgingARTotals extends DataDumpReport implements ReportByNoInput {
 			"PIVOT\n" + 
 			"(sum(ar_total)\n" + 
 			"for Div in ([0-AA00], [12-IL02], [15-IL05], [18-IL08], [19-IL09], [23-CH03], [31-IN01], [32-IN02], [33-IN03], [44-MO04],   \n" + 
-			"			[65-OH05], [66-OH06], [67-OH07], [71-PA01], [72-PA02], [77-CL07], [78-CL08], [81-TN01], [89-TN09])\n" + 
+			"			[65-OH05], [66-OH06], [67-OH07], [91-PA01], [92-PA02], [77-CL07], [78-CL08], [81-TN01], [89-TN09])\n" + 
 			") as pivotTable\n" + 
 			"where year_month>= '2015-05-01'\n" + 
 			"order by year, month";
